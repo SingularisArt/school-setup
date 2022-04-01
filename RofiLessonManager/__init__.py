@@ -15,14 +15,13 @@ class Basis(object):
         self.data = utils.load_data()
 
         # Assign the data to the variables
-        self.editor = self.data['editor']
+        self.code_dir = self.data['code_dir']
         self.viewer = self.data['viewer']
         self.terminal = self.data['terminal']
         self.notes_dir = self.data['notes_dir']
         self.root = self.data['root']
         self.current_course = self.data['current_course']
         self.projects_dir = self.data['projects_dir']
-        print(self.projects_dir)
         self.source_lessons_location = self.data['source_lessons_location']
         self.unit_info_name = self.data['unit_info_name']
         self.new_chap = self.data['new_chap']

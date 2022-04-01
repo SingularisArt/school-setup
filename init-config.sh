@@ -4,14 +4,17 @@ echo "Removing config.yaml ..."
 
 true > config.yaml
 
-echo "editor: nvim
+echo "Adding configuration template ..."
+
+echo "code_dir: $(pwd)
+editor: nvim
 viewer: zathura
 terminal: xfce4-terminal
-notes_dir: ${HOME}/Documents/notes
-root: ${HOME}/Documents/notes/Grade-10/semester-2
-current_course: ${HOME}/Documents/notes/current-course
-source_lessons_location: ${HOME}/Documents/notes/current-course/source-lessons.tex
-projects_dir: ${HOME}/Documents/notes/projects
+notes_dir: ${HOME}/Documents/school-notes
+root: ${HOME}/Documents/school-notes/Grade-10/semester-2
+current_course: ${HOME}/Documents/school-notes/current-course
+source_lessons_location: ${HOME}/Documents/school-notes/current-course/source-lessons.tex
+projects_dir: ${HOME}/Documents/school-notes/projects
 unit_info_name: unit-info.tex
 new_chap: False
 home: ${HOME}
@@ -38,5 +41,4 @@ discourage_folders:
   - projects
   - .git
   - media
-  - current-course
-" >> config.yaml
+  - current-course" >> config.yaml
