@@ -2,13 +2,12 @@
 
 import re
 import os
-import ntpath
 
 import RofiLessonManager
 import RofiLessonManager.utils as utils
 
 
-class ViewLessons(RofiLessonManager.Basis):
+class ViewLectures(RofiLessonManager.Basis):
     def __init__(self):
         super().__init__()
 
@@ -17,63 +16,57 @@ class ViewLessons(RofiLessonManager.Basis):
         self.units_head, self.units_tail = utils.get_all_units(
             self.folders_head)
         self.options, \
-            self.lesson_numbers, \
-            self.lesson_dates, self.lesson_names, \
-            self.lesson_units = self.get_lesson_info()
+            self.lecture_numbers, \
+            self.lecture_dates, self.lecture_names = self.get_lecture_info()
 
-    def get_lesson_info(self):
+    def get_first_line(self, file):
+        file_opened = open(file)
+        for line in file_opened.readlines():
+            return line
+
+    def get_lecture_info(self):
         options = []
-        lesson_numbers = []
-        lesson_dates = []
-        lesson_names = []
-        lesson_units = []
+        lecture_numbers = []
+        lecture_dates = []
+        lecture_names = []
 
-        for unit in self.units_head:
-            unit_head, unit_tail = ntpath.split(unit)
+        lectures = [f for f in os.listdir(self.units_head[0]) if
+                    os.path.isfile(os.path.join(self.units_head[0], f))]
 
-            for lesson in range(self.LESSON_RANGE_NUMBER):
-                lesson = '{}/{}/lesson-{}.tex'.format(self.current_course,
-                                                      unit_tail, lesson)
+        for lecture in lectures:
+            for lecture_number in range(self.LESSON_RANGE_NUMBER):
+                lecture = '{}/lec-{}.tex'.format(self.units_head[0],
+                                                 lecture_number)
 
-                if not os.path.exists(lesson):
+                if not os.path.isfile(lecture):
                     continue
-
-                with open(lesson, encoding="utf8",
-                          errors='ignore') as lesson_file:
-                    for line in lesson_file:
-                        count = utils.get_amount_of_lines_in_file(lesson_file)
-
-                        lesson_match = re.search(self.lesson_regex, line)
+                else:
+                    with open(lecture, encoding='utf8'):
+                        first_line = self.get_first_line(lecture)
+                        lecture_match = re.search(self.lecture_regex,
+                                                  first_line)
 
                         try:
-                            lesson_number = lesson_match.group(1)
-                            lesson_date = lesson_match.group(2)
-                            lesson_name = lesson_match.group(3)
-                            lesson_unit = lesson_match.group(4)
+                            lecture_number = lecture_match.group(1)
+                            lecture_date = lecture_match.group(2)
+                            lecture_name = lecture_match.group(3)
 
-                            lesson_numbers.append(lesson_number)
-                            lesson_dates.append(lesson_date)
-                            lesson_names.append(lesson_name)
-                            lesson_units.append(
-                                lesson_unit.lower().replace(' ', '-'))
-
-                            if count <= 5:
-                                lesson_unit += " File Empty"
+                            lecture_numbers.append(lecture_number)
+                            lecture_dates.append(lecture_date)
+                            lecture_names.append(lecture_name)
 
                             options.append(
                                 "<span color='red'>{number: >2}</span>. "
                                 "<b><span color='blue'>{title: <{fill}}</span>"
                                 "</b> <i><span color='yellow' size='smaller'>"
-                                "{date}</span> <span color='green' "
-                                "size='smaller'>({week})</span></i>".format(
+                                "{date}</span></i>".format(
                                     fill=35,
-                                    number=lesson_number,
-                                    title=lesson_name,
-                                    date=lesson_date,
-                                    week=lesson_unit
+                                    number=lecture_number,
+                                    title=lecture_name,
+                                    date=lecture_date,
                                 ))
                         except Exception:
                             pass
 
-        return options, lesson_numbers, lesson_dates, \
-            lesson_names, lesson_units
+        return options, lecture_numbers, lecture_dates, \
+            lecture_names

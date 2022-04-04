@@ -1,7 +1,7 @@
 import os
 
 
-def open_file(terminal, editor, current_course, unit, lesson):
+def open_file(terminal, editor, current_course, lesson):
     """
     Opens the lesson file in the wanted terminal with the wanted editor.
 
@@ -15,7 +15,6 @@ def open_file(terminal, editor, current_course, unit, lesson):
 
     if terminal == 'xfce4-terminal':
         os.system('{} -e "{} {}"'.format(terminal, editor,
-                  '{}/{}/lesson-{}.tex'.format(
+                  '{}/lectures/lec-{}.tex'.format(
                     current_course,
-                    unit,
                     lesson)))

@@ -59,12 +59,11 @@ def Main():
         projects.run_func_based_on_command(selected_command,
                                            projects.folders[index])
     elif args.lessons:
-        lesson = vl.ViewLessons()
-        key, index, selected = utils.rofi('Select Lesson', lesson.options,
-                                          lesson.rofi_options)
-        utils.open_file(lesson.terminal, lesson.editor, lesson.current_course,
-                        lesson.lesson_units[index],
-                        lesson.lesson_numbers[index])
+        lecture = vl.ViewLectures()
+        key, index, selected = utils.rofi('Select Lesson', lecture.options,
+                                          lecture.rofi_options)
+        utils.open_file(lecture.terminal, lecture.editor,
+                        lecture.current_course, lecture.lecture_numbers[index])
 
 
 if __name__ == "__main__":

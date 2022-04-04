@@ -16,18 +16,19 @@ class Basis(object):
 
         # Assign the data to the variables
         self.code_dir = self.data['code_dir']
+        self.editor = self.data['editor']
         self.viewer = self.data['viewer']
         self.terminal = self.data['terminal']
         self.notes_dir = self.data['notes_dir']
         self.root = self.data['root']
         self.current_course = self.data['current_course']
         self.projects_dir = self.data['projects_dir']
-        self.source_lessons_location = self.data['source_lessons_location']
+        self.source_lectures_location = self.data['source_lessons_location']
         self.unit_info_name = self.data['unit_info_name']
         self.new_chap = self.data['new_chap']
         self.home = self.data['home']
         self.user = self.data['user']
-        self.lesson_regex = r'\\lesson\{(.*?)\}\{(.*?)\}\{(.*?)\}\{(.*?)\}'
+        self.lecture_regex = r'lesson\{(.*?)\}\{(.*?)\}\{(.*)\}'
         self.rofi = Rofi()
         self.LESSON_RANGE_NUMBER = self.data['LESSON_RANGE_NUMBER']
         self.rofi_options = self.data['rofi_options']
