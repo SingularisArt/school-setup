@@ -124,3 +124,22 @@ class Projects(Basis):
             utils.delete(project_name, self.projects_dir, self.rofi_options)
         elif command == '<span color="yellow">Exit</span>':
             sys.exit()
+
+
+def main():
+    projects = Projects()
+
+    key, index, selected = utils.rofi('Select project',
+                                      projects.options,
+                                      projects.rofi_options)
+
+    key_command, index_command, \
+        selected_command = utils.rofi(
+                                      'Select command for the ' +
+                                      '{} project'.format(
+                                         projects.folders[index]),
+                                      projects.commands,
+                                      projects.rofi_options)
+
+    projects.run_func_based_on_command(selected_command,
+                                       projects.folders[index])

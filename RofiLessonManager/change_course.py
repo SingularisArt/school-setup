@@ -33,3 +33,12 @@ class ChangeCourse(RofiLessonManager.Basis):
                 raise e
 
         return titles
+
+
+def main():
+    course = ChangeCourse()
+
+    key, index, selected = utils.rofi('Select Class', course.titles,
+                                      course.rofi_options)
+    utils.create_symlink_class(course.current_course,
+                               course.classes[index])
