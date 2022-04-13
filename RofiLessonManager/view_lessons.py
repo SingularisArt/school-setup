@@ -15,7 +15,7 @@ class ViewLectures(Basis):
     def __init__(self):
         """ Initialize the class """
 
-        Basis().__init__()
+        Basis.__init__(self)
 
         self.folders_head, self.folders_tail = utils.get_all_folders(
             self.current_course, self.discourage_folders)

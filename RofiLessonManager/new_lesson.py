@@ -40,6 +40,8 @@ class NewLesson(Basis):
         rofi = Rofi()
 
         lec_number = rofi.integer_entry('Enter Lecture Number')
+        if not lec_number:
+            exit(1)
         lec_path = '{}/lectures/lec-{}.tex'.format(self.current_course,
                                                    lec_number)
         if os.path.exists(lec_path):
@@ -55,9 +57,11 @@ class NewLesson(Basis):
                 return
 
         lec_name = rofi.text_entry('Enter Lecture Name')
+        if not lec_name:
+            exit(1)
 
-        with open('{}/lectures/lec-{}.tex'.format(self.current_course,
-                                                  lec_number), 'w') as file:
+        with open('{}/lectures/lec-{}.tex'.format(
+                self.current_course, lec_number), 'w') as file:
             file.write(self.template(lec_number, lec_name))
 
 
