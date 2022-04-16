@@ -2,6 +2,7 @@
 
 echo "Removing config.yaml ..."
 
+source ~/.config/zsh/exports.zsh
 true > config.yaml
 
 echo "Adding configuration template ..."
@@ -11,10 +12,12 @@ editor: nvim
 viewer: zathura
 terminal: xfce4-terminal
 notes_dir: ${HOME}/Documents/school-notes
-root: ${HOME}/Documents/school-notes/Grade-10/semester-2
+root: ${ROOT}
 current_course: ${HOME}/Documents/school-notes/current-course
 source_lessons_location: ${HOME}/Documents/school-notes/current-course/source-lessons.tex
 projects_dir: ${HOME}/Documents/school-notes/projects
+assignments_dir: ${HOME}/Documents/school-notes/current-course/assignments
+assignments_folder: ${HOME}/Documents/school-notes/current-course/assignments/latex-files
 unit_info_name: unit-info.tex
 new_chap: False
 home: ${HOME}
@@ -42,3 +45,8 @@ discourage_folders:
   - .git
   - media
   - current-course" >> config.yaml
+  
+
+mkdir -p ~/.config/lesson-manager/
+rm -rf ~/.config/lesson-manager/config.yaml
+cp $(pwd)/config.yaml ~/.config/lesson-manager/config.yaml

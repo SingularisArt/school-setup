@@ -28,7 +28,6 @@ def chapter(project_name, projects_dir, rofi_options):
                                 project_path + '/chapters',
                                 f))])[-1][4:-4]) + 1
 
-    print('{}/chapters/chap{}.tex'.format(project_path, chap_number))
     with open('{}/chapters/chap{}.tex'.format(project_path, chap_number), 'w'):
         pass
 
@@ -41,7 +40,5 @@ def chapter(project_name, projects_dir, rofi_options):
 
     if answer == options[0]:
         # Open the new chapter
-        print('xfce4-terminal -e "nvim {}/chapters/chap{}.tex"'.format(
-              project_path, chap_number))
         os.system('xfce4-terminal -e "nvim {}/chapters/chap{}.tex"'.format(
             project_path, chap_number))

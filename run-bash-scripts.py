@@ -33,7 +33,6 @@ class Scripts(Basis):
         ]
 
         self.file_to_run = self.ask_user_for_which_script_to_run()
-        print(self.file_to_run)
 
     def ask_user_for_which_script_to_run(self):
         _, index, _ = utils.rofi('Select Which program to run',

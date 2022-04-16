@@ -20,3 +20,4 @@ from RofiLessonManager.utils.open_notes import open_notes
 from RofiLessonManager.utils.open_pdf import open_pdf
 from RofiLessonManager.utils.open_source import open_source
 from RofiLessonManager.utils.rofi import rofi
+from RofiLessonManager.utils.is_today import is_today

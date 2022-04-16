@@ -2,6 +2,8 @@
 A simple gui interface for managing my school notes.
 """
 
+import difflib
+import os
 from rofi import Rofi
 
 import RofiLessonManager.utils as utils
@@ -23,6 +25,25 @@ class Basis(object):
         self.root = self.data['root']
         self.current_course = self.data['current_course']
         self.projects_dir = self.data['projects_dir']
+        self.assignments_dir = self.data['assignments_dir']
+        self.assignments_folder = self.data['assignments_folder']
+        self.yaml_extensions = ['.yaml', '.yml']
+        self.assignments = []
+        self.yaml_files = []
+
+        for file in os.listdir(self.assignments_folder):
+            if os.path.isfile(os.path.join(self.assignments_folder, file)):
+                if os.path.splitext(file)[1] == '.tex':
+                    self.assignments.append(file)
+
+        for file in os.listdir(self.assignments_folder):
+            if os.path.isfile(os.path.join(self.assignments_folder, file)):
+                if os.path.splitext(file)[1] in self.yaml_extensions:
+                    self.yaml_files.append(file)
+
+        self.assignments = sorted(self.assignments)
+        self.yaml_files = sorted(self.yaml_files)
+
         self.source_lectures_location = self.data['source_lessons_location']
         self.unit_info_name = self.data['unit_info_name']
         self.new_chap = self.data['new_chap']
@@ -34,3 +55,18 @@ class Basis(object):
         self.rofi_options = self.data['rofi_options']
         self.tex_types = self.data['tex_types']
         self.discourage_folders = self.data['discourage_folders']
+        self.placeholder = self.get_placeholder()
+
+    def get_placeholder(self):
+        placeholder = ''
+
+        # Get the placeholder
+        for i, s in enumerate(difflib.ndiff(self.notes_dir, self.root)):
+            if s[0] == '+':
+                placeholder += s[-1]
+
+        # Remove the / from the beginning
+        placeholder = placeholder[1:]
+
+        # Return the placeholder
+        return placeholder
