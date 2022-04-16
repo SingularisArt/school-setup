@@ -20,6 +20,7 @@ class ViewAssignments(Basis):
         self.assignments_name, self.assignments_due_dates, \
             self.assignments_submitted = self.get_assignment_info()
         self.options = self.get_assignments_ready_to_be_viewed()
+        self.second_options = ['View Assignment', 'View Assignment Info']
 
     def get_assignment_info(self):
         """
@@ -68,8 +69,8 @@ class ViewAssignments(Basis):
             assignment_number = assignment_number[5:-4]
             fancy_assignment_style = ''
 
-            logo = self.check_if_assignment_is_due(assignment_due_date,
-                                                   assignment_submitted)
+            logo, due_date_formatted = self.check_if_assignment_is_due(
+                    assignment_due_date, assignment_submitted)
 
             if not assignment_submitted:
                 fancy_assignment_style = \
@@ -77,12 +78,11 @@ class ViewAssignments(Basis):
                     "<b><span color='blue'>{title: <{fill}}</span>" \
                     "</b> <i><span color='yellow' size='smaller'> Due By: " \
                     "{date: <{fill}}</span></i> <i><span color='red'>" \
-                    "Submitted: {submitted}</span></i>".format(
-                        fill=23,
+                    "Submitted: No</span></i>".format(
+                        fill=24,
                         number=assignment_number,
                         title=assignment_name,
-                        date=assignment_due_date + logo,
-                        submitted=assignment_submitted
+                        date=due_date_formatted + logo,
                     )
             else:
                 fancy_assignment_style = \
@@ -91,10 +91,10 @@ class ViewAssignments(Basis):
                     "</b> <i><span color='yellow' size='smaller'> Due By: " \
                     "{date: <{fill}}</span></i> <i><span color='green'>" \
                     "Submitted: Yes</span></i>".format(
-                        fill=23,
+                        fill=24,
                         number=assignment_number,
                         title=assignment_name,
-                        date=assignment_due_date,
+                        date=due_date_formatted,
                     )
 
             options.append(fancy_assignment_style)
@@ -123,7 +123,13 @@ class ViewAssignments(Basis):
             days = int((assignment_date - now).days) + 1
             logo = ' (DAYS: {})'.format(days)
 
-        return logo
+        assignment_due_date_formatted = '{} {} ({})'.format(
+            assignment_date.strftime('%b'),
+            assignment_date.strftime('%d'),
+            assignment_date.strftime('%a')
+        )
+
+        return logo, assignment_due_date_formatted
 
 
 def main():
@@ -135,8 +141,17 @@ def main():
                                       assignment.rofi_options)
     assignment_file = assignment.assignments[index]
 
-    utils.open_file('xfce4-terminal', 'nvim', assignment.assignments_folder,
-                    assignment_file, type='assignment')
+    second_key, second_index, second_selected = utils.rofi(
+            'Which One', assignment.second_options, assignment.rofi_options)
+
+    if second_selected == 'View Assignment':
+        utils.open_file('xfce4-terminal', 'nvim',
+                        assignment.assignments_folder,
+                        assignment_file, type='assignment')
+    else:
+        utils.open_file('xfce4-terminal', 'nvim',
+                        assignment.assignments_folder,
+                        assignment.yaml_files[index], type='assignment')
 
 
 if __name__ == "__main__":
