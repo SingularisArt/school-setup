@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import datetime
+import os
 import yaml
 
 from RofiLessonManager import Basis as Basis
@@ -69,7 +69,7 @@ class ViewAssignments(Basis):
             assignment_number = assignment_number[5:-4]
             fancy_assignment_style = ''
 
-            logo, due_date_formatted = self.check_if_assignment_is_due(
+            logo, due_date_formatted = utils.check_if_assignment_is_due(
                     assignment_due_date, assignment_submitted)
 
             if not assignment_submitted:
@@ -101,36 +101,6 @@ class ViewAssignments(Basis):
 
         return options
 
-    def check_if_assignment_is_due(self, assignment_due_date,
-                                   assignment_submitted):
-        now = datetime.datetime.now()
-        assignment_date = datetime.datetime.strptime(assignment_due_date,
-                                                     '%m-%d-%y')
-        logo = ''
-
-        # Check if the assignment is due today
-        if now.date() == assignment_date.date():
-            logo = ' (TODAY)'
-        # Check if the assignment is due tomorrow
-        elif now.date() + datetime.timedelta(days=1) == \
-                assignment_date.date():
-            logo = ' (TOMORROW)'
-        # Check if the assignment is due in the past
-        elif now.date() > assignment_date.date() and \
-                not assignment_submitted:
-            logo = ' (LATE)'
-        else:
-            days = int((assignment_date - now).days) + 1
-            logo = ' (DAYS: {})'.format(days)
-
-        assignment_due_date_formatted = '{} {} ({})'.format(
-            assignment_date.strftime('%b'),
-            assignment_date.strftime('%d'),
-            assignment_date.strftime('%a')
-        )
-
-        return logo, assignment_due_date_formatted
-
 
 def main():
     """ This function will run the program """
@@ -143,6 +113,8 @@ def main():
 
     second_key, second_index, second_selected = utils.rofi(
             'Which One', assignment.second_options, assignment.rofi_options)
+
+    os.chdir(assignment.assignments_folder)
 
     if second_selected == 'View Assignment':
         utils.open_file('xfce4-terminal', 'nvim',

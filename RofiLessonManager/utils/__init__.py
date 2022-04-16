@@ -1,4 +1,6 @@
 from RofiLessonManager.utils.chapter import chapter
+from RofiLessonManager.utils.check_if_assignment_is_due import \
+    check_if_assignment_is_due
 from RofiLessonManager.utils.copy_pdf import copy_pdf
 from RofiLessonManager.utils.create_symlink_class import create_symlink_class
 from RofiLessonManager.utils.delete import delete

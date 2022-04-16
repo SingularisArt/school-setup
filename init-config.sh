@@ -14,7 +14,7 @@ terminal: xfce4-terminal
 notes_dir: ${HOME}/Documents/school-notes
 root: ${ROOT}
 current_course: ${HOME}/Documents/school-notes/current-course
-source_lessons_location: ${HOME}/Documents/school-notes/current-course/source-lessons.tex
+source_lessons_location: ${HOME}/Documents/school-notes/current-course/source-lectures.tex
 projects_dir: ${HOME}/Documents/school-notes/projects
 assignments_dir: ${HOME}/Documents/school-notes/current-course/assignments
 assignments_folder: ${HOME}/Documents/school-notes/current-course/assignments/latex-files

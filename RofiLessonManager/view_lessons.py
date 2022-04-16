@@ -115,6 +115,9 @@ def main():
 
     key, index, selected = utils.rofi('Select Lesson', lecture.options,
                                       lecture.rofi_options)
+
+    os.chdir(lecture.current_course + '/lectures')
+
     utils.open_file(lecture.terminal, lecture.editor,
                     lecture.current_course, lecture.lecture_numbers[index])
 
