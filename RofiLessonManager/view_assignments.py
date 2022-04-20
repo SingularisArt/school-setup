@@ -20,7 +20,11 @@ class ViewAssignments(Basis):
         self.assignments_name, self.assignments_due_dates, \
             self.assignments_submitted = self.get_assignment_info()
         self.options = self.get_assignments_ready_to_be_viewed()
-        self.second_options = ['View Assignment', 'View Assignment Info']
+        self.second_options = [
+                '<span color="yellow">View Assignment</span>',
+                '<span color="yellow">View Assignment Yaml</span>',
+                '<span color="yellow">View Assignment PDF</span>'
+                              ]
 
     def get_assignment_info(self):
         """
@@ -72,30 +76,27 @@ class ViewAssignments(Basis):
             logo, due_date_formatted = utils.check_if_assignment_is_due(
                     assignment_due_date, assignment_submitted)
 
+            color = 'green'
+            submit = 'Yes'
+
             if not assignment_submitted:
-                fancy_assignment_style = \
-                    "<span color='red'>{number: >2}</span>. " \
-                    "<b><span color='blue'>{title: <{fill}}</span>" \
-                    "</b> <i><span color='yellow' size='smaller'> Due By: " \
-                    "{date: <{fill}}</span></i> <i><span color='red'>" \
-                    "Submitted: No</span></i>".format(
-                        fill=24,
-                        number=assignment_number,
-                        title=assignment_name,
-                        date=due_date_formatted + logo,
-                    )
-            else:
-                fancy_assignment_style = \
-                    "<span color='red'>{number: >2}</span>. " \
-                    "<b><span color='blue'>{title: <{fill}}</span>" \
-                    "</b> <i><span color='yellow' size='smaller'> Due By: " \
-                    "{date: <{fill}}</span></i> <i><span color='green'>" \
-                    "Submitted: Yes</span></i>".format(
-                        fill=24,
-                        number=assignment_number,
-                        title=assignment_name,
-                        date=due_date_formatted,
-                    )
+                color = 'red'
+                submit = 'No'
+                due_date_formatted += logo
+
+            fancy_assignment_style = \
+                "<span color='red'>{number: >2}</span>. " \
+                "<b><span color='blue'>{title: <{fill}}</span>" \
+                "</b> <i><span color='yellow' size='smaller'> Due By: " \
+                "{date: <{fill}}</span></i> <i><span color='{color}'>" \
+                "Submitted: {submit}</span></i>".format(
+                    fill=24,
+                    number=assignment_number,
+                    title=assignment_name,
+                    date=due_date_formatted,
+                    color=color,
+                    submit=submit
+                )
 
             options.append(fancy_assignment_style)
 
@@ -116,14 +117,17 @@ def main():
 
     os.chdir(assignment.assignments_folder)
 
-    if second_selected == 'View Assignment':
+    if second_selected == assignment.second_options[0]:
         utils.open_file('xfce4-terminal', 'nvim',
                         assignment.assignments_folder,
                         assignment_file, type='assignment')
-    else:
+    elif second_selected == assignment.second_options[1]:
         utils.open_file('xfce4-terminal', 'nvim',
                         assignment.assignments_folder,
                         assignment.yaml_files[index], type='assignment')
+    elif second_selected == assignment.second_options[2]:
+        os.system('zathura {}/{}'.format(assignment.assignments_pdf_folder,
+                  assignment.pdf_files[index]))
 
 
 if __name__ == "__main__":

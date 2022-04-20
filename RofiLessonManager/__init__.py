@@ -27,9 +27,11 @@ class Basis(object):
         self.projects_dir = self.data['projects_dir']
         self.assignments_dir = self.data['assignments_dir']
         self.assignments_folder = self.data['assignments_folder']
+        self.assignments_pdf_folder = self.assignments_dir + '/pdf-files'
         self.yaml_extensions = ['.yaml', '.yml']
         self.assignments = []
         self.yaml_files = []
+        self.pdf_files = []
 
         for file in os.listdir(self.assignments_folder):
             if os.path.isfile(os.path.join(self.assignments_folder, file)):
@@ -41,8 +43,14 @@ class Basis(object):
                 if os.path.splitext(file)[1] in self.yaml_extensions:
                     self.yaml_files.append(file)
 
+        for file in os.listdir(self.assignments_pdf_folder):
+            if os.path.isfile(os.path.join(self.assignments_pdf_folder, file)):
+                if os.path.splitext(file)[1] == '.pdf':
+                    self.pdf_files.append(file)
+
         self.assignments = sorted(self.assignments)
         self.yaml_files = sorted(self.yaml_files)
+        self.pdf_files = sorted(self.pdf_files)
 
         self.source_lectures_location = self.data['source_lessons_location']
         self.unit_info_name = self.data['unit_info_name']
