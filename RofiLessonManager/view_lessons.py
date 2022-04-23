@@ -64,7 +64,7 @@ class ViewLectures(Basis):
 
         # Iterate through a possible range of lectures
         for lecture_number in range(self.LESSON_RANGE_NUMBER):
-            lecture = '{}/lec-{}.tex'.format(self.units_head[0],
+            lecture = '{}/lec-{}.tex'.format(self.current_course + '/lectures',
                                              lecture_number)
 
             # If the lecture exists
