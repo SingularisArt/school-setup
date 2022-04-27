@@ -67,41 +67,43 @@ class ViewLectures(Basis):
             lecture = '{}/lec-{}.tex'.format(self.current_course + '/lectures',
                                              lecture_number)
 
-            # If the lecture exists
-            if os.path.isfile(lecture):
-                # Opening the file
-                with open(lecture, encoding='utf8'):
-                    # Getting the first line
-                    first_line = self.get_first_line(lecture)
-                    try:
-                        # Performing regex on the first line to get the needed
-                        # information
-                        lecture_match = re.search(self.lecture_regex,
-                                                  first_line)
+            # If the lecture doesn't exist, just continue
+            if not os.path.isfile(lecture):
+                continue
+            # If it does, open it and parse the needed information
+            with open(lecture, encoding='utf8'):
+                # Getting the first line
+                first_line = self.get_first_line(lecture)
+                try:
+                    # Performing regex on the first line to get the needed
+                    # information
+                    lecture_match = re.search(self.lecture_regex,
+                                              first_line)
 
-                        # Getting the needed information into variables
-                        lecture_number = lecture_match.group(1)
-                        lecture_date = lecture_match.group(2)
-                        lecture_name = lecture_match.group(3)
+                    # Getting the needed information into variables
+                    lecture_number = lecture_match.group(1)
+                    lecture_date = lecture_match.group(2)
+                    lecture_name = utils.generate_short_title(
+                            lecture_match.group(3))
 
-                        # Appending the information to the lists
-                        lecture_numbers.append(lecture_number)
-                        lecture_dates.append(lecture_date)
-                        lecture_names.append(lecture_name)
+                    # Appending the information to the lists
+                    lecture_numbers.append(lecture_number)
+                    lecture_dates.append(lecture_date)
+                    lecture_names.append(lecture_name)
 
-                        # Appending the options to the list
-                        options.append(
-                            "<span color='red'>{number: >2}</span>. "
-                            "<b><span color='blue'>{title: <{fill}}</span>"
-                            "</b> <i><span color='yellow' size='smaller'>"
-                            "{date}</span></i>".format(
-                                fill=35,
-                                number=lecture_number,
-                                title=lecture_name,
-                                date=lecture_date,
-                            ))
-                    except Exception:
-                        pass
+                    # Appending the options to the list
+                    options.append(
+                        "<span color='red'>{number: >2}</span>. "
+                        "<b><span color='blue'>{title: <{fill}}</span>"
+                        "</b> <i><span color='yellow' size='smaller'>"
+                        "{date}</span></i>".format(
+                            fill=35,
+                            number=lecture_number,
+                            title=lecture_name,
+                            date=lecture_date,
+                        ))
+                except Exception:
+                    pass
 
         # Returning the variables
         return options, lecture_numbers, lecture_dates, \

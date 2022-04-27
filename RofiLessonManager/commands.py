@@ -44,13 +44,13 @@ class SourceLectures(Basis):
 
     def get_last_two_lectures(self):
         """
-        This function gets the last two lectures
+        This function will get the last two lectures
 
         Returns:
-            last_lec (str): The last lecture (lec-X.tex)
-            sec_lec (str): The second last lecture (lec-X.tex OR None)
+            last_lec (str): The last lecture
+            sec_lec (str): The second last lecture. If the second last lecture
+                doesn't exist, it will return None
         """
-
         # Iterate through a possible range of lectures
         for i in reversed(range(self.LESSON_RANGE_NUMBER)):
             # If that lecture exists, we're going to make it our last lecture

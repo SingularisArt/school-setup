@@ -1,3 +1,5 @@
 config.yaml
 RofiLessonManager/utils/__pycache__
 RofiLessonManager/__pycache__
+credentials.json
+token.pickle

@@ -13,6 +13,13 @@ class ChangeCourse(RofiLessonManager.Basis):
         self.classes = sorted(utils.get_classes(self.root))
         self.titles = sorted(self.get_titles())
 
+    def activate(self, index):
+        if index == -1:
+            return
+
+        utils.create_symlink_class(self.current_course,
+                                   self.classes[index])
+
     def get_titles(self):
         titles = []
         file_info = ''

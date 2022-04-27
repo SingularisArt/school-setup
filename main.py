@@ -3,7 +3,7 @@
 
 import argparse
 
-from RofiLessonManager import Basis as Basis
+import RofiLessonManager.countdown as co
 import RofiLessonManager.view_assignments as va
 import RofiLessonManager.new_assignment as na
 import RofiLessonManager.change_course as cc
@@ -17,6 +17,8 @@ import RofiLessonManager.view_lessons as vl
 def Main():
     parser = argparse.ArgumentParser(description='Lesson Manager')
 
+    parser.add_argument('-co', '--countdown',
+                        help='When the next class starts', action='store_true')
     parser.add_argument('-na', '--new-assignment',
                         help='Create new assignment', action='store_true')
     parser.add_argument('-va', '--view-assignments',
@@ -36,6 +38,8 @@ def Main():
 
     args = parser.parse_args()
 
+    if args.countdown:
+        co.main()
     if args.new_assignment:
         na.main()
     if args.view_assignments:

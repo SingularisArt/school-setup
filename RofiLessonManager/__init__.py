@@ -17,6 +17,7 @@ class Basis(object):
         self.data = utils.load_data()
 
         # Assign the data to the variables
+        self.calendar_id = self.data['calendar_id']
         self.code_dir = self.data['code_dir']
         self.editor = self.data['editor']
         self.viewer = self.data['viewer']

@@ -4,6 +4,7 @@ from RofiLessonManager.utils.check_if_assignment_is_due import \
 from RofiLessonManager.utils.copy_pdf import copy_pdf
 from RofiLessonManager.utils.create_symlink_class import create_symlink_class
 from RofiLessonManager.utils.delete import delete
+from RofiLessonManager.utils.generate_short_title import generate_short_title
 from RofiLessonManager.utils.get_all_folders import get_all_folders
 from RofiLessonManager.utils.get_all_lessons import get_all_lessons
 from RofiLessonManager.utils.get_all_units import get_all_units

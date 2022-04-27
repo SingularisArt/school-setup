@@ -7,7 +7,8 @@ true > config.yaml
 
 echo "Adding configuration template ..."
 
-echo "code_dir: $(pwd)
+echo "calendar_id: primary
+code_dir: $(pwd)
 editor: nvim
 viewer: zathura
 terminal: xfce4-terminal
