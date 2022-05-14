@@ -23,12 +23,15 @@ def chapter(project_name, projects_dir, rofi_options):
                                   project_folder_name)
 
     # Get the last chapter number and then increment it by one
-    chap_number = int(sorted([f for f in os.listdir(project_path + '/chapters')
-                             if os.path.isfile(os.path.join(
-                                project_path + '/chapters',
-                                f))])[-1][4:-4]) + 1
+    try:
+        chap_number = int(sorted([f for f in os.listdir(
+            project_path + '/chapters')
+            if os.path.isfile(os.path.join(
+                project_path + '/chapters', f))])[-1][4:-4]) + 1
+    except Exception:
+        chap_number = 1
 
-    with open('{}/chapters/chap{}.tex'.format(project_path, chap_number), 'w'):
+    with open('{}/chapters/chap-{}.tex'.format(project_path, chap_number), 'w'):
         pass
 
     # Ask if the user wants to open the new chapter
@@ -40,5 +43,5 @@ def chapter(project_name, projects_dir, rofi_options):
 
     if answer == options[0]:
         # Open the new chapter
-        os.system('xfce4-terminal -e "nvim {}/chapters/chap{}.tex"'.format(
+        os.system('xfce4-terminal -e "nvim {}/chapters/chap-{}.tex"'.format(
             project_path, chap_number))

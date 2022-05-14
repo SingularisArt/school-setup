@@ -23,21 +23,27 @@ def check_if_assignment_is_due(assignment_due_date, assignment_submitted):
     assignment_date = datetime.datetime.strptime(assignment_due_date,
                                                  '%m-%d-%y')
     logo = ''
+    late = True
 
     # Check if the assignment is due today
     if now.date() == assignment_date.date():
         logo = ' (TODAY)'
+        late = True
     # Check if the assignment is due tomorrow
     elif now.date() + datetime.timedelta(days=1) == \
             assignment_date.date():
         logo = ' (TOMORROW)'
+        late = True
     # Check if the assignment is due in the past
     elif now.date() > assignment_date.date() and \
             not assignment_submitted:
-        logo = ' (LATE)'
+        days = abs(int((assignment_date - now).days) + 1)
+        logo = ' ({} DAYS LATE)'.format(days)
+        late = True
     else:
         days = int((assignment_date - now).days) + 1
-        logo = ' (DAYS: {})'.format(days)
+        logo = ' ({} DAYS LEFT)'.format(days)
+        late = False
 
     assignment_due_date_formatted = '{} {} ({})'.format(
         assignment_date.strftime('%b'),
@@ -45,4 +51,4 @@ def check_if_assignment_is_due(assignment_due_date, assignment_submitted):
         assignment_date.strftime('%a')
     )
 
-    return logo, assignment_due_date_formatted
+    return logo, assignment_due_date_formatted, late

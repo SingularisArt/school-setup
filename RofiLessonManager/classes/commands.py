@@ -20,9 +20,10 @@ import os
 
 from RofiLessonManager import Basis as Basis
 from RofiLessonManager import utils as utils
+from RofiLessonManager.classes.lectures import Lectures as Lectures
 
 
-class SourceLectures(Basis):
+class Commands(Basis):
     """
     This class will source the lectures.
     """
@@ -51,6 +52,7 @@ class SourceLectures(Basis):
             sec_lec (str): The second last lecture. If the second last lecture
                 doesn't exist, it will return None
         """
+
         # Iterate through a possible range of lectures
         for i in reversed(range(self.LESSON_RANGE_NUMBER)):
             # If that lecture exists, we're going to make it our last lecture
@@ -73,7 +75,9 @@ class SourceLectures(Basis):
                 break
 
     def source_current_lecture(self):
-        """ This function will source the last lecture """
+        """
+        This function will source the last lecture
+        """
 
         with open(self.source_lectures_location, 'w') as source_lectures_file:
             last_lec, _ = self.get_last_two_lectures()
@@ -82,7 +86,9 @@ class SourceLectures(Basis):
                                        last_lec + '}\n')
 
     def source_last_two_lectures(self):
-        """ This function will source the last two lectures """
+        """
+        This function will source the last two lectures
+        """
 
         with open(self.source_lectures_location, 'w') as source_lectures_file:
             last_lec, sec_lec = self.get_last_two_lectures()
@@ -96,7 +102,9 @@ class SourceLectures(Basis):
                                        last_lec + '}\n')
 
     def source_all_lectures(self):
-        """ This function will source all of the lectures """
+        """
+        This function will source all of the lectures
+        """
 
         with open(self.source_lectures_location, 'w') as source_lectures_file:
             # Iterate through a possible range of lectures
@@ -131,7 +139,9 @@ class SourceLectures(Basis):
                                                lec + '}\n')
 
     def check_selection(self):
-        """ This function will check the selection """
+        """
+        This function will check the selection
+        """
 
         if self.selected == self.options[0]:
             self.source_current_lecture()
@@ -141,23 +151,3 @@ class SourceLectures(Basis):
             self.source_all_lectures()
         else:
             self.source_range(self.selected)
-
-
-def main():
-    """ This function will run the program """
-
-    lecture = SourceLectures()
-
-    _, _, selected = utils.rofi('Select Option (You can specify a range: 2-4)',
-                                lecture.options,
-                                ['-scroll-method', 1,
-                                 '-lines', 5,
-                                 '-markup-rows'])
-
-    lecture.selected = selected
-
-    lecture.check_selection()
-
-
-if __name__ == "__main__":
-    main()
