@@ -1,3 +1,23 @@
+#!/usr/bin/env python3
+
+"""
+Function rofi:
+    - RofiLessonManager.utils.rofi
+
+    Run rofi with the given prompt and options.
+
+    Args:
+        - prompt (str): The prompt to display.
+        - options (list): A list of options to display.
+        - rofi_args (list): A list of arguments to pass to rofi. (default: [])
+        - fuzzy (bool): Whether to use fuzzy matching. (default: True)
+
+    Returns:
+        - key (int): The status code of the rofi process.
+        - index (int): The index of the selected option.
+        - selected (str): The selected option.
+"""
+
 import subprocess
 
 
@@ -6,15 +26,15 @@ def rofi(prompt, options, rofi_args=[], fuzzy=True):
     Run rofi with the given prompt and options.
 
     Args:
-        prompt (str): The prompt to display.
-        options (list): A list of options to display.
-        rofi_args (list): A list of arguments to pass to rofi. (default: [])
-        fuzzy (bool): Whether to use fuzzy matching. (default: True)
+        - prompt (str): The prompt to display.
+        - options (list): A list of options to display.
+        - rofi_args (list): A list of arguments to pass to rofi. (default: [])
+        - fuzzy (bool): Whether to use fuzzy matching. (default: True)
 
     Returns:
-        key (int): The status code of the rofi process.
-        index (int): The index of the selected option.
-        selected (str): The selected option.
+        - key (int): The status code of the rofi process.
+        - index (int): The index of the selected option.
+        - selected (str): The selected option.
     """
 
     optionstr = '\n'.join(option.replace('\n', ' ') for option in options)

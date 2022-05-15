@@ -1,3 +1,16 @@
+#!/usr/bin/env python3
+
+"""
+Function open_notes:
+    - RofiLessonManager.utils.open_notes
+
+    This function opens the notes of the project.
+
+    Args:
+        - project_name (str): The name of the project.
+        - projects_dir (str): The path to the projects directory.
+"""
+
 import os
 
 
@@ -6,8 +19,8 @@ def open_notes(project_name, projects_dir):
     This function opens the notes of the project.
 
     Args:
-        project_name (str): The name of the project.
-        projects_dir (str): The path to the projects directory.
+        - project_name (str): The name of the project.
+        - projects_dir (str): The path to the projects directory.
     """
 
     # Replace spaces with - and make it lowercase

@@ -1,3 +1,24 @@
+#!/usr/bin/env python3
+
+"""
+Function open_file:
+    - RofiLessonManager.utils.open_file
+
+    Opens the lesson file in the wanted terminal with the wanted editor.
+
+    Args:
+        - terminal (str): The terminal to use: Supported Terminals:
+            - 'gnome-terminal'
+            - 'xfce4-terminal'
+        - editor (str): The editor to use.
+        - current_course (str): The current course.
+        - unit (str): The unit.
+        - lesson (str): The lesson number.
+        - type (str): The type of the file:
+            - lecture (default): The lecture file.
+            - assignment: The assignment file.
+"""
+
 import os
 
 
@@ -6,16 +27,16 @@ def open_file(terminal, editor, current_course, lesson, type='lecture'):
     Opens the lesson file in the wanted terminal with the wanted editor.
 
     Args:
-        terminal (str): The terminal to use: Supported Terminals:
+        - terminal (str): The terminal to use: Supported Terminals:
             - 'gnome-terminal'
             - 'xfce4-terminal'
-        editor (str): The editor to use.
-        current_course (str): The current course.
-        unit (str): The unit.
-        lesson (str): The lesson number.
-        type (str): The type of the file:
-            lecture (default): The lecture file.
-            assignment: The assignment file.
+        - editor (str): The editor to use.
+        - current_course (str): The current course.
+        - unit (str): The unit.
+        - lesson (str): The lesson number.
+        - type (str): The type of the file:
+            - lecture (default): The lecture file.
+            - assignment: The assignment file.
     """
 
     if terminal == 'xfce4-terminal':

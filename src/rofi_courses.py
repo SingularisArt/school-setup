@@ -1,4 +1,4 @@
-from RofiLessonManager.classes.courses import Courses as Courses
+from RofiLessonManager.courses import Courses as Courses
 from RofiLessonManager import utils as utils
 
 

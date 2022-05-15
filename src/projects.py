@@ -1,6 +1,6 @@
 import sys
 
-from RofiLessonManager.classes.projects import Projects as Projects
+from RofiLessonManager.projects import Projects as Projects
 import RofiLessonManager.utils as utils
 
 

@@ -1,3 +1,19 @@
+#!/usr/bin/env python3
+
+"""
+Function chapter:
+    - RofiLessonManager.utils.chapter
+
+    This function creates a new chapter.
+    It then asks the user if they want to open the new chapter in the
+    text editor.
+
+    Args:
+        - project_name (str): The name of the project.
+        - projects_dir (str): The path to the projects directory.
+        - rofi_options (list): The rofi options.
+"""
+
 import os
 
 from RofiLessonManager.utils.rofi import rofi
@@ -10,9 +26,9 @@ def chapter(project_name, projects_dir, rofi_options):
     text editor.
 
     Args:
-        project_name (str): The name of the project.
-        projects_dir (str): The path to the projects directory.
-        rofi_options (list): The rofi options.
+        - project_name (str): The name of the project.
+        - projects_dir (str): The path to the projects directory.
+        - rofi_options (list): The rofi options.
     """
 
     # Replace spaces with - and make it lowercase
@@ -31,7 +47,8 @@ def chapter(project_name, projects_dir, rofi_options):
     except Exception:
         chap_number = 1
 
-    with open('{}/chapters/chap-{}.tex'.format(project_path, chap_number), 'w'):
+    with open('{}/chapters/chap-{}.tex'.format(
+            project_path, chap_number), 'w'):
         pass
 
     # Ask if the user wants to open the new chapter

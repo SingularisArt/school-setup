@@ -1,9 +1,9 @@
 from rofi import Rofi
 
-import RofiLessonManager.utils as utils
-from RofiLessonManager.classes.courses import Courses as Courses
 from RofiLessonManager import Basis as Basis
-from RofiLessonManager.classes.courses import Course as Course
+from RofiLessonManager.courses import Course as Course
+from RofiLessonManager.courses import Courses as Courses
+import RofiLessonManager.utils as utils
 
 
 def main():

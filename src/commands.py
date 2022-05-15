@@ -1,5 +1,5 @@
-from RofiLessonManager.classes.commands import Commands as Commands
-from RofiLessonManager.classes.lectures import Lectures as Lectures
+from RofiLessonManager.commands import Commands as Commands
+from RofiLessonManager.lectures import Lectures as Lectures
 import RofiLessonManager.utils as utils
 
 

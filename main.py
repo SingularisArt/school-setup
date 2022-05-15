@@ -3,13 +3,13 @@
 
 import argparse
 
-import RofiLessonManager.src.view_assignments as va
-import RofiLessonManager.src.rofi_courses as rc
-import RofiLessonManager.src.change_path as ch
-import RofiLessonManager.src.commands as cm
-import RofiLessonManager.src.projects as pr
-import RofiLessonManager.src.rofi_lectures as rl
-import RofiLessonManager.src.new_course as nc
+import src.view_assignments as va
+import src.rofi_courses as rc
+import src.change_path as ch
+import src.commands as cm
+import src.projects as pr
+import src.rofi_lectures as rl
+import src.new_course as nc
 
 
 def main():

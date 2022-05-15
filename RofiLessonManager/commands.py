@@ -1,35 +1,88 @@
 #!/usr/bin/env python3
 
 """
-Author: Hashem A. Damrah
-Date: Mar 06 2022 Sun (02:29:21)
+This module contains the RofiLessonManager.commands.Commands class.
 
-OPTIONS:
-    Current Lectures: This one will ask the user to select a unit. Then,
-        from that unit, the program will source the last lecture.
+Class Commands:
+    - RofiLessonManager.commands.Commands
 
-    Last Two Lectures: This one will ask the user to select a unit.
-        Then, from that unit, the program will source the two lectures.
+    This class inherits from the RofiLessonManager.Basis class.
 
-    All Lectures: This one will just source all of the lectures.
+    This class is used to source lectures. It asks the user the amount of
+    lectures they would like to select: current, last two, all, or a range.
 
-    Range of Lectures: This one will source a range of lectures.
+    Attributes:
+        - options (list): Options for the user to select from.
+        - index (int): The index of the selected options.
+        - selected (str): The selected option.
+
+    Methods:
+        - get_last_two_lectures: This function will get the last two lectures.
+
+            Returns:
+                - last_lec (str): The last lecture.
+                - sec_lec (str): The second last lecture. If the second last
+                    lecture doesn't exist, it will return None.
+
+        - source_current_lecture: This function will source the last lecture.
+
+        - source_last_two_lectures: This function will source the last two
+            lectures.
+
+        - source_all_lectures: This function will source all of the lectures.
+
+        - source_range: This function will source a range of lectures.
+
+            Args:
+                - lecture_range (str): The range of lectures to source
+                    (ex: 1-5)
+
+        - check_selection: This function will check the selection.
 """
 
 import os
 
 from RofiLessonManager import Basis as Basis
-from RofiLessonManager import utils as utils
-from RofiLessonManager.classes.lectures import Lectures as Lectures
 
 
 class Commands(Basis):
     """
-    This class will source the lectures.
+    This class inherits from the RofiLessonManager.Basis class.
+
+    This class is used to source lectures. It asks the user the amount of
+    lectures they would like to select: current, last two, all, or a range.
+
+    Attributes:
+        - options (list): Options for the user to select from.
+        - index (int): The index of the selected options.
+        - selected (str): The selected option.
+
+    Methods:
+        - get_last_two_lectures: This function will get the last two lectures.
+
+            Returns:
+                - last_lec (str): The last lecture.
+                - sec_lec (str): The second last lecture. If the second last
+                    lecture doesn't exist, it will return None.
+
+        - source_current_lecture: This function will source the last lecture.
+
+        - source_last_two_lectures: This function will source the last two
+            lectures.
+
+        - source_all_lectures: This function will source all of the lectures.
+
+        - source_range: This function will source a range of lectures.
+
+            Args:
+                - lecture_range (str): The range of lectures to source
+                    (ex: 1-5)
+
+        - check_selection: This function will check the selection.
     """
 
     def __init__(self):
-        """ Initialize the class """
+        """ Initialize the class. """
 
         Basis.__init__(self)
 
@@ -45,12 +98,12 @@ class Commands(Basis):
 
     def get_last_two_lectures(self):
         """
-        This function will get the last two lectures
+        This function will get the last two lectures.
 
         Returns:
-            last_lec (str): The last lecture
-            sec_lec (str): The second last lecture. If the second last lecture
-                doesn't exist, it will return None
+            - last_lec (str): The last lecture.
+            - sec_lec (str): The second last lecture. If the second last
+                lecture doesn't exist, it will return None.
         """
 
         # Iterate through a possible range of lectures
@@ -75,9 +128,7 @@ class Commands(Basis):
                 break
 
     def source_current_lecture(self):
-        """
-        This function will source the last lecture
-        """
+        """ This function will source the last lecture. """
 
         with open(self.source_lectures_location, 'w') as source_lectures_file:
             last_lec, _ = self.get_last_two_lectures()
@@ -86,9 +137,7 @@ class Commands(Basis):
                                        last_lec + '}\n')
 
     def source_last_two_lectures(self):
-        """
-        This function will source the last two lectures
-        """
+        """ This function will source the last two lectures. """
 
         with open(self.source_lectures_location, 'w') as source_lectures_file:
             last_lec, sec_lec = self.get_last_two_lectures()
@@ -102,9 +151,7 @@ class Commands(Basis):
                                        last_lec + '}\n')
 
     def source_all_lectures(self):
-        """
-        This function will source all of the lectures
-        """
+        """ This function will source all of the lectures. """
 
         with open(self.source_lectures_location, 'w') as source_lectures_file:
             # Iterate through a possible range of lectures
@@ -120,10 +167,10 @@ class Commands(Basis):
 
     def source_range(self, lecture_range):
         """
-        This function will source a range of lectures
+        This function will source a range of lectures.
 
         Args:
-            lecture_range (str): The range of lectures to source (ex: 1-5)
+            - lecture_range (str): The range of lectures to source (ex: 1-5)
         """
 
         range_list = lecture_range.split('-')
@@ -139,9 +186,7 @@ class Commands(Basis):
                                                lec + '}\n')
 
     def check_selection(self):
-        """
-        This function will check the selection
-        """
+        """ This function will check the selection. """
 
         if self.selected == self.options[0]:
             self.source_current_lecture()

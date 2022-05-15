@@ -19,7 +19,8 @@ master_file: ${HOME}/Documents/school-notes/current-course/master.tex
 source_lessons_location: ${HOME}/Documents/school-notes/current-course/source-lectures.tex
 projects_dir: ${HOME}/Documents/school-notes/projects
 assignments_dir: ${HOME}/Documents/school-notes/current-course/assignments
-assignments_folder: ${HOME}/Documents/school-notes/current-course/assignments/latex-files
+assignments_latex_folder: ${HOME}/Documents/school-notes/current-course/assignments/latex-files
+assignments_pdf_folder: ${HOME}/Documents/school-notes/current-course/assignments/pdf-files
 unit_info_name: unit-info.tex
 new_chap: False
 home: ${HOME}

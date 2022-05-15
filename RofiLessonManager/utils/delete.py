@@ -1,3 +1,15 @@
+"""
+Function delete:
+    - RofiLessonManager.utils.delete
+
+    Delete the project.
+
+    Args:
+        - project_name (str): The name of the project.
+        - projects_dir (str): The path to the projects directory.
+        - rofi_options (list): The rofi options.
+"""
+
 import os
 
 from RofiLessonManager.utils import rofi
@@ -8,9 +20,9 @@ def delete(project_name, projects_dir, rofi_options):
     Delete the project.
 
     Args:
-        project_name (str): The name of the project.
-        projects_dir (str): The path to the projects directory.
-        rofi_options (list): The rofi options.
+        - project_name (str): The name of the project.
+        - projects_dir (str): The path to the projects directory.
+        - rofi_options (list): The rofi options.
     """
 
     # Ask for confirmation

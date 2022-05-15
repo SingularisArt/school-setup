@@ -1,9 +1,313 @@
+#!/usr/bin/env python3
+
 """
-A simple gui interface for managing my school notes.
+Module RofiLessonManager -- Module for managing my school notes.
+
+Class Assignment:
+    - RofiLessonManager.Assignment
+
+    This class inherits from the RofiLessonManager.Basis class.
+
+    This class is used to hold information about a specific assignment.
+    For example: Assignment(path-to-assignment). Then, it has all the
+    information on that assignment from the assignment's yaml file,
+    respectively.
+
+    Args:
+        - path (str): The path to the assignment.
+
+    Attributes:
+        - path (str): The path to the assignment.
+        - name (str): The name of the assignment, which is the name of the
+            file.
+        - info (json): The information from the yaml file.
+
+Class Assignments:
+    - RofiLessonManager.Assignments
+
+    This class inherits from the RofiLessonManager.Basis class.
+    This class inherits from the list class.
+
+    This class holds a list of all the assignments, which are located in the
+    assignments folder, which can be modified from the config.yaml file. Each
+    assignment is an instance from the
+    RofiLessonManager.assignments.Assignment.
+
+    Attributes:
+        - names (list): A list of names for all the assignments.
+        - rofi_names (list): A list of names for rofi to display.
+        - second_options (list): The commands for Rofi to display for the user
+            to select.
+
+    Methods:
+        - read_files: Reads all the files in the assignments folder and returns
+            a list of Assignment objects.
+
+            Returns:
+                - assignments (list): A list of Assignment objects.
+
+        - get_rofi_names: Returns a list of names for rofi to display.
+
+            Returns:
+                - options (list): A list of names for rofi to display.
+
+        - __len__: Gets the number of assignments.
+
+            Returns:
+                - int: The number of assignments.
+
+Class Basis:
+    - RofiLessonManager.Basis
+
+    All the classes within this module inherit from this class.
+    It has all the basic information, which comes from the config.yaml file.
+
+    Attributes:
+        - data (json): The data from the config.yaml file, stored in json
+            format.
+        - calendar_id (str): The google calendar id.
+        - code_dir (str): The location of the code directory.
+        - editor (str): The text editor to use when opening lectures and
+            assignments.
+        - viewer (str): The pdf viewer to use when opening notes and
+            assignments.
+        - terminal (str): The terminal to use when opening the pdf viewer and
+            editor.
+        - notes_dir (str): The head location of the notes.
+        - root (str): The location to the folder, which stores all my class
+            notes for each term.
+        - current_course (pathlib.Path): The location to the current course,
+            which is a symlink to the root folder.
+        - master_file (str): The location to the master.tex file.
+        - projects_dir (str): The location to the projects folder.
+        - assignments_dir (str): The location to the assignments folder, which
+            is located in the current course.
+        - assignments_latex_folder (str): The location to the folder where the
+            LaTex source code is stored for the assignments.
+        - assignments_pdf_folder (str): The location to the folder where the
+            pdf files are stored for the assignments.
+        - yaml_extensions (list): The extensions of the yaml files.
+        - source_lectures_location (str): The location to the file where all
+            the lectures are sourced.
+        - home (str): The location to the home folder.
+        - user (str): The name of the user.
+        - lecture_regex (str): The regex, which is used to parse the needed
+            information about each lecture.
+        - rofi (rofi.Rofi): The rofi object, which is used to display the
+            options.
+        - LESSON_RANGE_NUMBER (int): A number, which is used in a for loop
+            range to check if the lecture exists or not.
+        - rofi_options (list): The arguments in a list, which are passed to the
+            rofi object.
+        - tex_types (list): The types of tex files.
+        - discourage_folders (list): The folders to ignore.
+        - placeholder (str): The placeholder, which is used when the user wants
+            to replace the root folder.
+        - date_format (str): The format of the date.
+
+    Methods:
+        - get_placeholder: Gets the current location to my classes, which will
+            then be used as a placeholder for asking the user to enter a new
+            location.
+
+            Returns:
+                - placeholder (str): The current location to my classes.
+
+Class Commands:
+    - RofiLessonManager.commands.Commands
+
+    This class inherits from the RofiLessonManager.Basis class.
+
+    This class is used to source lectures. It asks the user the amount of
+    lectures they would like to select: current, last two, all, or a range.
+
+    Attributes:
+        - options (list): Options for the user to select from.
+        - index (int): The index of the selected options.
+        - selected (str): The selected option.
+
+    Methods:
+        - get_last_two_lectures: This function will get the last two lectures.
+
+            Returns:
+                - last_lec (str): The last lecture.
+                - sec_lec (str): The second last lecture. If the second last
+                    lecture doesn't exist, it will return None.
+
+        - source_current_lecture: This function will source the last lecture.
+
+        - source_last_two_lectures: This function will source the last two
+            lectures.
+
+        - source_all_lectures: This function will source all of the lectures.
+
+        - source_range: This function will source a range of lectures.
+
+            Args:
+                - lecture_range (str): The range of lectures to source
+                    (ex: 1-5)
+
+        - check_selection: This function will check the selection.
+
+Class Lecture:
+    - RofiLessonManager.Lecture
+
+    This class inherits from the RofiLessonManager.Basis class.
+
+    This class is used to hold information about a specific lecture. For
+    example: Lecture(path-to-lecture). Then, it has all the information on that
+    lecture from the lecture's yaml file, respectively.
+
+    Attributes:
+        - file_path (str): Path to the lecture file.
+        - date_str (str): Date of the lecture as a string.
+        - date (datetime.datetime): Date of the lecture as a datetime object.
+        - week (int): Number of week when the lecture notes were written.
+        - number (int): Number of the lecture.
+        - title (str): Title of the lecture.
+        - rofi_title (str): Title of the lecture as a fancy string for rofi.
+
+    Args:
+        - file_path (str): Path to the lecture file.
+
+    Methods:
+        - edit: Edits the lecture.
+
+        - __str__: Returns the lecture as a string.
+
+            Returns:
+                - str: Lecture as a string.
+
+        - __eq__: Checks if two lectures are equal.
+
+            Args:
+                - other (Lecture): Lecture to compare with.
+
+            Returns:
+                - bool: True if equal, False otherwise.
+
+Class Lectures:
+    - RofiLessonManager.Lectures
+
+    This class inherits from the RofiLessonManager.Basis class.
+    This class inherits from the List class.
+
+    This class holds a list of all the lectures, which are located in the
+    lectures folder, which can be modified from the config.yaml file. Each
+    lecture is an instance from the RofiLessonManager.lectures.Lecture class.
+
+    Attributes:
+        - rofi_titles (list): List of titles for rofi.
+        - titles (list): List of titles.
+
+    Args:
+        - file_path (str): Path to the lecture file.
+
+    Methods:
+        - read_files: Reads all the lecture files and returns a list of Lecture
+            objects.
+
+            Returns:
+                - list: List of Lecture objects.
+
+        - compile_master: Compiles the master file.
+
+            Returns:
+                - int: 0 if successful, 1 otherwise.
+
+        - __len__: Gets the number of lectures.
+
+            Returns:
+                - int: Number of lectures.
+
+Class Path:
+    - RofiLessonManager.path.Path
+
+    This class inherits from the RofiLessonManager.Basis class.
+
+    This class is used to change the current root path, which is the path to
+    all the classes.
+
+    Attributes:
+        - theme (json): The theme, which will be passed to rofi. It has the
+            placeholder in it.
+        - path (str): The current root path.
+
+    Methods:
+        - get_path: Get the current path.
+
+            Returns:
+                - str: The current path.
+
+        - replace_path: Replace the current path with the new path.
+
+        - __str__: Return the string representation of the class.
+
+            Returns:
+                - str: The string representation of the class.
+
+Class Project:
+    - RofiLessonManager.projects.Project
+
+    This class inherits from the RofiLessonManager.Basis class.
+
+    This class is used to hold information about a specific project. For
+    example: Project(path-to-project). Then, it has all the information on that
+    project from the project's yaml file, respectively.
+
+    Attributes:
+        - path (str): The path to the project.
+        - name (str): The name of the project.
+        - chapters (list): A list of chapters.
+
+    Args:
+        - path (str): The path to the project.
+
+    Methods:
+        - get_chapters: Returns a list of chapters.
+
+            Returns:
+                - list: A list of chapters.
+
+        - add_chapter: Adds a chapter to the project.
+
+            Args:
+                - n (int): The chapter number.
+
+        - remove_chapter: Removes a chapter from the project.
+
+            Args:
+                - n (int): The chapter number.
+
+Class Projects:
+    - RofiLessonManager.projects.Projects
+
+    This class inherits from the RofiLessonManager.Basis class.
+    This class inherits from the list class.
+
+    This class holds a list of all the projects, which are located in the
+    projects folder, which can be modified from the config.yaml file. Each
+    project is an instance from the RofiLessonManager.projects.Project.
+
+    Attributes:
+        - names (list): A list of project names.
+        - rofi_names (list): A list of project names formatted for rofi.
+        - commands (list): A list of commands for the user to choose from.
+
+    Methods:
+        - read_files: This function reads the files in the projects directory.
+
+            Returns:
+                - list: A list of Project objects for each project.
+
+        - run_func_based_on_command: This function runs the function based on
+            the command.
+
+            Args:
+                - command (str): The command.
+                - project_name (str): The name of the project.
 """
 
-import difflib
-import os
 from rofi import Rofi
 from pathlib import Path
 
@@ -12,69 +316,63 @@ import RofiLessonManager.utils as utils
 
 class Basis(object):
     """
-    This is the basis class for all of the other classes.
-    It has all of the default variables and methods.
+    All the classes within this module inherit from this class.
+    It has all the basic information, which comes from the config.yaml file.
 
     Attributes:
-        data:                       The data from the config file.
-        calendar_id:                The primary calendar id.
-        code_dir:                   The directory where the source code is
-                                        located.
-        editor:                     The text editor that I will use to open
-                                        files and folders.
-        viewer:                     The pdf viewer that I will use to open
-                                        pdf files.
-        terminal:                   The terminal that I'll use to open the
-                                        text editor with.
-        notes_dir:                  The master directory where I store my
-                                        notes.
-        root:                       The directory where I store my class notes.
-        current_course:             The directory where I store my current
-                                        course symlink.
-        projects_dir:               The directory where I store my projects.
-        assignments_dir:            The directory where I store my assignments.
-        assignments_folder:         The directory where I store my latex
-                                        assignments.
-        assignments_pdf_folder:     The directory where I store my pdf.
-                                        assignments.
-        yaml_extensions:            The extensions that I use for my yaml
-                                        files.
-        assignments:                The list of assignments that I have.
-        yaml_files:                 The list of yaml files that I have.
-        pdf_files:                  The list of pdf files that I have.
-        source_lectures_location:   The location where I store my source
-                                        lectures file.
-        unit_info_name:             The name of the unit info file.
-        new_chap:                   Variable that stores if there is a new
-                                        chapter or not.
-        home:                       The home directory of the user.
-        user:                       The user that is logged in.
-        lecture_regex:              The regex that I use to find the lecture
-                                        information from the lecture files.
-        rofi:                       The rofi object that I use to display my
-                                        options.
-        LESSON_RANGE_NUMBER:        The number of lessons that I check for.
-        rofi_options:               The list that I pass to rofi for its
-                                        configuration.
-        tex_types:                  The list of tex types that I use.
-        discourage_folders:         The list of folders that I don't want
-                                        to show.
-        placeholder:                The placeholder that I use when I change
-                                        root directory.
+        - data (json): The data from the config.yaml file, stored in json
+            format.
+        - calendar_id (str): The google calendar id.
+        - code_dir (str): The location of the code directory.
+        - editor (str): The text editor to use when opening lectures and
+            assignments.
+        - viewer (str): The pdf viewer to use when opening notes and
+            assignments.
+        - terminal (str): The terminal to use when opening the pdf viewer and
+            editor.
+        - notes_dir (str): The head location of the notes.
+        - root (str): The location to the folder, which stores all my class
+            notes for each term.
+        - current_course (pathlib.Path): The location to the current course,
+            which is a symlink to the root folder.
+        - master_file (str): The location to the master.tex file.
+        - projects_dir (str): The location to the projects folder.
+        - assignments_dir (str): The location to the assignments folder, which
+            is located in the current course.
+        - assignments_latex_folder (str): The location to the folder where the
+            LaTex source code is stored for the assignments.
+        - assignments_pdf_folder (str): The location to the folder where the
+            pdf files are stored for the assignments.
+        - yaml_extensions (list): The extensions of the yaml files.
+        - source_lectures_location (str): The location to the file where all
+            the lectures are sourced.
+        - home (str): The location to the home folder.
+        - user (str): The name of the user.
+        - lecture_regex (str): The regex, which is used to parse the needed
+            information about each lecture.
+        - rofi (rofi.Rofi): The rofi object, which is used to display the
+            options.
+        - LESSON_RANGE_NUMBER (int): A number, which is used in a for loop
+            range to check if the lecture exists or not.
+        - rofi_options (list): The arguments in a list, which are passed to the
+            rofi object.
+        - tex_types (list): The types of tex files.
+        - discourage_folders (list): The folders to ignore.
+        - placeholder (str): The placeholder, which is used when the user wants
+            to replace the root folder.
+        - date_format (str): The format of the date.
 
     Methods:
-        -----------------------------------------------------------------------
-        | Gets the current location where I store my classes.                 |
-        |                                                                     |
-        | Returns:                                                            |
-        |   placeholder (str): The current location where I store my classes. |
-        -----------------------------------------------------------------------
+        - get_placeholder: Gets the current location to my classes, which will
+            then be used as a placeholder for asking the user to enter a new
+            location.
+
+            Returns:
+                - placeholder (str): The current location to my classes.
     """
 
     def __init__(self):
-        """
-        Initializes the class.
-        """
+        """ Initializes the class. """
 
         # Load the data from the config file
         self.data = utils.load_data()
@@ -92,35 +390,10 @@ class Basis(object):
         self.master_file = self.data['master_file']
         self.projects_dir = self.data['projects_dir']
         self.assignments_dir = self.data['assignments_dir']
-        self.assignments_folder = self.data['assignments_folder']
-        self.assignments_pdf_folder = self.assignments_dir + '/pdf-files'
+        self.assignments_latex_folder = self.data['assignments_latex_folder']
+        self.assignments_pdf_folder = self.data['assignments_pdf_folder']
         self.yaml_extensions = ['.yaml', '.yml']
-        self.assignments = []
-        self.yaml_files = []
-        self.pdf_files = []
-
-        for file in os.listdir(self.assignments_folder):
-            if os.path.isfile(os.path.join(self.assignments_folder, file)):
-                if os.path.splitext(file)[1] == '.tex':
-                    self.assignments.append(file)
-
-        for file in os.listdir(self.assignments_folder):
-            if os.path.isfile(os.path.join(self.assignments_folder, file)):
-                if os.path.splitext(file)[1] in self.yaml_extensions:
-                    self.yaml_files.append(file)
-
-        for file in os.listdir(self.assignments_pdf_folder):
-            if os.path.isfile(os.path.join(self.assignments_pdf_folder, file)):
-                if os.path.splitext(file)[1] == '.pdf':
-                    self.pdf_files.append(file)
-
-        self.assignments = sorted(self.assignments)
-        self.yaml_files = sorted(self.yaml_files)
-        self.pdf_files = sorted(self.pdf_files)
-
         self.source_lectures_location = self.data['source_lessons_location']
-        self.unit_info_name = self.data['unit_info_name']
-        self.new_chap = self.data['new_chap']
         self.home = self.data['home']
         self.user = self.data['user']
         self.lecture_regex = r'lesson\{(.*?)\}\{(.*?)\}\{(.*)\}'
@@ -134,21 +407,11 @@ class Basis(object):
 
     def get_placeholder(self):
         """
-        Gets the current location where I store my classes.
+        Gets the current location to my classes, which will then be used as a
+        placeholder for asking the user to enter a new location.
 
         Returns:
-            placeholder (str): The current location where I store my classes.
+            - placeholder (str): The current location to my classes.
         """
 
-        placeholder = ''
-
-        # Get the placeholder
-        for i, s in enumerate(difflib.ndiff(self.notes_dir, self.root)):
-            if s[0] == '+':
-                placeholder += s[-1]
-
-        # Remove the / from the beginning
-        placeholder = placeholder[1:]
-
-        # Return the placeholder
-        return placeholder
+        return self.current_course.readlink()

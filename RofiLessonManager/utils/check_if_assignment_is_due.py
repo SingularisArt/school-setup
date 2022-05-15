@@ -1,3 +1,25 @@
+#!/usr/bin/env python3
+
+"""
+Function check_if_assignment_is_due:
+    - RofiLessonManager.utils.check_if_assignment_is_due
+
+    Checks if an assignment is due or not. If it is due, it returns either if
+    it' LATE, or if it's due TODAY, TOMORROW, or it returns the number of days
+    left until the assignment is due.
+
+    Args:
+        - assignment_due_date (str): The date the assignment is due.
+        - assignment_submitted (str): The assignment submitted (True/False).
+
+    Returns:
+        - str: Returns either:
+            - "LATE" if the assignment is late.
+            - "TODAY" if the assignment is due today.
+            - "TOMORROW" if the assignment is due tomorrow.
+            - "Days: X" if the assignment is due in X days.
+"""
+
 import datetime
 
 
@@ -8,11 +30,11 @@ def check_if_assignment_is_due(assignment_due_date, assignment_submitted):
     left until the assignment is due.
 
     Args:
-        assignment_due_date (str): The date the assignment is due.
-        assignment_submitted (str): The assignment submitted (True/False).
+        - assignment_due_date (str): The date the assignment is due.
+        - assignment_submitted (str): The assignment submitted (True/False).
 
     Returns:
-        str: Returns either:
+        - str: Returns either:
             - "LATE" if the assignment is late.
             - "TODAY" if the assignment is due today.
             - "TOMORROW" if the assignment is due tomorrow.

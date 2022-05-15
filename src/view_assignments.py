@@ -1,7 +1,7 @@
 import os
 import sys
 
-from RofiLessonManager.classes.assignments import Assignments as Assignments
+from RofiLessonManager.assignments import Assignments as Assignments
 import RofiLessonManager.utils as utils
 
 
@@ -26,15 +26,15 @@ def main():
             assignment[index]),
         assignment.second_options, assignment.rofi_options)
 
-    os.chdir(assignment.assignments_folder)
+    os.chdir(assignment.assignments_latex_folder)
 
     if second_selected == assignment.second_options[0]:
         utils.open_file('xfce4-terminal', 'nvim',
-                        assignment.assignments_folder,
+                        assignment.assignments_latex_folder,
                         assignment_file, type='assignment')
     elif second_selected == assignment.second_options[1]:
         utils.open_file('xfce4-terminal', 'nvim',
-                        assignment.assignments_folder,
+                        assignment.assignments_latex_folder,
                         assignment.yaml_files[index], type='assignment')
     elif second_selected == assignment.second_options[2]:
         os.system('zathura {}/{}'.format(assignment.assignments_pdf_folder,

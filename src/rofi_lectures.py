@@ -1,6 +1,6 @@
 import os
 
-from RofiLessonManager.classes.lectures import Lectures as Lectures
+from RofiLessonManager.lectures import Lectures as Lectures
 from RofiLessonManager import utils as utils
 
 

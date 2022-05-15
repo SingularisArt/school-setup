@@ -1,12 +1,28 @@
+#!/usr/bin/env python3
+
+"""
+Function get_folder_status
+    - RofiLessonManager.utils.get_folder_status
+
+    Gets the status of each project.
+
+    Args:
+        - folder (str): The folder to get the status of.
+
+    Returns:
+        - str: The status of the folder. ('Incomplete', 'Complete', 'Unknown')
+"""
+
+
 def get_folder_status(folder):
     """
     Gets the status of each project.
 
     Args:
-        folder (str): The folder to get the status of.
+        - folder (str): The folder to get the status of.
 
     Returns:
-        str: The status of the folder. ('Incomplete', 'Complete', 'Unknown')
+        - str: The status of the folder. ('Incomplete', 'Complete', 'Unknown')
     """
 
     try:
