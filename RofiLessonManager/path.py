@@ -48,7 +48,7 @@ class Path(Basis):
         - path (str): The current root path.
 
     Methods:
-        - get_path: Get the current path.
+        - get_path: Ask the user for a new path.
 
             Returns:
                 - str: The current path.
@@ -70,21 +70,19 @@ class Path(Basis):
             'entry { placeholder: "' + self.placeholder + '"; ' + \
             'placeholder-color: grey; }'
 
-        self.path = self.get_path()
-        self.replace_path(self.placeholder, self.path)
-
     def get_path(self):
         """
-        Get the current path.
+        Ask the user for a new path.
 
         Returns:
             - str: The current path.
         """
 
         options = ['-theme-str', self.theme]
-        r = Rofi(rofi_args=options)
 
-        return r.text_entry('New Path')
+        r = Rofi()
+
+        return r.text_entry('New Path', rofi_args=options)
 
     def replace_path(self, placeholder, path):
         """ Replace the current path with the new path. """

@@ -23,6 +23,26 @@ Class Assignment:
             file.
         - info (json): The information from the yaml file.
 
+    Methods:
+        - edit_latex: Opens the tex file of the assignment.
+
+        - edit_yaml: Opens the yaml file of the assignment.
+
+        - open_pdf: Opens the pdf file of the assignment.
+
+        - __str__: Returns a string representation of the Assignment object.
+
+            Returns:
+                - str: A string representation of the Assignment object.
+
+        - __eq__: Checks if two lectures are equal.
+
+            Args:
+                - other (Lecture): Lecture to compare with.
+
+            Returns:
+                - bool: True if equal, False otherwise.
+
 Class Assignments:
     - RofiLessonManager.Assignments
 
@@ -84,6 +104,26 @@ class Assignment(Basis):
         - name (str): The name of the assignment, which is the name of the
             file.
         - info (json): The information from the yaml file.
+
+    Methods:
+        - edit_latex: Opens the tex file of the assignment.
+
+        - edit_yaml: Opens the yaml file of the assignment.
+
+        - open_pdf: Opens the pdf file of the assignment.
+
+        - __str__: Returns a string representation of the Assignment object.
+
+            Returns:
+                - str: A string representation of the Assignment object.
+
+        - __eq__: Checks if two lectures are equal.
+
+            Args:
+                - other (Lecture): Lecture to compare with.
+
+            Returns:
+                - bool: True if equal, False otherwise.
     """
 
     def __init__(self, path):
@@ -98,13 +138,57 @@ class Assignment(Basis):
 
         self.path = path
         self.name = os.path.basename(path)
+        self.number = self.name.replace(
+            'week-', '').replace('.yaml', '').replace('.tex', '')
         info_file_name = self.name.replace('tex', 'yaml')
         info = open('{}/{}'.format(self.assignments_latex_folder,
                                    info_file_name))
+        self.info_file = '{}/{}'.format(self.assignments_latex_folder,
+                                        info_file_name)
         self.info = yaml.load(info, Loader=yaml.FullLoader)
+        self.title = self.info['name']
+
+    def edit_latex(self):
+        """ Opens the tex file of the assignment. """
+
+        os.system('xfce4-terminal -e "nvim {}/week-{}.tex"'.format(
+            self.assignments_latex_folder, self.number))
+
+    def edit_yaml(self):
+        """ Opens the yaml file of the assignment. """
+
+        os.system('xfce4-terminal -e "nvim {}/week-{}.yaml"'.format(
+            self.assignments_latex_folder, self.number))
+
+    def open_pdf(self):
+        """ Opens the pdf file of the assignment. """
+
+        os.system('zathura {}/week-{}.pdf'.format(
+            self.assignments_pdf_folder, self.number))
 
     def __str__(self):
-        return '<Assignment: {}>'.format(self.name)
+        """
+        Returns a string representation of the Assignment object.
+
+        Returns:
+            - str: A string representation of the Assignment object.
+        """
+
+        return '<Assignment: {}. {} Due By: {}>'.format(self.number, self.name,
+                                                        self.info['due_date'])
+
+    def __eq__(self, other):
+        """
+        Checks if two lectures are equal.
+
+        Args:
+            - other (Lecture): Lecture to compare with.
+
+        Returns:
+            - bool: True if equal, False otherwise.
+        """
+
+        return self.number == other.number
 
 
 class Assignments(Basis, list):

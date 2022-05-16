@@ -1,10 +1,24 @@
+"""
+This file uses the RofiLessonManager.commands module to allow the user to
+select the amount of lectures that they would like to source.
+
+Either:
+    - The current lecture
+    - The last two lectures
+    - All the lectures
+    - A range of lectures
+"""
+
 from RofiLessonManager.commands import Commands as Commands
 from RofiLessonManager.lectures import Lectures as Lectures
 import RofiLessonManager.utils as utils
 
 
 def main():
-    """ This function will run the program """
+    """
+    This function will run the RofiLessonManager.commands module to allow the
+    user to select the amount of lectures that they would like to source.
+    """
 
     source_lectures = Commands()
 

@@ -1,3 +1,8 @@
+"""
+This file uses the RofiLessonManager.lectures module to help open and edit
+lectures.
+"""
+
 import os
 
 from RofiLessonManager.lectures import Lectures as Lectures
@@ -5,7 +10,7 @@ from RofiLessonManager import utils as utils
 
 
 def main():
-    """ This function will run the program """
+    """ This main function will open and edit the selected lecture. """
 
     lectures = Lectures()
 

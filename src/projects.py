@@ -1,3 +1,7 @@
+"""
+This file uses the RofiLessonManager.projects module to manage my projects.
+"""
+
 import sys
 
 from RofiLessonManager.projects import Projects as Projects
@@ -5,6 +9,8 @@ import RofiLessonManager.utils as utils
 
 
 def main():
+    """ Help manage the projects using RofiLessonManager.projects. """
+
     projects = Projects()
 
     key, index, selected = utils.rofi('Select project',
@@ -23,7 +29,7 @@ def main():
             projects.rofi_options)
 
     projects.run_func_based_on_command(selected_command,
-                                       projects[index].name)
+                                       index)
 
 
 if __name__ == "__main__":

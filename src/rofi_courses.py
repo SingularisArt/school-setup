@@ -1,3 +1,8 @@
+"""
+This file uses the RofiLessonManager.courses module to help switch between
+different courses.
+"""
+
 from RofiLessonManager.courses import Courses as Courses
 from RofiLessonManager import utils as utils
 

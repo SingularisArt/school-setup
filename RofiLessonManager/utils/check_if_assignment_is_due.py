@@ -14,10 +14,11 @@ Function check_if_assignment_is_due:
 
     Returns:
         - str: Returns either:
-            - "LATE" if the assignment is late.
+            - "X DAYS LATE" if the assignment is late.
+            - "YESTERDAY" if the assignment was due yesterday.
             - "TODAY" if the assignment is due today.
             - "TOMORROW" if the assignment is due tomorrow.
-            - "Days: X" if the assignment is due in X days.
+            - "X DAYS LEFT" if the assignment is due in X days.
 """
 
 import datetime
@@ -35,10 +36,11 @@ def check_if_assignment_is_due(assignment_due_date, assignment_submitted):
 
     Returns:
         - str: Returns either:
-            - "LATE" if the assignment is late.
+            - "X DAYS LATE" if the assignment is late.
+            - "YESTERDAY" if the assignment was due yesterday.
             - "TODAY" if the assignment is due today.
             - "TOMORROW" if the assignment is due tomorrow.
-            - "Days: X" if the assignment is due in X days.
+            - "X DAYS LEFT" if the assignment is due in X days.
     """
 
     now = datetime.datetime.now()
@@ -60,8 +62,12 @@ def check_if_assignment_is_due(assignment_due_date, assignment_submitted):
     elif now.date() > assignment_date.date() and \
             not assignment_submitted:
         days = abs(int((assignment_date - now).days) + 1)
-        logo = ' ({} DAYS LATE)'.format(days)
         late = True
+
+        if days == 1:
+            logo = ' (YESTERDAY)'
+        else:
+            logo = ' ({} DAYS LATE)'.format(days)
     else:
         days = int((assignment_date - now).days) + 1
         logo = ' ({} DAYS LEFT)'.format(days)

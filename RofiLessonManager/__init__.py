@@ -22,6 +22,26 @@ Class Assignment:
             file.
         - info (json): The information from the yaml file.
 
+    Methods:
+        - edit_latex: Opens the tex file of the assignment.
+
+        - edit_yaml: Opens the yaml file of the assignment.
+
+        - open_pdf: Opens the pdf file of the assignment.
+
+        - __str__: Returns a string representation of the Assignment object.
+
+            Returns:
+                - str: A string representation of the Assignment object.
+
+        - __eq__: Checks if two lectures are equal.
+
+            Args:
+                - other (Lecture): Lecture to compare with.
+
+            Returns:
+                - bool: True if equal, False otherwise.
+
 Class Assignments:
     - RofiLessonManager.Assignments
 
@@ -256,14 +276,34 @@ Class Project:
     project from the project's yaml file, respectively.
 
     Attributes:
-        - path (str): The path to the project.
-        - name (str): The name of the project.
-        - chapters (list): A list of chapters.
+        path (str): The path to the project.
+        chapters (list): A list of chapters.
+        info (dict): The project's info from the info.yaml file.
+        info_file (str): The path to the info.yaml file.
+        name (str): The name of the project.
+        status (str): The status of the project.
+        rofi_name (str): The name of the project for rofi.
 
     Args:
         - path (str): The path to the project.
 
     Methods:
+        - get_status: Returns the status of the project.
+
+            Returns:
+                str: The status of the project.
+
+        - open_pdf: Opens the project's pdf.
+
+        - open_source: Opens the project's source folder.
+
+        - open_notes: Opens the project's notes.
+
+        - open_chapter: Opens a chapter.
+
+            Args:
+                - n (int): The chapter number.
+
         - get_chapters: Returns a list of chapters.
 
             Returns:
@@ -276,8 +316,24 @@ Class Project:
 
         - remove_chapter: Removes a chapter from the project.
 
+        - source_chapter: Sources a chapter.
+
+        - copy_pdf_to_drive: Copies the project's pdf.
+
             Args:
-                - n (int): The chapter number.
+                - user (str): The user's name.
+
+        - mark_project: Marks a project.
+
+            Args:
+                - status (str): The status of the project.
+
+        - delete: Deletes the project.
+
+        - __str__: Returns a string representation of the project.
+
+            Returns:
+                str: A string representation of the project.
 
 Class Projects:
     - RofiLessonManager.projects.Projects
@@ -305,7 +361,50 @@ Class Projects:
 
             Args:
                 - command (str): The command.
-                - project_name (str): The name of the project.
+                - index (int): The index of the project.
+
+
+Function chapter:
+    - RofiLessonManager.utils.chapter
+
+    This function creates a new chapter.
+    It then asks the user if they want to open the new chapter in the
+    text editor.
+
+    Args:
+        - project_name (str): The name of the project.
+        - projects_dir (str): The path to the projects directory.
+        - rofi_options (list): The rofi options.
+
+Function check_if_assignment_is_due:
+    - RofiLessonManager.utils.check_if_assignment_is_due
+
+    Checks if an assignment is due or not. If it is due, it returns either if
+    it' LATE, or if it's due TODAY, TOMORROW, or it returns the number of days
+    left until the assignment is due.
+
+    Args:
+        - assignment_due_date (str): The date the assignment is due.
+        - assignment_submitted (str): The assignment submitted (True/False).
+
+    Returns:
+        - str: Returns either:
+            - "X DAYS LATE" if the assignment is late.
+            - "YESTERDAY" if the assignment was due yesterday.
+            - "TODAY" if the assignment is due today.
+            - "TOMORROW" if the assignment is due tomorrow.
+            - "X DAYS LEFT" if the assignment is due in X days.
+
+Function copy_pdf:
+    - RofiLessonManager.utils.copy_pdf
+
+    This function copies the pdf of the project to the flash drive
+
+    Args:
+        - project_name (str): The name of the project.
+        - projects_dir (str): The path to the projects directory.
+        - rofi_options (list): The options for the rofi menu.
+        - user (str): The user who is running the script.
 """
 
 from rofi import Rofi
@@ -414,4 +513,6 @@ class Basis(object):
             - placeholder (str): The current location to my classes.
         """
 
-        return self.current_course.readlink()
+        len_of_notes_dir = int(len(self.notes_dir)+1)
+
+        return self.root[len_of_notes_dir:]

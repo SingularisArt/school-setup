@@ -20,13 +20,13 @@ import os
 
 import RofiLessonManager.utils as utils
 
-def get_flash_drives(r, project_name, user):
+
+def get_flash_drives(user):
     """
     Get the flash drives that are connected to the laptop/pc/etc.
 
     Args:
-        - r (object): Rofi object.
-        - project_name (str): Name of the project.
+        - user (str): Username.
 
     Returns:
         - drives (list): List of drives.

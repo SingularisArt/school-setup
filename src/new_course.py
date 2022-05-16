@@ -1,3 +1,7 @@
+"""
+This file uses the RofiLessonManager.courses module to create a new course.
+"""
+
 from rofi import Rofi
 
 from RofiLessonManager import Basis as Basis
@@ -7,6 +11,8 @@ import RofiLessonManager.utils as utils
 
 
 def main():
+    """ This function creates a new course. """
+
     b = Basis()
     r = Rofi()
     name = r.text_entry('Course Name')
