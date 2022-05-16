@@ -71,8 +71,8 @@ def summary(text):
     return truncate(re.sub(r'X[0-9A-Za-z]+', '', text).strip(), 50)
 
 
-def gray(text):
-    return '%{F#999999}' + text + '%{F-}'
+def colored_text(text, color='#999999'):
+    return '%{F' + color + '}' + text + '%{F-}'
 
 
 def formatdd(begin, end):
@@ -82,26 +82,24 @@ def formatdd(begin, end):
         return '1 minute'
 
     if minutes < 60:
-        return f'{minutes} minutes'
+        return '{} minutes'.format(minutes)
 
     hours = math.floor(minutes/60)
     rest_minutes = minutes % 60
 
     if hours > 5 or rest_minutes == 0:
-        return f'{hours} hours'
+        return '{} hours'.format(hours)
+    if hours == 1:
+        return '1 hour and {} minutes'.format(rest_minutes)
 
-    return '{}:{:02d} hours'.format(hours, rest_minutes)
+    return '{} hours {:02d} minutes'.format(hours, rest_minutes)
 
 
 def location(text):
     if not text:
         return ''
-    match = re.search(r'\((.*)\)', text)
 
-    if not match:
-        return ''
-
-    return f'{gray("in")} {match.group(1)}'
+    return '{} {}'.format(colored_text("in"), text)
 
 
 def text(events, now):
@@ -111,9 +109,15 @@ def text(events, now):
     if not current:
         nxt = next((e for e in events if now <= e['start']), None)
         if nxt:
+            color_id = ''
+            try:
+                color_id = nxt['colorId']
+            except Exception:
+                color_id = 'None'
+
             return join(
-                summary(nxt['summary']),
-                gray('starts'),
+                get_color_from_id(color_id, summary(nxt['summary'])),
+                colored_text('starts'),
                 formatdd(now, nxt['start']),
                 location(nxt['location'])
             )
@@ -121,24 +125,37 @@ def text(events, now):
 
     nxt = next((e for e in events if e['start'] >= current['end']), None)
     if not nxt:
-        return join(gray('Ends in'), formatdd(now, current['end']) + '!')
+        return join(colored_text('Ends in'),
+                    formatdd(now, current['end']) + '!')
 
     if current['end'] == nxt['start']:
+        color_id = ''
+        try:
+            color_id = current['colorId']
+        except Exception:
+            color_id = 'None'
+
         return join(
-            gray('Ends in'),
-            formatdd(now, current['end']) + gray('.'),
-            gray('After this'),
-            summary(nxt['summary']),
+            colored_text('Ends in'),
+            formatdd(now, current['end']) + colored_text('.'),
+            colored_text('After this'),
+            get_color_from_id(color_id, summary(nxt['summary'])),
             location(nxt['location'])
         )
 
+    color_id = ''
+    try:
+        color_id = nxt['colorId']
+    except Exception:
+        color_id = 'None'
+
     return join(
-        gray('Ends in'),
-        formatdd(now, current['end']) + gray('.'),
-        gray('After this'),
-        summary(nxt['summary']),
+        colored_text('Ends in'),
+        formatdd(now, current['end']) + colored_text('.'),
+        colored_text('After this'),
+        get_color_from_id(color_id, summary(nxt['summary'])),
         location(nxt['location']),
-        gray('After a break of'),
+        colored_text('After a break of'),
         formatdd(current['end'], nxt['start'])
     )
 
@@ -156,7 +173,49 @@ def activate_course(event):
     courses.current = course
 
 
+def get_color_from_id(id, text):
+    """
+    Get color from id and text to colorize.
+
+    Args:
+        - id (int): color id (default: None)
+        - text (str): text to colorize
+
+    Returns:
+        - str: colorized text
+    """
+
+    color = ''
+
+    if not id:
+        color = '#4f86f7'
+    if id == '1':
+        color = '#dcd0ff'
+    if id == '2':
+        color = '#bcb88a'
+    if id == '3':
+        color = '#6f2da8'
+    if id == '4':
+        color = '#fc8eac'
+    if id == '5':
+        color = '#ffe135'
+    if id == '6':
+        color = '#f28500'
+    if id == '8':
+        color = '#251607'
+    if id == '9':
+        color = '#326872'
+    if id == '10':
+        color = '#626e60'
+    if id == '11':
+        color = '#ff6347'
+
+    return colored_text(text, color)
+
+
 def main():
+    """ Main function, which runs the program. """
+
     scheduler = sched.scheduler(time.time, time.sleep)
 
     print('Initializing')
@@ -177,6 +236,16 @@ def main():
     print('Searching for events')
 
     def get_events(calendar):
+        """
+        Get events from the calendar and return them as a list of dicts.
+
+        Args:
+            - calendar (str): The calendar to get events from.
+
+        Returns:
+            - list: A list of dicts containing the events.
+        """
+
         events_result = service.events().list(
             calendarId=calendar,
             timeMin=morning.isoformat(),
@@ -185,16 +254,29 @@ def main():
             orderBy='startTime'
         ).execute()
         events = events_result.get('items', [])
-        return [
-            {
-                'summary': event['summary'],
-                'location': event.get('location', None),
-                'start': parse(event['start']['dateTime']),
-                'end': parse(event['end']['dateTime'])
-            }
-            for event in events
-            if 'dateTime' in event['start']
-        ]
+        try:
+            return [
+                {
+                    'summary': event['summary'],
+                    'location': event.get('location', None),
+                    'colorId': event['colorId'],
+                    'start': parse(event['start']['dateTime']),
+                    'end': parse(event['end']['dateTime'])
+                }
+                for event in events
+                if 'dateTime' in event['start']
+            ]
+        except Exception:
+            return [
+                {
+                    'summary': event['summary'],
+                    'location': event.get('location', None),
+                    'start': parse(event['start']['dateTime']),
+                    'end': parse(event['end']['dateTime'])
+                }
+                for event in events
+                if 'dateTime' in event['start']
+            ]
 
     events = get_events(courses.calendar_id)
     print('Done')
@@ -202,6 +284,8 @@ def main():
     DELAY = 60
 
     def print_message():
+        """ Print the message. """
+
         now = datetime.datetime.now(tz=TZ)
         print(text(events, now))
         if now < evening:
@@ -218,6 +302,18 @@ def main():
 
 
 def wait_for_internet_connection(url, timeout=1):
+    """
+    Wait for internet connection to be available
+
+    Args:
+        - url (str): url to test
+        - timeout (int): timeout in seconds to wait for connection to begin
+            available (default: 1)
+
+    Returns:
+        - bool: True if connection is available, otherwise, keep trying
+    """
+
     while True:
         conn = httplib.HTTPConnection(url, timeout=5)
         try:
