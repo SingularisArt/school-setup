@@ -29,6 +29,8 @@ Class Assignment:
 
         - open_pdf: Opens the pdf file of the assignment.
 
+        - new: Creates a new assignment.
+
         - __str__: Returns a string representation of the Assignment object.
 
             Returns:

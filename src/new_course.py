@@ -15,7 +15,12 @@ def main():
 
     b = Basis()
     r = Rofi()
+
     name = r.text_entry('Course Name')
+
+    if not name:
+        return
+
     name = name.replace(' ', '-').replace('_', '-').lower()
 
     if '{}/{}'.format(b.root, name) in Courses().paths:

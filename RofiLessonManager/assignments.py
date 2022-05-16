@@ -30,6 +30,8 @@ Class Assignment:
 
         - open_pdf: Opens the pdf file of the assignment.
 
+        - new: Creates a new assignment.
+
         - __str__: Returns a string representation of the Assignment object.
 
             Returns:
@@ -79,7 +81,9 @@ Class Assignments:
 """
 
 
+from rofi import Rofi
 from glob import glob
+from natsort import natsorted
 import os
 import yaml
 
@@ -112,6 +116,8 @@ class Assignment(Basis):
 
         - open_pdf: Opens the pdf file of the assignment.
 
+        - new: Creates a new assignment.
+
         - __str__: Returns a string representation of the Assignment object.
 
             Returns:
@@ -137,6 +143,10 @@ class Assignment(Basis):
         Basis.__init__(self)
 
         self.path = path
+
+        if not os.path.exists(self.path):
+            self.new()
+
         self.name = os.path.basename(path)
         self.number = self.name.replace(
             'week-', '').replace('.yaml', '').replace('.tex', '')
@@ -163,8 +173,38 @@ class Assignment(Basis):
     def open_pdf(self):
         """ Opens the pdf file of the assignment. """
 
+        if not os.path.exists('zathura {}/week-{}.pdf'.format(
+            self.assignments_pdf_folder, self.number
+        )):
+            utils.error_message(
+                'No PDF file found for assignment number {}'.format(
+                    self.number))
+            exit(1)
+
         os.system('zathura {}/week-{}.pdf'.format(
             self.assignments_pdf_folder, self.number))
+
+    def new(self):
+        """ Creates a new assignment. """
+
+        rofi = Rofi()
+        title = rofi.text_entry('Title')
+        due_date = rofi.date_entry('Due Date (ex: 05-30-22)',
+                                   formats=['%m-%d-%y'])
+        due_date = due_date.strftime('%m-%d-%y')
+        _, _, selected = utils.rofi('Submitted', ['Yes', 'No'])
+
+        yaml_file = self.path.replace('.tex', '.yaml')
+
+        with open(self.path, 'x') as file:
+            pass
+        with open(yaml_file, 'x') as file:
+            pass
+
+        with open(yaml_file, 'w') as file:
+            file.write('name: {}\n'.format(title))
+            file.write('due_date: {}\n'.format(due_date))
+            file.write('submitted: {}\n'.format(selected))
 
     def __str__(self):
         """
@@ -180,10 +220,8 @@ class Assignment(Basis):
     def __eq__(self, other):
         """
         Checks if two lectures are equal.
-
         Args:
             - other (Lecture): Lecture to compare with.
-
         Returns:
             - bool: True if equal, False otherwise.
         """
@@ -249,8 +287,8 @@ class Assignments(Basis, list):
         """
 
         assignments = glob('{}/*.tex'.format(self.assignments_latex_folder))
-        return sorted((Assignment(a) for a in assignments),
-                      key=lambda a: a.name)
+        assignments = natsorted(assignments)
+        return [Assignment(a) for a in assignments]
 
     def get_rofi_names(self):
         """

@@ -77,6 +77,7 @@ Class Lectures:
 """
 
 
+from rofi import Rofi
 import os
 from datetime import datetime
 from glob import glob
@@ -139,6 +140,11 @@ class Lecture(Basis):
 
         Basis.__init__(self)
 
+        self.file_path = file_path
+
+        if not os.path.isfile(file_path):
+            self.new()
+
         with open(file_path) as f:
             for line in f:
                 lecture_match = re.search(self.lecture_regex, line)
@@ -150,7 +156,6 @@ class Lecture(Basis):
         week = utils.get_week(date)
         title = lecture_match.group(3)
 
-        self.file_path = file_path
         self.date_str = date_str
         self.date = date
         self.week = week
@@ -173,6 +178,26 @@ class Lecture(Basis):
 
         os.system('xfce4-terminal -e "nvim {}/lectures/lec-{}.tex"'.format(
             self.current_course, self.number))
+
+    def new(self):
+        """ Creates the lecture if it doesn't exist. """
+
+        # if os.path.isfile(self.file_path):
+        #     return
+
+        rofi = Rofi()
+        title = rofi.text_entry('Title')
+        date = datetime.now().strftime(self.date_format)
+        number = utils.filename2number(os.path.basename(self.file_path))
+
+        template = [fr'\lesson{{{number}}}{{{date}}}{{{title}}}',
+                    '',
+                    '',
+                    '',
+                    r'\newpage']
+
+        with open(self.file_path, 'w') as f:
+            f.write('\n'.join(template))
 
     def __str__(self):
         """
