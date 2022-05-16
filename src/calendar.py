@@ -1,5 +1,58 @@
 #!/usr/bin/python3
 
+"""
+This program gets the current events from Google Calendar and displays them.
+You can use this script to create a polybar module because I use different
+colors on different texts to work with polybar.
+
+Example:
+
+Ends in 25 minutes. After this, a break for 25 minutes. Then, Pre-Calculus II.
+Ends in 25 minutes. After this, Pre-Calculus II!
+Ends in 25 minutes.
+
+Function authenticate:
+    - src.calendar.authenticate
+
+    Authenticate with Google Calendar API.
+
+    Returns:
+        - service (object): authenticated service
+
+Function text:
+    - src.calendar.text
+    Generate text for the current events and the next events.
+
+    Args:
+        - events (list): list of events
+        - now (datetime): current time
+
+    Returns:
+        - str: text to display
+
+Function activate_course:
+    Activate the current course.
+
+    Args:
+        - event (dict): event to activate
+
+    Returns:
+        - bool: True if the course was activated, otherwise, False
+
+Function wait_for_internet_connection:
+    - src.calendar.wait_for_internet_connection
+
+    Wait for internet connection to be available
+
+    Args:
+        - url (str): url to test
+        - timeout (int): timeout in seconds to wait for connection to begin
+            available (default: 1)
+
+    Returns:
+        - bool: True if connection is available, otherwise, keep trying
+"""
+
 import pickle
 
 import os
@@ -27,6 +80,13 @@ courses = Courses()
 
 
 def authenticate():
+    """
+    Authenticate with Google Calendar API.
+
+    Returns:
+        - service (object): authenticated service
+    """
+
     print('Authenticating')
     # If modifying these scopes, delete the file token.pickle.
     SCOPES = ['https://www.googleapis.com/auth/calendar.readonly']
@@ -61,8 +121,8 @@ def text(events, now):
     Generate text for the current events and the next events.
 
     Args:
-        events (list): list of events
-        now (datetime): current time
+        - events (list): list of events
+        - now (datetime): current time
 
     Returns:
         - str: text to display
@@ -71,8 +131,15 @@ def text(events, now):
     current = next(
         (e for e in events if e['start'] < now and now < e['end']), None)
 
+    study_or_not_1 = ''
+    study_or_not_2 = ''
+
     if not current:
         nxt = next((e for e in events if now <= e['start']), None)
+        print(nxt['summary'])
+        study = re.search('(.+) Study', nxt['summary'])
+        print(study.group(1))
+
         if nxt:
             color_id = ''
             try:
@@ -80,19 +147,38 @@ def text(events, now):
             except Exception:
                 color_id = 'None'
 
-            return utils.join(
-                utils.get_color_from_id(
-                    color_id, utils.summary(nxt['summary'])),
-                utils.colored_text('starts'),
-                utils.formatdd(now, nxt['start']),
-                utils.location(nxt['location'])
-            )
+            if not study:
+                return utils.join(
+                    utils.get_color_from_id(
+                        color_id, utils.summary(nxt['summary'])),
+                    utils.colored_text('starts in'),
+                    utils.formatdd(now, nxt['start']),
+                    utils.location(nxt['location'])
+                )
+            else:
+                return utils.join(
+                    utils.colored_text('Study'),
+                    utils.get_color_from_id(
+                        color_id, study.group(1)),
+                    utils.colored_text('in'),
+                    utils.formatdd(now, nxt['start']),
+                )
         return ''
 
-    nxt = next((e for e in events if e['start'] >= current['end']), None)
+    study = re.search('(.+)Study(.+)', current['summary'])
+    print(study)
+
     if not nxt:
-        return utils.join(utils.colored_text('Ends in'),
-                          utils.formatdd(now, current['end']) + '!')
+        nxt = next((e for e in events if e['start'] >= current['end']), None)
+
+        if not study:
+            return utils.join(utils.colored_text('Ends in'),
+                              utils.formatdd(now, current['end']) + '!')
+        else:
+            return utils.join(utils.colored_text('Stop studying ' +
+                                                 utils.summary(
+                                                     current['summary'])),
+                              utils.formatdd(now, current['end']) + '!')
 
     if current['end'] == nxt['start']:
         color_id = ''
@@ -101,14 +187,30 @@ def text(events, now):
         except Exception:
             color_id = 'None'
 
-        return utils.join(
-            utils.colored_text('Ends in'),
+        lines = [
+            utils.colored_text(study_or_not_1),
             utils.formatdd(now, current['end']) + utils.colored_text('.'),
-            utils.colored_text('After this'),
-            utils.get_color_from_id(color_id, utils.summary(nxt['summary'])),
-            utils.colored_text('.'),
-            utils.location(nxt['location'])
-        )
+            utils.colored_text(study_or_not_2),
+            utils.get_color_from_id(color_id,
+                                    utils.summary(nxt['summary'])) + '.',
+        ]
+
+        if not study:
+            study_or_not_1 = 'Ends in'
+            study_or_not_2 = 'After this, '
+            lines = utils.join(lines)
+            return utils.join(
+                lines,
+                utils.location(nxt['location'])
+            )
+        else:
+            study_or_not_1 = 'Stop studying'
+            study_or_not_2 = 'Then, study'
+            lines = utils.join(lines)
+            return utils.join(
+                lines,
+                utils.location(nxt['location'])
+            )
 
     color_id = ''
     try:
@@ -116,15 +218,35 @@ def text(events, now):
     except Exception:
         color_id = 'None'
 
-    return utils.join(
-        utils.colored_text('Ends in'),
+    study_or_not_1 = ''
+    study_or_not_2 = ''
+
+    lines = [
+        utils.colored_text(study_or_not_1),
         utils.formatdd(now, current['end']) + utils.colored_text('.'),
-        utils.colored_text('After this'),
-        utils.get_color_from_id(color_id, utils.summary(nxt['summary'])) + '.',
-        utils.location(nxt['location']),
-        utils.colored_text('After a break of'),
+        utils.colored_text('After this, a break for'),
         utils.formatdd(current['end'], nxt['start']) + '.',
-    )
+        utils.colored_text(study_or_not_2),
+        utils.get_color_from_id(
+            color_id, utils.summary(nxt['summary'])) + '.',
+    ]
+
+    if not study:
+        study_or_not_1 = 'Ends in'
+        study_or_not_2 = 'After this, '
+        lines = utils.join(lines)
+        return utils.join(
+            lines,
+            utils.location(nxt['location']),
+        )
+    else:
+        study_or_not_1 = 'Stop studying'
+        study_or_not_2 = 'Then, study'
+        lines = utils.join(lines)
+        return utils.join(
+            lines,
+            utils.location(nxt['location']),
+        )
 
 
 def activate_course(event):
