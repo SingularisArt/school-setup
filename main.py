@@ -3,6 +3,7 @@
 
 import argparse
 
+import src.calendar as ca
 import src.change_path as cp
 import src.commands as cm
 import src.new_assignment as na
@@ -17,6 +18,8 @@ import src.rofi_lectures as rl
 def main():
     parser = argparse.ArgumentParser(description='Lesson Manager')
 
+    parser.add_argument('-ca', '--calendar',
+                        help='Parse google calendar', action='store_true')
     parser.add_argument('-cp', '--change-path',
                         help='Change path to classes', action='store_true')
     parser.add_argument('-cm', '--commands',
@@ -38,6 +41,8 @@ def main():
 
     args = parser.parse_args()
 
+    if args.calendar:
+        ca.main()
     if args.change_path:
         cp.main()
     elif args.commands:
