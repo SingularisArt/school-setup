@@ -27,6 +27,7 @@ def generate_short_title(title, MAX_LENGTH=36):
         - str: The shortened title.
     """
 
-    if len(title) > MAX_LENGTH:
-        title = title[:MAX_LENGTH - len(' ...')] + '...'
-    return title
+    ellipsis = ' ...'
+    if len(title) < MAX_LENGTH:
+        return title
+    return title[:MAX_LENGTH - len(ellipsis)] + ellipsis

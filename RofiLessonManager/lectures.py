@@ -268,12 +268,6 @@ class Lectures(Basis, list):
         self.titles = [lec.title for lec in self]
         self.rofi_titles = [lec.rofi_title for lec in self]
 
-        # Check if we have any lectures
-        # If we don't, just give an error and return
-        if not self:
-            utils.error_message('No lectures found')
-            sys.exit(1)
-
     def read_files(self):
         """
         Reads all the lecture files and returns a list of Lecture objects.

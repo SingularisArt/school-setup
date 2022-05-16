@@ -7,7 +7,6 @@ import os.path
 import sys
 
 import re
-import math
 
 import sched
 import datetime
@@ -22,6 +21,7 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 
 from RofiLessonManager.courses import Courses as Courses
+import RofiLessonManager.utils as utils
 
 courses = Courses()
 
@@ -56,53 +56,18 @@ def authenticate():
     return service
 
 
-def join(*args):
-    return ' '.join(str(e) for e in args if e)
-
-
-def truncate(string, length):
-    ellipsis = ' ...'
-    if len(string) < length:
-        return string
-    return string[:length - len(ellipsis)] + ellipsis
-
-
-def summary(text):
-    return truncate(re.sub(r'X[0-9A-Za-z]+', '', text).strip(), 50)
-
-
-def colored_text(text, color='#999999'):
-    return '%{F' + color + '}' + text + '%{F-}'
-
-
-def formatdd(begin, end):
-    minutes = math.ceil((end - begin).seconds / 60)
-
-    if minutes == 1:
-        return '1 minute'
-
-    if minutes < 60:
-        return '{} minutes'.format(minutes)
-
-    hours = math.floor(minutes/60)
-    rest_minutes = minutes % 60
-
-    if hours > 5 or rest_minutes == 0:
-        return '{} hours'.format(hours)
-    if hours == 1:
-        return '1 hour and {} minutes'.format(rest_minutes)
-
-    return '{} hours {:02d} minutes'.format(hours, rest_minutes)
-
-
-def location(text):
-    if not text:
-        return ''
-
-    return '{} {}'.format(colored_text("in"), text)
-
-
 def text(events, now):
+    """
+    Generate text for the current events and the next events.
+
+    Args:
+        events (list): list of events
+        now (datetime): current time
+
+    Returns:
+        - str: text to display
+    """
+
     current = next(
         (e for e in events if e['start'] < now and now < e['end']), None)
 
@@ -115,18 +80,19 @@ def text(events, now):
             except Exception:
                 color_id = 'None'
 
-            return join(
-                get_color_from_id(color_id, summary(nxt['summary'])),
-                colored_text('starts'),
-                formatdd(now, nxt['start']),
-                location(nxt['location'])
+            return utils.join(
+                utils.get_color_from_id(
+                    color_id, utils.summary(nxt['summary'])),
+                utils.colored_text('starts'),
+                utils.formatdd(now, nxt['start']),
+                utils.location(nxt['location'])
             )
         return ''
 
     nxt = next((e for e in events if e['start'] >= current['end']), None)
     if not nxt:
-        return join(colored_text('Ends in'),
-                    formatdd(now, current['end']) + '!')
+        return utils.join(utils.colored_text('Ends in'),
+                          utils.formatdd(now, current['end']) + '!')
 
     if current['end'] == nxt['start']:
         color_id = ''
@@ -135,12 +101,13 @@ def text(events, now):
         except Exception:
             color_id = 'None'
 
-        return join(
-            colored_text('Ends in'),
-            formatdd(now, current['end']) + colored_text('.'),
-            colored_text('After this'),
-            get_color_from_id(color_id, summary(nxt['summary'])),
-            location(nxt['location'])
+        return utils.join(
+            utils.colored_text('Ends in'),
+            utils.formatdd(now, current['end']) + utils.colored_text('.'),
+            utils.colored_text('After this'),
+            utils.get_color_from_id(color_id, utils.summary(nxt['summary'])),
+            utils.colored_text('.'),
+            utils.location(nxt['location'])
         )
 
     color_id = ''
@@ -149,18 +116,28 @@ def text(events, now):
     except Exception:
         color_id = 'None'
 
-    return join(
-        colored_text('Ends in'),
-        formatdd(now, current['end']) + colored_text('.'),
-        colored_text('After this'),
-        get_color_from_id(color_id, summary(nxt['summary'])),
-        location(nxt['location']),
-        colored_text('After a break of'),
-        formatdd(current['end'], nxt['start'])
+    return utils.join(
+        utils.colored_text('Ends in'),
+        utils.formatdd(now, current['end']) + utils.colored_text('.'),
+        utils.colored_text('After this'),
+        utils.get_color_from_id(color_id, utils.summary(nxt['summary'])) + '.',
+        utils.location(nxt['location']),
+        utils.colored_text('After a break of'),
+        utils.formatdd(current['end'], nxt['start']) + '.',
     )
 
 
 def activate_course(event):
+    """
+    Activate the current course.
+
+    Args:
+        - event (dict): event to activate
+
+    Returns:
+        - bool: True if the course was activated, otherwise, False
+    """
+
     course = next(
         (course for course in courses
          if course.info['title'].lower() in event['summary'].lower()),
@@ -171,46 +148,6 @@ def activate_course(event):
         return
 
     courses.current = course
-
-
-def get_color_from_id(id, text):
-    """
-    Get color from id and text to colorize.
-
-    Args:
-        - id (int): color id (default: None)
-        - text (str): text to colorize
-
-    Returns:
-        - str: colorized text
-    """
-
-    color = ''
-
-    if not id:
-        color = '#4f86f7'
-    if id == '1':
-        color = '#dcd0ff'
-    if id == '2':
-        color = '#bcb88a'
-    if id == '3':
-        color = '#6f2da8'
-    if id == '4':
-        color = '#fc8eac'
-    if id == '5':
-        color = '#ffe135'
-    if id == '6':
-        color = '#f28500'
-    if id == '8':
-        color = '#251607'
-    if id == '9':
-        color = '#326872'
-    if id == '10':
-        color = '#626e60'
-    if id == '11':
-        color = '#ff6347'
-
-    return colored_text(text, color)
 
 
 def main():
