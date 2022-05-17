@@ -5,11 +5,13 @@ This program gets the current events from Google Calendar and displays them.
 You can use this script to create a polybar module because I use different
 colors on different texts to work with polybar.
 
-Example:
+Examples:
 
-Ends in 25 minutes. After this, a break for 25 minutes. Then, Pre-Calculus II.
-Ends in 25 minutes. After this, Pre-Calculus II!
-Ends in 25 minutes.
+Stop studying Pre-Calculus II in 39 minutes. After this, start College SS.
+Stop studying Pre-Calculus II in 39 minutes. Then, take a break for 30 minutes.
+    Then, start College SS.
+Stop studying Pre-Calculus II in 39 minutes.
+...
 
 Function authenticate:
     - src.calendar.authenticate
@@ -18,6 +20,17 @@ Function authenticate:
 
     Returns:
         - service (object): authenticated service
+
+Function get_color_id:
+    - src.calendar.get_color_id
+
+    Get the color id of the event.
+
+    Args:
+        - event (dict): event to get the color id
+
+    Returns:
+        - str: color id
 
 Function text:
     - src.calendar.text
@@ -51,6 +64,11 @@ Function wait_for_internet_connection:
 
     Returns:
         - bool: True if connection is available, otherwise, keep trying
+
+TODO: Make this program also work on other things like:
+    College Composition: Essay and the program will transform that into:
+
+    Stop working on the College Composition Essay in 29 minutes.
 """
 
 import pickle
@@ -116,6 +134,26 @@ def authenticate():
     return service
 
 
+def get_color_id(event):
+    """
+    Get the color id of the event.
+
+    Args:
+        - event (dict): event to get the color id
+
+    Returns:
+        - str: color id
+    """
+
+    color_id = ''
+    try:
+        color_id = event['colorId']
+    except Exception:
+        color_id = 'None'
+
+    return color_id
+
+
 def text(events, now):
     """
     Generate text for the current events and the next events.
@@ -131,122 +169,160 @@ def text(events, now):
     current = next(
         (e for e in events if e['start'] < now and now < e['end']), None)
 
-    study_or_not_1 = ''
-    study_or_not_2 = ''
-
+    # Checking if there are no other events after the current one.
+    ###########################################################################
     if not current:
+        # Get the next event
         nxt = next((e for e in events if now <= e['start']), None)
-        print(nxt['summary'])
-        study = re.search('(.+) Study', nxt['summary'])
-        print(study.group(1))
+        # Get the current class
+        summary = nxt['summary']
+        # Parse the current event to see if we are in a study session.
+        study = re.search('(.+) Study', summary)
 
         if nxt:
-            color_id = ''
-            try:
-                color_id = nxt['colorId']
-            except Exception:
-                color_id = 'None'
+            color_id = get_color_id(nxt)
 
-            if not study:
-                return utils.join(
-                    utils.get_color_from_id(
-                        color_id, utils.summary(nxt['summary'])),
-                    utils.colored_text('starts in'),
-                    utils.formatdd(now, nxt['start']),
-                    utils.location(nxt['location'])
-                )
+            study_or_start_text = ''
+            in_or_start = ''
+
+            if study:
+                study_or_start_text = 'Study'
+                in_or_start = 'in'
             else:
-                return utils.join(
-                    utils.colored_text('Study'),
-                    utils.get_color_from_id(
-                        color_id, study.group(1)),
-                    utils.colored_text('in'),
-                    utils.formatdd(now, nxt['start']),
-                )
+                study_or_start_text = ''
+                in_or_start = 'starts in'
+
+            # Example output:
+            # College Composition starts in 25 minutes in TCB 208
+            # Study College Composition in 25 minutes
+            return utils.join(
+                utils.colored_text(study_or_start_text),
+                utils.get_color_from_id(color_id, summary),
+                utils.colored_text(in_or_start),
+                utils.formatdd(now, nxt['start']),
+                utils.location(nxt['location'])
+            )
         return ''
+    ###########################################################################
 
-    study = re.search('(.+)Study(.+)', current['summary'])
-    print(study)
+    # Parse the current event to see if we are in a study session.
+    study = re.search('(.+) Study', current['summary'])
+    # Get the next event
+    nxt = next((e for e in events if e['start'] >= current['end']), None)
 
+    ###########################################################################
     if not nxt:
-        nxt = next((e for e in events if e['start'] >= current['end']), None)
+        # Get the id for the color
+        color_id = get_color_id(current)
+        # Get the current class
+        summary = current['summary']
+        # Parse the current to see if we are in a study session
+        study = re.search('(.+) Study', summary)
 
-        if not study:
-            return utils.join(utils.colored_text('Ends in'),
-                              utils.formatdd(now, current['end']) + '!')
+        # Check if we are in a study session
+        if study:
+            summary = study.group(1)
+            start = utils.colored_text('Stop studying ') + \
+                utils.get_color_from_id(color_id,
+                                        summary) + \
+                utils.colored_text(' in')
+        # Check if we aren't in a study session
         else:
-            return utils.join(utils.colored_text('Stop studying ' +
-                                                 utils.summary(
-                                                     current['summary'])),
-                              utils.formatdd(now, current['end']) + '!')
+            start = utils.colored_text('Stop ') + utils.get_color_from_id(
+                color_id, summary) + utils.colored_text(' in')
 
+        return utils.join(
+            start,
+            utils.formatdd(now, current['end']),
+            utils.location(current['location'])
+        )
+    ###########################################################################
+
+    ###########################################################################
     if current['end'] == nxt['start']:
-        color_id = ''
-        try:
-            color_id = current['colorId']
-        except Exception:
-            color_id = 'None'
+        # Get the id for the color
+        current_id_color = get_color_id(current)
+        next_color_id = get_color_id(nxt)
+        # Get the current and next class name
+        current_summary = utils.get_color_from_id(current_id_color,
+                                                  current['summary'])
+        next_summary = nxt['summary']
+        # Parse the current and next event to see if we are in a study session.
+        study_current = re.search('(.+) Study', current_summary)
+        study_next = re.search('(.+) Study', next_summary)
 
-        lines = [
-            utils.colored_text(study_or_not_1),
-            utils.formatdd(now, current['end']) + utils.colored_text('.'),
-            utils.colored_text(study_or_not_2),
-            utils.get_color_from_id(color_id,
-                                    utils.summary(nxt['summary'])) + '.',
-        ]
+        after = 'After this,'
+        start = ''
 
-        if not study:
-            study_or_not_1 = 'Ends in'
-            study_or_not_2 = 'After this, '
-            lines = utils.join(lines)
-            return utils.join(
-                lines,
-                utils.location(nxt['location'])
-            )
+        # If we are in a study session
+        if study_current:
+            current_summary = utils.get_color_from_id(current_id_color,
+                                                      study_current.group(1))
+            start = utils.colored_text('Stop studying ') + current_summary + \
+                utils.colored_text(' in')
+        # If we aren't in a study session
         else:
-            study_or_not_1 = 'Stop studying'
-            study_or_not_2 = 'Then, study'
-            lines = utils.join(lines)
-            return utils.join(
-                lines,
-                utils.location(nxt['location'])
-            )
+            start = current_summary + utils.colored_text(' ends in')
+            start = utils.colored_text('Stop ') + current_summary + \
+                utils.colored_text(' in')
 
-    color_id = ''
-    try:
-        color_id = nxt['colorId']
-    except Exception:
-        color_id = 'None'
+        if study_next:
+            next_summary = utils.get_color_from_id(next_color_id,
+                                                   study_next.group(1))
+            after += ' study'
+        else:
+            after += ' start'
 
-    study_or_not_1 = ''
-    study_or_not_2 = ''
-
-    lines = [
-        utils.colored_text(study_or_not_1),
-        utils.formatdd(now, current['end']) + utils.colored_text('.'),
-        utils.colored_text('After this, a break for'),
-        utils.formatdd(current['end'], nxt['start']) + '.',
-        utils.colored_text(study_or_not_2),
-        utils.get_color_from_id(
-            color_id, utils.summary(nxt['summary'])) + '.',
-    ]
-
-    if not study:
-        study_or_not_1 = 'Ends in'
-        study_or_not_2 = 'After this, '
-        lines = utils.join(lines)
         return utils.join(
-            lines,
-            utils.location(nxt['location']),
+            start,
+            utils.formatdd(now, current['end']) + utils.colored_text('.'),
+            utils.colored_text(after),
+            utils.get_color_from_id(next_color_id, next_summary),
+            utils.location(nxt['location'])
         )
+    ###########################################################################
+
+    # Get the id for the color
+    current_id_color = get_color_id(current)
+    next_id_color = get_color_id(nxt)
+    color_id = get_color_id(nxt)
+
+    ###########################################################################
+    current_summary = utils.get_color_from_id(current_id_color,
+                                              current['summary'])
+    next_summary = utils.get_color_from_id(next_id_color, nxt['summary'])
+    current_study = re.search('(.+) Study', current_summary)
+    next_study = re.search('(.+) Study', next_summary)
+
+    start = ''
+    after = ''
+
+    # Check if we are in a study session
+    if current_study:
+        current_summary = utils.get_color_from_id(color_id, study.group(1))
+        start = utils.colored_text('Stop studying ') + current_summary + \
+            utils.colored_text(' in')
+    # Check if we aren't in a study session
     else:
-        study_or_not_1 = 'Stop studying'
-        study_or_not_2 = 'Then, study'
-        lines = utils.join(lines)
-        return utils.join(
-            lines,
-            utils.location(nxt['location']),
-        )
+        start = current_summary + utils.colored_text(' ends in')
+
+    if next_study:
+        next_summary = utils.get_color_from_id(next_id_color,
+                                               next_study.group(1))
+        after = 'Then, study'
+    else:
+        after = 'Then, start'
+
+    return utils.join(
+        start,
+        utils.formatdd(now, current['end']) + utils.colored_text('.'),
+        utils.colored_text('Then, take a break for'),
+        utils.formatdd(current['end'], nxt['start']) + utils.colored_text('.'),
+        utils.colored_text(after),
+        next_summary,
+        utils.location(nxt['location']),
+    )
+    ###########################################################################
 
 
 def activate_course(event):
