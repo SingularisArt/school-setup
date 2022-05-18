@@ -136,19 +136,8 @@ def activate_course(event):
     if not course:
         return
 
-    try:
-        summary = re.search('Study (.+)', event['summary']).group(1)
-    except AttributeError:
-        summary = event['summary']
-
-    try:
-        if course.info['calendar_name'] == summary:
-            courses.current = course
-    except KeyError:
-        if course.info['title'] == summary:
-            courses.current = course
-    else:
-        pass
+    if course.info['title'] == event['summary']:
+        courses.current = course
 
 
 def main(end=False):

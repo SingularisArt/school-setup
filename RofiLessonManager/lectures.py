@@ -81,7 +81,6 @@ from rofi import Rofi
 import os
 from datetime import datetime
 from glob import glob
-import sys
 import locale
 import re
 import subprocess
@@ -161,17 +160,6 @@ class Lecture(Basis):
         self.week = week
         self.number = utils.filename2number(os.path.basename(file_path))
         self.title = title
-
-        self.rofi_title = "<span color='red'>{number: >2}</span>. " \
-            "<b><span color='blue'>{title: <{fill}}</span>" \
-            "</b> <i><span color='yellow' size='smaller'>" \
-            "{date: <{fill}}</span></i><b>({week})</b>".format(
-                fill=35,
-                number=self.number,
-                title=utils.generate_short_title(self.title),
-                date=utils.generate_short_title(self.date_str),
-                week=self.week
-            )
 
     def edit(self):
         """ Edits the lecture. """
@@ -266,7 +254,6 @@ class Lectures(Basis, list):
 
         list.__init__(self, self.read_files())
         self.titles = [lec.title for lec in self]
-        self.rofi_titles = [lec.rofi_title for lec in self]
 
     def read_files(self):
         """
@@ -278,6 +265,38 @@ class Lectures(Basis, list):
 
         files = glob('{}/lectures/*.tex'.format(self.current_course))
         return sorted((Lecture(f) for f in files), key=lambda l: l.number)
+
+    def parse_lecture_spec(self, string):
+        if len(self) == 0:
+            return 0
+
+        if string.isdigit():
+            return int(string)
+        elif string == 'last':
+            return self[-1].number
+        elif string == 'prev':
+            return self[-2].number
+
+    def parse_range_string(self, arg):
+        all_numbers = [lecture.number for lecture in self]
+
+        if 'all' in arg:
+            return all_numbers
+        if 'prev_last' == arg:
+            return all_numbers[-2:]
+        if 'prev' == arg:
+            return all_numbers[:-1]
+        if '-' in arg:
+            start, end = arg.split('-')
+            return list(range(int(start), int(end)+1))
+
+        return [self.parse_lecture_spec(arg)]
+
+    def update_lectures_in_master(self, r):
+        body = ''.join(r'\input{lectures/' +
+                       utils.number2filename(number) + '}\n' for number in r)
+        with open(self.source_lectures_location, 'w') as f:
+            f.write(body)
 
     def compile_master(self):
         """

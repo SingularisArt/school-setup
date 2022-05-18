@@ -11,10 +11,21 @@ def main():
     """ This main function will change the current course. """
 
     courses = Courses()
+    current = courses.current
 
-    code, index, selected = utils.rofi('Select course',
-                                       courses.rofi_names,
-                                       courses.rofi_options)
+    try:
+        current_index = courses.index(current)
+        args = ['-a', current_index]
+    except Exception:
+        args = []
+
+    key, index, selected = utils.rofi(
+        'Select course', [c.info['title'] for c in courses], [
+            '-auto-select',
+            '-no-custom',
+            '-lines', len(courses)
+        ] + args)
+
     if index >= 0:
         courses.current = courses[index]
 

@@ -5,7 +5,7 @@ import argparse
 
 import src.calendar as ca
 import src.change_path as cp
-import src.commands as cm
+import src.source_lectures as sl
 import src.new_assignment as na
 import src.new_course as nc
 import src.new_lecture as nl
@@ -20,13 +20,8 @@ def main():
 
     parser.add_argument('-ca', '--calendar',
                         help='Parse google calendar', action='store_true')
-    parser.add_argument('--end',
-                        help='Output the end of the current class',
-                        action='store_true')
     parser.add_argument('-cp', '--change-path',
                         help='Change path to classes', action='store_true')
-    parser.add_argument('-cm', '--commands',
-                        help='Commands', action='store_true')
     parser.add_argument('-na', '--new-assignment',
                         help='Create a new assignment', action='store_true')
     parser.add_argument('-nc', '--new-course',
@@ -41,18 +36,15 @@ def main():
                         help='Change course', action='store_true')
     parser.add_argument('-rl', '--rofi-lectures',
                         help='View all Lectures', action='store_true')
+    parser.add_argument('-sl', '--source-lectures',
+                        help='Source lectures', action='store_true')
 
     args = parser.parse_args()
 
     if args.calendar:
-        if args.end:
-            ca.main(end=True)
-        else:
-            ca.main()
+        ca.main()
     if args.change_path:
         cp.main()
-    elif args.commands:
-        cm.main()
     elif args.new_course:
         nc.main()
     elif args.new_assignment:
@@ -67,6 +59,8 @@ def main():
         rc.main()
     elif args.rofi_lectures:
         rl.main()
+    elif args.source_lectures:
+        sl.main()
 
 
 if __name__ == "__main__":

@@ -14,13 +14,24 @@ def main():
 
     lectures = Lectures()
 
+    options = [
+        "{number: >2}. <b>{title: <{fill}}</b> <span size='smaller'>{date}  ({week})</span>".format(
+            fill=36,
+            number=lecture.number,
+            title=utils.generate_short_title(lecture.title),
+            date=lecture.date.strftime('%a %d %b'),
+            week=lecture.week
+        )
+        for lecture in lectures
+    ]
+
     # Check if we have any lectures
     # If we don't, just give an error and return
     if not lectures:
         utils.error_message('No lectures found')
         exit(1)
 
-    key, index, selected = utils.rofi('Select Lesson', lectures.rofi_titles,
+    key, index, selected = utils.rofi('Select Lesson', options,
                                       lectures.rofi_options)
 
     if index >= 0:
