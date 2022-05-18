@@ -6,6 +6,7 @@ import os.path
 import sys
 
 import math
+import re
 
 import sched
 import datetime
@@ -62,47 +63,42 @@ def formatdd(begin, end):
         return '1 minute'
 
     if minutes < 60:
-        return '{} min'.format(minutes)
+        return '{} minutes'.format(minutes)
 
     hours = math.floor(minutes/60)
     rest_minutes = minutes % 60
 
-    if hours > 5 or rest_minutes == 0:
+    if hours == 1 and rest_minutes == 0:
+        return '1 hour'
+    elif hours > 5 or rest_minutes == 0:
         return '{} hours'.format(hours)
 
     return '{}:{:02d} hours'.format(hours, rest_minutes)
-
-
-def format_time_for_output(time):
-    return time.strftime('%H:%M')
 
 
 def text(events, now, end):
     current = next(
         (e for e in events if e['start'] < now and now < e['end']), None)
 
-    if not current:
-        return utils.colored_text('No events left for the day!')
-
+    # Check if we have an event right now
     if not current:
         nxt = next((e for e in events if now <= e['start']), None)
         if nxt:
             return utils.join(
                 utils.summary(nxt['summary']),
-                utils.colored_text('over'),
+                utils.colored_text('starts in'),
                 formatdd(now, nxt['start']),
                 utils.location(nxt['location']),
                 '   ',
-                format_time_for_output(current['end'])
+                utils.format_time(nxt['start'])
             )
         return ''
-
     nxt = next((e for e in events if e['start'] >= current['end']), None)
     if not nxt:
         return utils.join(utils.colored_text('Ends in'),
                           formatdd(now, current['end']) + '!',
                           '   ',
-                          format_time_for_output(current['start'])
+                          utils.format_time(current['end'])
                           )
 
     if current['end'] == nxt['start']:
@@ -111,9 +107,9 @@ def text(events, now, end):
             formatdd(now, current['end']) + utils.colored_text('.'),
             utils.colored_text('Next:'),
             utils.summary(nxt['summary']),
-            utils.location(nxt['location'] + utils.colored_text('.')),
+            utils.location(nxt['location']),
             '   ',
-            format_time_for_output(nxt['start'])
+            utils.format_time(nxt['start'])
         )
 
     return utils.join(
@@ -126,7 +122,7 @@ def text(events, now, end):
         formatdd(current['end'], nxt['start']),
         utils.colored_text('break.'),
         '   ',
-        format_time_for_output(nxt['start'])
+        utils.format_time(current['end'])
     )
 
 
@@ -140,7 +136,19 @@ def activate_course(event):
     if not course:
         return
 
-    courses.current = course
+    try:
+        summary = re.search('Study (.+)', event['summary']).group(1)
+    except AttributeError:
+        summary = event['summary']
+
+    try:
+        if course.info['calendar_name'] == summary:
+            courses.current = course
+    except KeyError:
+        if course.info['title'] == summary:
+            courses.current = course
+    else:
+        pass
 
 
 def main(end=False):

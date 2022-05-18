@@ -29,7 +29,7 @@ def main():
         source_lectures.options,
         source_lectures.rofi_options)
 
-    if index >= 0:
+    if index >= 0 or selected:
         source_lectures.selected = selected
         source_lectures.check_selection()
         Lectures().compile_master()
