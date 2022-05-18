@@ -29,10 +29,24 @@ def main():
     file, or the pdf.
     """
 
+    commands = ['edit_latex', 'edit_yaml', 'open_pdf']
+    second_options = ['View LaTeX', 'View YAML', 'View PDF']
+
     assignments = Assignments()
+    options = [
+        "{number: >2}. <b>{title: <{fill}}</b> <i><span size='smaller'>Due By: {date: <{fill_2}}</span></i> Submitted: {submit}".format(
+            fill=22,
+            number=assignment.number,
+            title=assignment.title,
+            date=assignment.due_date,
+            submit=assignment.submit,
+            fill_2=26,
+        )
+        for assignment in assignments
+    ]
 
     key, index, selected = utils.rofi('Select Assignment',
-                                      assignments.rofi_names,
+                                      options,
                                       assignments.rofi_options)
 
     if index < 0:
@@ -41,16 +55,11 @@ def main():
     second_key, second_index, second_selected = utils.rofi(
         'Which One for assignment: {}'.format(
             assignments[index].title),
-        assignments.second_options, assignments.rofi_options)
+        second_options, assignments.rofi_options)
 
     os.chdir(assignments.assignments_latex_folder)
 
-    if second_selected == assignments.second_options[0]:
-        assignments[index].edit_latex()
-    elif second_selected == assignments.second_options[1]:
-        assignments[index].edit_yaml()
-    elif second_selected == assignments.second_options[2]:
-        assignments[index].open_pdf()
+    assignments[index].parse_command(commands[second_index])
 
 
 if __name__ == "__main__":

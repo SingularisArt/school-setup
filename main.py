@@ -9,7 +9,6 @@ import src.source_lectures as sl
 import src.new_assignment as na
 import src.new_course as nc
 import src.new_lecture as nl
-import src.projects as pr
 import src.rofi_assignments as ra
 import src.rofi_courses as rc
 import src.rofi_lectures as rl
@@ -28,8 +27,6 @@ def main():
                         help='Create a new course', action='store_true')
     parser.add_argument('-nl', '--new-lecture',
                         help='Create a new lecture', action='store_true')
-    parser.add_argument('-pr', '--projects',
-                        help='Projects', action='store_true')
     parser.add_argument('-ra', '--rofi-assignments',
                         help='View all assignments', action='store_true')
     parser.add_argument('-rc', '--rofi-courses',
@@ -51,8 +48,6 @@ def main():
         na.main()
     elif args.new_lecture:
         nl.main()
-    elif args.projects:
-        pr.main()
     elif args.rofi_assignments:
         ra.main()
     elif args.rofi_courses:

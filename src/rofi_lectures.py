@@ -1,7 +1,4 @@
-"""
-This file uses the RofiLessonManager.lectures module to help open and edit
-lectures.
-"""
+#!/usr/bin/env python3
 
 import os
 
