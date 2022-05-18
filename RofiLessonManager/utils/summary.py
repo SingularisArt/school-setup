@@ -27,5 +27,5 @@ def summary(text):
         - str: The summary of the text.
     """
 
-    return utils.generate_short_title(re.sub(r'X[0-9A-Za-z]+',
-                                             '', text).strip(), 50)
+    return utils.generate_short_title(
+        re.sub(r'X[0-9A-Za-z]+', '', text).strip(), MAX_LENGTH=45)
