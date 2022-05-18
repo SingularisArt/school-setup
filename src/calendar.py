@@ -73,9 +73,16 @@ def formatdd(begin, end):
     return '{}:{:02d} hours'.format(hours, rest_minutes)
 
 
-def text(events, now):
+def format_time_for_output(time):
+    return time.strftime('%H:%M')
+
+
+def text(events, now, end):
     current = next(
         (e for e in events if e['start'] < now and now < e['end']), None)
+
+    if not current:
+        return utils.colored_text('No events left for the day!')
 
     if not current:
         nxt = next((e for e in events if now <= e['start']), None)
@@ -84,32 +91,42 @@ def text(events, now):
                 utils.summary(nxt['summary']),
                 utils.colored_text('over'),
                 formatdd(now, nxt['start']),
-                utils.location(nxt['location'])
+                utils.location(nxt['location']),
+                '   ',
+                format_time_for_output(current['end'])
             )
         return ''
 
     nxt = next((e for e in events if e['start'] >= current['end']), None)
     if not nxt:
         return utils.join(utils.colored_text('Ends in'),
-                          formatdd(now, current['end']) + '!')
+                          formatdd(now, current['end']) + '!',
+                          '   ',
+                          format_time_for_output(current['start'])
+                          )
 
     if current['end'] == nxt['start']:
         return utils.join(
             utils.colored_text('Ends in'),
             formatdd(now, current['end']) + utils.colored_text('.'),
-            utils.colored_text('After this'),
+            utils.colored_text('Next:'),
             utils.summary(nxt['summary']),
-            utils.location(nxt['location'] + utils.colored_text('.'))
+            utils.location(nxt['location'] + utils.colored_text('.')),
+            '   ',
+            format_time_for_output(nxt['start'])
         )
 
     return utils.join(
         utils.colored_text('Ends in'),
         formatdd(now, current['end']) + utils.colored_text('.'),
-        utils.colored_text('After this'),
+        utils.colored_text('Next:'),
         utils.summary(nxt['summary']),
         utils.location(nxt['location']),
-        utils.colored_text('after a break of'),
-        formatdd(current['end'], nxt['start']) + utils.colored_text('.')
+        utils.colored_text('after a'),
+        formatdd(current['end'], nxt['start']),
+        utils.colored_text('break.'),
+        '   ',
+        format_time_for_output(nxt['start'])
     )
 
 
@@ -126,7 +143,7 @@ def activate_course(event):
     courses.current = course
 
 
-def main():
+def main(end=False):
     scheduler = sched.scheduler(time.time, time.sleep)
 
     print('Initializing')
@@ -173,7 +190,7 @@ def main():
 
     def print_message():
         now = datetime.datetime.now(tz=TZ)
-        print(text(events, now))
+        print(text(events, now, end))
         if now < evening:
             scheduler.enter(DELAY, 1, print_message)
 

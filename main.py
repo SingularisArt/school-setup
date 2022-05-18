@@ -20,6 +20,9 @@ def main():
 
     parser.add_argument('-ca', '--calendar',
                         help='Parse google calendar', action='store_true')
+    parser.add_argument('--end',
+                        help='Output the end of the current class',
+                        action='store_true')
     parser.add_argument('-cp', '--change-path',
                         help='Change path to classes', action='store_true')
     parser.add_argument('-cm', '--commands',
@@ -42,7 +45,10 @@ def main():
     args = parser.parse_args()
 
     if args.calendar:
-        ca.main()
+        if args.end:
+            ca.main(end=True)
+        else:
+            ca.main()
     if args.change_path:
         cp.main()
     elif args.commands:
