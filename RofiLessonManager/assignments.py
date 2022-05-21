@@ -81,14 +81,11 @@ class Assignment(Basis):
         logo, due_date, late = utils.check_if_assignment_is_due(
             due_date, submit)
 
-        submit = 'Yes'
-
-        if not submit and late:
+        if not submit:
             submit = 'No'
             due_date += logo
-        elif not submit:
-            submit = 'No'
-            due_date += logo
+        else:
+            submit = 'Yes'
 
         due_date = utils.generate_short_title(
             due_date, 28)

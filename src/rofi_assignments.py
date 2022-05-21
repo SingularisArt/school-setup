@@ -33,6 +33,13 @@ def main():
     second_options = ['View LaTeX', 'View YAML', 'View PDF']
 
     assignments = Assignments()
+    due_dates = [a.due_date for a in assignments]
+    fill = len(max(due_dates, key=len))
+    if int(fill) == 12:
+        fill += 5
+    else:
+        fill += 1
+
     options = [
         "{number: >2}. <b>{title: <{fill}}</b> <i><span size='smaller'>Due By: {date: <{fill_2}}</span></i> Submitted: {submit}".format(
             fill=22,
@@ -40,7 +47,7 @@ def main():
             title=assignment.title,
             date=assignment.due_date,
             submit=assignment.submit,
-            fill_2=26,
+            fill_2=fill,
         )
         for assignment in assignments
     ]
