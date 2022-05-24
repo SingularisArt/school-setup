@@ -8,20 +8,20 @@ Function generate_short_title:
 
     Args:
         - title (str): The title to shorten.
-        - MAX_LENGTH (int): The maximum length of the title. (Default: 36)
+        - MAX_LENGTH (int): The maximum length of the title. (Default: 34)
 
     Returns:
         - str: The shortened title.
 """
 
 
-def generate_short_title(title, MAX_LENGTH=36):
+def generate_short_title(title, MAX_LENGTH=34):
     """
     Shorten a title of too long in length.
 
     Args:
         - title (str): The title to shorten.
-        - MAX_LENGTH (int): The maximum length of the title. (Default: 36)
+        - MAX_LENGTH (int): The maximum length of the title. (Default: 34)
 
     Returns:
         - str: The shortened title.

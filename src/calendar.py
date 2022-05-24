@@ -168,17 +168,33 @@ def main(end=False):
             singleEvents=True,
             orderBy='startTime'
         ).execute()
+
         events = events_result.get('items', [])
-        return [
-            {
-                'summary': event['summary'],
-                'location': event.get('location', None),
-                'start': parse(event['start']['dateTime']),
-                'end': parse(event['end']['dateTime'])
-            }
-            for event in events
-            if 'dateTime' in event['start']
-        ]
+        new_events = []
+        for event in events:
+            try:
+                summary = re.search('(.+) \(CLASS\)', event['summary']).group(1)
+                event_dict = {
+                    'summary': summary,
+                    'location': event.get('location', None),
+                    'start': parse(event['start']['dateTime']),
+                    'end': parse(event['end']['dateTime'])
+                }
+                new_events.append(event_dict)
+            except Exception:
+                pass
+
+        # return [
+        #     {
+        #         'summary': event['summary'],
+        #         'location': event.get('location', None),
+        #         'start': parse(event['start']['dateTime']),
+        #         'end': parse(event['end']['dateTime'])
+        #     }
+        #     for event in events
+        #     if 'dateTime' in event['start']
+        # ]
+        return new_events
 
     events = get_events(courses.calendar_id)
     print('Done')

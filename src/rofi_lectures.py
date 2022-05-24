@@ -12,11 +12,12 @@ def main():
     lectures = Lectures()
 
     options = [
-        "{number: >2}. <b>{title: <{fill}}</b> <span size='smaller'>{date}  ({week})</span>".format(
-            fill=36,
+        "{number: >2}. <b>{title: <{fill}} </b> <span size='smaller'>{date: <{fill_2}} (Week: {week})</span>".format(
+            fill=34,
             number=lecture.number,
             title=utils.generate_short_title(lecture.title),
-            date=lecture.date.strftime('%a %d %b'),
+            date=lecture.date.strftime('%a %d %b (%I:%M %p)'),
+            fill_2=30,
             week=lecture.week
         )
         for lecture in lectures

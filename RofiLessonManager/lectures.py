@@ -3,16 +3,12 @@
 """
 This module contains the RofiLessonManager.Lecture and
 RofiLessonManager.Lectures classes.
-
 Class Lecture:
     - RofiLessonManager.Lecture
-
     This class inherits from the RofiLessonManager.Basis class.
-
     This class is used to hold information about a specific lecture. For
     example: Lecture(path-to-lecture). Then, it has all the information on that
     lecture from the lecture's yaml file, respectively.
-
     Attributes:
         - file_path (str): Path to the lecture file.
         - date_str (str): Date of the lecture as a string.
@@ -21,57 +17,39 @@ Class Lecture:
         - number (int): Number of the lecture.
         - title (str): Title of the lecture.
         - rofi_title (str): Title of the lecture as a fancy string for rofi.
-
     Args:
         - file_path (str): Path to the lecture file.
-
     Methods:
         - edit: Edits the lecture.
-
         - __str__: Returns the lecture as a string.
-
             Returns:
                 - str: Lecture as a string.
-
         - __eq__: Checks if two lectures are equal.
-
             Args:
                 - other (Lecture): Lecture to compare with.
-
             Returns:
                 - bool: True if equal, False otherwise.
-
 Class Lectures:
     - RofiLessonManager.Lectures
-
     This class inherits from the RofiLessonManager.Basis class.
     This class inherits from the List class.
-
     This class holds a list of all the lectures, which are located in the
     lectures folder, which can be modified from the config.yaml file. Each
     lecture is an instance from the RofiLessonManager.lectures.Lecture class.
-
     Attributes:
         - rofi_titles (list): List of titles for rofi.
         - titles (list): List of titles.
-
     Args:
         - file_path (str): Path to the lecture file.
-
     Methods:
         - read_files: Reads all the lecture files and returns a list of Lecture
             objects.
-
             Returns:
                 - list: List of Lecture objects.
-
         - compile_master: Compiles the master file.
-
             Returns:
                 - int: 0 if successful, 1 otherwise.
-
         - __len__: Gets the number of lectures.
-
             Returns:
                 - int: Number of lectures.
 """
@@ -95,11 +73,9 @@ locale.setlocale(locale.LC_TIME, "en_US.utf8")
 class Lecture(Basis):
     """
     This class inherits from the RofiLessonManager.Basis class.
-
     This class is used to hold information about a specific lecture. For
     example: Lecture(path-to-lecture). Then, it has all the information on that
     lecture from the lecture's yaml file, respectively.
-
     Attributes:
         - file_path (str): Path to the lecture file.
         - date_str (str): Date of the lecture as a string.
@@ -108,23 +84,16 @@ class Lecture(Basis):
         - number (int): Number of the lecture.
         - title (str): Title of the lecture.
         - rofi_title (str): Title of the lecture as a fancy string for rofi.
-
     Args:
         - file_path (str): Path to the lecture file.
-
     Methods:
         - edit: Edits the lecture.
-
         - __str__: Returns the lecture as a string.
-
             Returns:
                 - str: Lecture as a string.
-
         - __eq__: Checks if two lectures are equal.
-
             Args:
                 - other (Lecture): Lecture to compare with.
-
             Returns:
                 - bool: True if equal, False otherwise.
     """
@@ -132,7 +101,6 @@ class Lecture(Basis):
     def __init__(self, file_path):
         """
         Initializes the class.
-
         Args:
             file_path (str): Path to the lecture file.
         """
@@ -164,14 +132,21 @@ class Lecture(Basis):
     def edit(self):
         """ Edits the lecture. """
 
-        os.system('xfce4-terminal -e "nvim {}/lectures/lec-{}.tex"'.format(
-            self.current_course, self.number))
+        listen_location = '/tmp/nvim.pipe'
+        args = []
+
+        if os.path.exists(listen_location):
+            args = ['--server', '/tmp/nvim.pipe', '--remote']
+        elif not os.path.exists(listen_location):
+            args = ['--listen', '/tmp/nvim.pipe']
+        args = ' '.join(str(e) for e in args if e)
+        print(args)
+
+        os.system('xfce4-terminal -e "nvim {} {}/lectures/lec-{}.tex"'.format(
+            args, self.current_course, self.number))
 
     def new(self):
         """ Creates the lecture if it doesn't exist. """
-
-        # if os.path.isfile(self.file_path):
-        #     return
 
         rofi = Rofi()
         title = rofi.text_entry('Title')
@@ -190,7 +165,6 @@ class Lecture(Basis):
     def __str__(self):
         """
         Returns the lecture as a string.
-
         Returns:
             - str: Lecture as a string.
         """
@@ -202,10 +176,8 @@ class Lecture(Basis):
     def __eq__(self, other):
         """
         Checks if two lectures are equal.
-
         Args:
             - other (Lecture): Lecture to compare with.
-
         Returns:
             - bool: True if equal, False otherwise.
         """
@@ -217,32 +189,23 @@ class Lectures(Basis, list):
     """
     This class inherits from the RofiLessonManager.Basis class.
     This class inherits from the List class.
-
     This class holds a list of all the lectures, which are located in the
     lectures folder, which can be modified from the config.yaml file. Each
     lecture is an instance from the RofiLessonManager.lectures.Lecture class.
-
     Attributes:
         - rofi_titles (list): List of titles for rofi.
         - titles (list): List of titles.
-
     Args:
         - file_path (str): Path to the lecture file.
-
     Methods:
         - read_files: Reads all the lecture files and returns a list of Lecture
             objects.
-
             Returns:
                 - list: List of Lecture objects.
-
         - compile_master: Compiles the master file.
-
             Returns:
                 - int: 0 if successful, 1 otherwise.
-
         - __len__: Gets the number of lectures.
-
             Returns:
                 - int: Number of lectures.
     """
@@ -258,7 +221,6 @@ class Lectures(Basis, list):
     def read_files(self):
         """
         Reads all the lecture files and returns a list of Lecture objects.
-
         Returns:
             - list: List of Lecture objects.
         """
@@ -301,7 +263,6 @@ class Lectures(Basis, list):
     def compile_master(self):
         """
         Compiles the master file.
-
         Returns:
             - int: 0 if successful, 1 otherwise.
         """
@@ -321,7 +282,6 @@ class Lectures(Basis, list):
     def __len__(self):
         """
         Gets the number of lectures.
-
         Returns:
             - int: Number of lectures.
         """

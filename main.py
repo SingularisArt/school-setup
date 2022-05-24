@@ -4,7 +4,6 @@
 import argparse
 
 import src.calendar as ca
-import src.change_path as cp
 import src.source_lectures as sl
 import src.new_assignment as na
 import src.new_course as nc
@@ -19,8 +18,6 @@ def main():
 
     parser.add_argument('-ca', '--calendar',
                         help='Parse google calendar', action='store_true')
-    parser.add_argument('-cp', '--change-path',
-                        help='Change path to classes', action='store_true')
     parser.add_argument('-na', '--new-assignment',
                         help='Create a new assignment', action='store_true')
     parser.add_argument('-nc', '--new-course',
@@ -40,8 +37,6 @@ def main():
 
     if args.calendar:
         ca.main()
-    if args.change_path:
-        cp.main()
     elif args.new_course:
         nc.main()
     elif args.new_assignment:
