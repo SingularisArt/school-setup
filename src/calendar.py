@@ -14,7 +14,7 @@ import time
 import pytz
 from dateutil.parser import parse
 
-import http.client as httplib
+import urllib.request
 
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
@@ -217,19 +217,17 @@ def main(end=False):
     scheduler.run()
 
 
-def wait_for_internet_connection(url, timeout=1):
+def check_internet(host='http://google.com'):
     while True:
-        conn = httplib.HTTPConnection(url, timeout=5)
         try:
-            conn.request("HEAD", "/")
-            conn.close()
-            return True
-        except Exception:
-            conn.close()
+            urllib.request.urlopen(host)
+            break
+        except:
+            pass
 
 
 if __name__ == '__main__':
     os.chdir(sys.path[0])
     print('Waiting for connection')
-    wait_for_internet_connection('www.google.com')
+    check_internet()
     main()

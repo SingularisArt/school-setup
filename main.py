@@ -2,6 +2,9 @@
 
 
 import argparse
+import http.client as httplib
+import os
+import sys
 
 import src.calendar as ca
 import src.source_lectures as sl
@@ -35,7 +38,11 @@ def main():
 
     args = parser.parse_args()
 
+    os.chdir(sys.path[0])
+
     if args.calendar:
+        print('Waiting for connection')
+        ca.check_internet()
         ca.main()
     elif args.new_course:
         nc.main()
