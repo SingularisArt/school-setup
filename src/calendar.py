@@ -19,6 +19,7 @@ import urllib.request
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
+from google.auth.exceptions import RefreshError
 
 from RofiLessonManager.courses import Courses as Courses
 import RofiLessonManager.utils as utils
@@ -41,15 +42,19 @@ def authenticate():
     # If there are no (valid) credentials available, let the user log in.
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
-            print('Refreshing credentials')
-            creds.refresh(Request())
+            try:
+                creds.refresh(Request())
+            except RefreshError:
+                return
         else:
+            print('3')
             print('Need to allow access')
             flow = InstalledAppFlow.from_client_secrets_file(
                 'credentials.json', SCOPES)
             creds = flow.run_local_server(port=0)
         # Save the credentials for the next run
         with open('token.pickle', 'wb') as token:
+            print('4')
             pickle.dump(creds, token)
 
     service = build('calendar', 'v3', credentials=creds)
