@@ -1,60 +1,5 @@
 #!/usr/bin/env python3
 
-"""
-This module contains the RofiLessonManager.Lecture and
-RofiLessonManager.Lectures classes.
-Class Lecture:
-    - RofiLessonManager.Lecture
-    This class inherits from the RofiLessonManager.Basis class.
-    This class is used to hold information about a specific lecture. For
-    example: Lecture(path-to-lecture). Then, it has all the information on that
-    lecture from the lecture's yaml file, respectively.
-    Attributes:
-        - file_path (str): Path to the lecture file.
-        - date_str (str): Date of the lecture as a string.
-        - date (datetime.datetime): Date of the lecture as a datetime object.
-        - week (int): Number of week when the lecture notes were written.
-        - number (int): Number of the lecture.
-        - title (str): Title of the lecture.
-        - rofi_title (str): Title of the lecture as a fancy string for rofi.
-    Args:
-        - file_path (str): Path to the lecture file.
-    Methods:
-        - edit: Edits the lecture.
-        - __str__: Returns the lecture as a string.
-            Returns:
-                - str: Lecture as a string.
-        - __eq__: Checks if two lectures are equal.
-            Args:
-                - other (Lecture): Lecture to compare with.
-            Returns:
-                - bool: True if equal, False otherwise.
-Class Lectures:
-    - RofiLessonManager.Lectures
-    This class inherits from the RofiLessonManager.Basis class.
-    This class inherits from the List class.
-    This class holds a list of all the lectures, which are located in the
-    lectures folder, which can be modified from the config.yaml file. Each
-    lecture is an instance from the RofiLessonManager.lectures.Lecture class.
-    Attributes:
-        - rofi_titles (list): List of titles for rofi.
-        - titles (list): List of titles.
-    Args:
-        - file_path (str): Path to the lecture file.
-    Methods:
-        - read_files: Reads all the lecture files and returns a list of Lecture
-            objects.
-            Returns:
-                - list: List of Lecture objects.
-        - compile_master: Compiles the master file.
-            Returns:
-                - int: 0 if successful, 1 otherwise.
-        - __len__: Gets the number of lectures.
-            Returns:
-                - int: Number of lectures.
-"""
-
-
 from rofi import Rofi
 import os
 from datetime import datetime
@@ -71,33 +16,6 @@ locale.setlocale(locale.LC_TIME, "en_US.utf8")
 
 
 class Lecture(Basis):
-    """
-    This class inherits from the RofiLessonManager.Basis class.
-    This class is used to hold information about a specific lecture. For
-    example: Lecture(path-to-lecture). Then, it has all the information on that
-    lecture from the lecture's yaml file, respectively.
-    Attributes:
-        - file_path (str): Path to the lecture file.
-        - date_str (str): Date of the lecture as a string.
-        - date (datetime.datetime): Date of the lecture as a datetime object.
-        - week (int): Number of week when the lecture notes were written.
-        - number (int): Number of the lecture.
-        - title (str): Title of the lecture.
-        - rofi_title (str): Title of the lecture as a fancy string for rofi.
-    Args:
-        - file_path (str): Path to the lecture file.
-    Methods:
-        - edit: Edits the lecture.
-        - __str__: Returns the lecture as a string.
-            Returns:
-                - str: Lecture as a string.
-        - __eq__: Checks if two lectures are equal.
-            Args:
-                - other (Lecture): Lecture to compare with.
-            Returns:
-                - bool: True if equal, False otherwise.
-    """
-
     def __init__(self, file_path):
         """
         Initializes the class.
@@ -152,8 +70,10 @@ class Lecture(Basis):
         title = rofi.text_entry('Title')
         date = datetime.now().strftime(self.date_format)
         number = utils.filename2number(os.path.basename(self.file_path))
+        label = 'les_{}:{}'.format(number, title.lower().replace(' ', '_'))
 
         template = [fr'\lesson{{{number}}}{{{date}}}{{{title}}}',
+                    fr'\label{{{label}}}',
                     '',
                     '',
                     '',
