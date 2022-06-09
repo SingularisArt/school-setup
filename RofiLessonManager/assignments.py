@@ -22,8 +22,9 @@ class Assignment(Basis):
         self.name = os.path.basename(path)
         self.number = self.name.replace(
             'week-', '').replace('.yaml', '').replace('.tex', '')
+
         info_file_name = self.name.replace('tex', 'yaml')
-        info = open('{}/{}'.format(self.assignments_latex_folder,
+        info = open('{}/{}'.format(self.assignments_yaml_folder,
                                    info_file_name))
         self.info_file = '{}/{}'.format(self.assignments_latex_folder,
                                         info_file_name)
@@ -113,8 +114,9 @@ class Assignments(Basis, list):
         ]
 
     def read_files(self):
-        assignments = glob('{}/*.tex'.format(self.assignments_latex_folder))
-        assignments = natsorted(assignments)
+        assignments = natsorted(glob('{}/*.tex'.format(
+            self.assignments_latex_folder)))
+
         return [Assignment(a) for a in assignments]
 
     def __len__(self):

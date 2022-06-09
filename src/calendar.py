@@ -44,17 +44,16 @@ def authenticate():
         if creds and creds.expired and creds.refresh_token:
             try:
                 creds.refresh(Request())
-            except RefreshError:
-                return
+            except RefreshError as e:
+                print(e)
+                sys.exit()
         else:
-            print('3')
             print('Need to allow access')
             flow = InstalledAppFlow.from_client_secrets_file(
                 'credentials.json', SCOPES)
             creds = flow.run_local_server(port=0)
         # Save the credentials for the next run
         with open('token.pickle', 'wb') as token:
-            print('4')
             pickle.dump(creds, token)
 
     service = build('calendar', 'v3', credentials=creds)
@@ -157,6 +156,7 @@ def main(end=False):
     service = authenticate()
 
     print('Authenticated')
+
     # Call the Calendar API
     now = datetime.datetime.now(tz=TZ)
 
@@ -178,7 +178,7 @@ def main(end=False):
         new_events = []
         for event in events:
             try:
-                summary = re.search('(.+) \(CLASS\)', event['summary']).group(1)
+                summary = re.search(r'(.+) \(CLASS\)', event['summary']).group(1)
                 event_dict = {
                     'summary': summary,
                     'location': event.get('location', None),
@@ -189,16 +189,6 @@ def main(end=False):
             except Exception:
                 pass
 
-        # return [
-        #     {
-        #         'summary': event['summary'],
-        #         'location': event.get('location', None),
-        #         'start': parse(event['start']['dateTime']),
-        #         'end': parse(event['end']['dateTime'])
-        #     }
-        #     for event in events
-        #     if 'dateTime' in event['start']
-        # ]
         return new_events
 
     events = get_events(courses.calendar_id)
@@ -227,7 +217,7 @@ def check_internet(host='http://google.com'):
         try:
             urllib.request.urlopen(host)
             break
-        except:
+        except Exception:
             pass
 
 

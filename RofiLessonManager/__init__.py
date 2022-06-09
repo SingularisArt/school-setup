@@ -492,6 +492,7 @@ class Basis(object):
         self.projects_dir = self.data['projects_dir']
         self.assignments_dir = self.data['assignments_dir']
         self.assignments_latex_folder = self.data['assignments_latex_folder']
+        self.assignments_yaml_folder = self.data['assignments_yaml_folder']
         self.assignments_pdf_folder = self.data['assignments_pdf_folder']
         self.yaml_extensions = ['.yaml', '.yml']
         self.source_lectures_location = self.data['source_lessons_location']

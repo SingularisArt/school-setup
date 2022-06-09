@@ -20,6 +20,7 @@ source_lessons_location: ${HOME}/Documents/notes/school-notes/current-course/sou
 projects_dir: ${HOME}/Documents/notes/school-notes/projects
 assignments_dir: ${HOME}/Documents/notes/school-notes/current-course/assignments
 assignments_latex_folder: ${HOME}/Documents/notes/school-notes/current-course/assignments/latex-files
+assignments_yaml_folder: ${HOME}/Documents/notes/school-notes/current-course/assignments/yaml-files
 assignments_pdf_folder: ${HOME}/Documents/notes/school-notes/current-course/assignments/pdf-files
 unit_info_name: unit-info.tex
 new_chap: False
