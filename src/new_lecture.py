@@ -18,6 +18,8 @@ def main():
 
     rofi = Rofi()
     n = rofi.integer_entry('Enter lecture number')
+    if n < 10:
+        n = '0{}'.format(n)
 
     if n:
         Lecture('{}/lectures/lec-{}.tex'.format(lectures.current_course, n))

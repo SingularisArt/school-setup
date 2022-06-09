@@ -49,6 +49,10 @@ class Lecture(Basis):
 
     def edit(self):
         """ Edits the lecture. """
+        number = ''
+
+        if int(self.number) < 10:
+            number = '0' + str(self.number)
 
         listen_location = '/tmp/nvim.pipe'
         args = []
@@ -58,10 +62,9 @@ class Lecture(Basis):
         elif not os.path.exists(listen_location):
             args = ['--listen', '/tmp/nvim.pipe']
         args = ' '.join(str(e) for e in args if e)
-        print(args)
 
         os.system('xfce4-terminal -e "nvim {} {}/lectures/lec-{}.tex"'.format(
-            args, self.current_course, self.number))
+            args, self.current_course, number))
 
     def new(self):
         """ Creates the lecture if it doesn't exist. """
