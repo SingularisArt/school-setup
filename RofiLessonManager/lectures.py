@@ -49,10 +49,6 @@ class Lecture(Basis):
 
     def edit(self):
         """ Edits the lecture. """
-        number = ''
-
-        if int(self.number) < 10:
-            number = '0' + str(self.number)
 
         listen_location = '/tmp/nvim.pipe'
         args = []
@@ -64,7 +60,7 @@ class Lecture(Basis):
         args = ' '.join(str(e) for e in args if e)
 
         os.system('xfce4-terminal -e "nvim {} {}/lectures/lec-{}.tex"'.format(
-            args, self.current_course, number))
+            args, self.current_course, self.number))
 
     def new(self):
         """ Creates the lecture if it doesn't exist. """
@@ -109,30 +105,6 @@ class Lecture(Basis):
 
 
 class Lectures(Basis, list):
-    """
-    This class inherits from the RofiLessonManager.Basis class.
-    This class inherits from the List class.
-    This class holds a list of all the lectures, which are located in the
-    lectures folder, which can be modified from the config.yaml file. Each
-    lecture is an instance from the RofiLessonManager.lectures.Lecture class.
-    Attributes:
-        - rofi_titles (list): List of titles for rofi.
-        - titles (list): List of titles.
-    Args:
-        - file_path (str): Path to the lecture file.
-    Methods:
-        - read_files: Reads all the lecture files and returns a list of Lecture
-            objects.
-            Returns:
-                - list: List of Lecture objects.
-        - compile_master: Compiles the master file.
-            Returns:
-                - int: 0 if successful, 1 otherwise.
-        - __len__: Gets the number of lectures.
-            Returns:
-                - int: Number of lectures.
-    """
-
     def __init__(self):
         """ Initializes the class. """
 
@@ -142,14 +114,34 @@ class Lectures(Basis, list):
         self.titles = [lec.title for lec in self]
 
     def read_files(self):
-        """
-        Reads all the lecture files and returns a list of Lecture objects.
-        Returns:
-            - list: List of Lecture objects.
-        """
-
         files = glob('{}/lectures/*.tex'.format(self.current_course))
         return sorted((Lecture(f) for f in files), key=lambda l: l.number)
+
+    # def parse_lecture_spec(self, string):
+    #     if len(self) == 0:
+    #         return 0
+    #
+    #     if string.isdigit():
+    #         return self[int(string) - 1].number
+    #     elif string == 'last':
+    #         return self[-1].number
+    #     elif string == 'prev':
+    #         return self[-2].number
+    #
+    # def parse_range_string(self, arg):
+    #     all_numbers = [lecture.number for lecture in self]
+    #
+    #     if 'all' in arg:
+    #         return all_numbers
+    #     if 'prev_last' == arg:
+    #         return all_numbers[-2:]
+    #     if 'prev' == arg:
+    #         return all_numbers[:-1]
+    #     if '-' in arg:
+    #         start, end = arg.split('-')
+    #         return list(range(int(start), int(end)+1))
+    #
+    #     return [self.parse_lecture_spec(arg)]
 
     def parse_lecture_spec(self, string):
         if len(self) == 0:
@@ -160,26 +152,32 @@ class Lectures(Basis, list):
         elif string == 'last':
             return self[-1].number
         elif string == 'prev':
-            return self[-2].number
+            return self[-1].number - 1
 
     def parse_range_string(self, arg):
         all_numbers = [lecture.number for lecture in self]
-
         if 'all' in arg:
             return all_numbers
-        if 'prev_last' == arg:
-            return all_numbers[-2:]
-        if 'prev' == arg:
-            return all_numbers[:-1]
+
         if '-' in arg:
-            start, end = arg.split('-')
-            return list(range(int(start), int(end)+1))
+            start, end = [
+                self.parse_lecture_spec(bit) for bit in arg.split('-')
+            ]
+            return list(range(start, end+1))
 
         return [self.parse_lecture_spec(arg)]
 
     def update_lectures_in_master(self, r):
-        body = ''.join(r'\input{lectures/' +
-                       utils.number2filename(number) + '}\n' for number in r)
+        body = ''
+        for n in r:
+            try:
+                self[int(n)-1].file_path
+                if n < 10:
+                    n = '0{}'.format(n)
+                body += r'\input{lectures/' + utils.number2filename(n) + '}\n'
+            except IndexError:
+                pass
+
         with open(self.source_lectures_location, 'w') as f:
             f.write(body)
 

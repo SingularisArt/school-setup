@@ -23,6 +23,5 @@ def success_message(message):
         - rofi (object): The rofi object from the rofi.Rofi.
     """
 
-    rofi = Rofi()
-    rofi.error('<span color="green"><b>{}</b></span>'.format(message),
-               ['-markup'])
+    rofi = Rofi(rofi_args=['-markup'])
+    rofi.error('<span color="green"><b>{}</b></span>'.format(message))

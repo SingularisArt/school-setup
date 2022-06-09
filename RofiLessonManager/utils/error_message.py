@@ -21,6 +21,5 @@ def error_message(message):
         - message (str): The message to display.
     """
 
-    rofi = Rofi()
-    rofi.error('<span color="red"><b>{}</b></span>'.format(message),
-               ['-markup'])
+    rofi = Rofi(rofi_args=['-markup'])
+    rofi.error('<span color="red"><b>{}</b></span>'.format(message))

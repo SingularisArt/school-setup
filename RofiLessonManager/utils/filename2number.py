@@ -25,4 +25,4 @@ def filename2number(s):
         - int: Lecture number.
     """
 
-    return int(str(s).replace('.tex', '').replace('lec-', ''))
+    return str(s).replace('lec-', '').replace('.tex', '')
