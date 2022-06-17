@@ -39,7 +39,7 @@ def main():
 
     if index >= 0:
         os.chdir('{}/lectures'.format(lectures.current_course))
-        lectures[index].edit()
+        sorted_lectures[index].edit()
 
 
 if __name__ == "__main__":
