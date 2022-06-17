@@ -1,5 +1,6 @@
 from RofiLessonManager.utils.check_if_assignment_is_due import check_if_assignment_is_due
 from RofiLessonManager.utils.colored_text import colored_text
+from RofiLessonManager.utils.display_number import display_number
 from RofiLessonManager.utils.error_message import error_message
 from RofiLessonManager.utils.filename2number import filename2number
 from RofiLessonManager.utils.formatdd import formatdd

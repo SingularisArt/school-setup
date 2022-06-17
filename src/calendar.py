@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+
 import pickle
 
 import os
@@ -28,6 +29,13 @@ courses = Courses()
 
 
 def authenticate():
+    """
+    Authenticates the user to access the google calendar api.
+
+    Returns:
+        - googleapiclient.discovery.build
+    """
+
     print('Authenticating')
     # If modifying these scopes, delete the file token.pickle.
     SCOPES = ['https://www.googleapis.com/auth/calendar.readonly']
@@ -61,6 +69,22 @@ def authenticate():
 
 
 def formatdd(begin, end):
+    """
+    Converts the time given into a readable human format.
+
+    Args:
+        - begin (datetime.datetime): The begin time of the class.
+        - end (datetime.datetime): The end time of the class.
+
+    Returns:
+        - A human readable format of when the next class will start. EX:
+            - 1 minute
+            - 38 minutes
+            - 1 hour
+            - 8 hours
+            - 2:38 hours
+    """
+
     minutes = math.ceil((end - begin).seconds / 60)
 
     if minutes == 1:
@@ -81,6 +105,18 @@ def formatdd(begin, end):
 
 
 def text(events, now, end):
+    """
+
+    Args:
+        - events (dict): Dictionary collection of the current items in there
+            google calendar.
+        - now (datetime.datetime): The current time.
+        - end (datetime.datetime): The end time of the class.
+
+    Returns:
+        - str: Information on the next event.
+    """
+
     current = next(
         (e for e in events if e['start'] < now and now < e['end']), None)
 
@@ -145,6 +181,18 @@ def activate_course(event):
 
 
 def main(end=False):
+    """
+    Gets information about the current class from the google calendar api
+    Also, it activates the class.
+
+    Args:
+        - end (boolean): If you want the time for the next class or when the
+            current class ends, pass end=True when calling this function.
+
+    Returns:
+        - None.
+    """
+
     scheduler = sched.scheduler(time.time, time.sleep)
 
     print('Initializing')
@@ -213,6 +261,13 @@ def main(end=False):
 
 
 def check_internet(host='http://google.com'):
+    """
+    Checks if connected to the internet.
+
+    Args:
+        - host (str): Checks if connected (Default: https://google.com).
+    """
+
     while True:
         try:
             urllib.request.urlopen(host)

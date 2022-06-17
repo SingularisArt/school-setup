@@ -486,7 +486,6 @@ class Basis(object):
         self.terminal = self.data['terminal']
         self.notes_dir = self.data['notes_dir']
         self.root = self.data['root']
-        # self.current_course = self.data['current_course']
         self.current_course = Path(self.data['current_course']).expanduser()
         self.master_file = self.data['master_file']
         self.projects_dir = self.data['projects_dir']

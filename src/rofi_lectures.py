@@ -7,20 +7,25 @@ from RofiLessonManager import utils as utils
 
 
 def main():
-    """ This main function will open and edit the selected lecture. """
+    """
+    This main function will display all the lectures in the current course to
+    the user. When the user selects a lecture, that lecture will open and he
+    can edit it.
+    """
 
     lectures = Lectures()
+    sorted_lectures = sorted(lectures, key=lambda l: -int(l.number))
 
     options = [
         "{number: >2}. <b>{title: <{fill}} </b> <span size='smaller'>{date: <{fill_2}} (Week: {week})</span>".format(
-            fill=34,
-            number=lecture.number,
-            title=utils.generate_short_title(lecture.title),
+            fill=38,
+            number=utils.display_number(lecture.number),
+            title=utils.generate_short_title(lecture.title, 39),
             date=lecture.date.strftime('%a %d %b (%I:%M %p)'),
-            fill_2=30,
+            fill_2=25,
             week=lecture.week
         )
-        for lecture in lectures
+        for lecture in sorted_lectures
     ]
 
     # Check if we have any lectures

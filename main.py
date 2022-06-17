@@ -2,7 +2,6 @@
 
 
 import argparse
-import http.client as httplib
 import os
 import sys
 

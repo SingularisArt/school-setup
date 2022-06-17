@@ -117,32 +117,6 @@ class Lectures(Basis, list):
         files = glob('{}/lectures/*.tex'.format(self.current_course))
         return sorted((Lecture(f) for f in files), key=lambda l: l.number)
 
-    # def parse_lecture_spec(self, string):
-    #     if len(self) == 0:
-    #         return 0
-    #
-    #     if string.isdigit():
-    #         return self[int(string) - 1].number
-    #     elif string == 'last':
-    #         return self[-1].number
-    #     elif string == 'prev':
-    #         return self[-2].number
-    #
-    # def parse_range_string(self, arg):
-    #     all_numbers = [lecture.number for lecture in self]
-    #
-    #     if 'all' in arg:
-    #         return all_numbers
-    #     if 'prev_last' == arg:
-    #         return all_numbers[-2:]
-    #     if 'prev' == arg:
-    #         return all_numbers[:-1]
-    #     if '-' in arg:
-    #         start, end = arg.split('-')
-    #         return list(range(int(start), int(end)+1))
-    #
-    #     return [self.parse_lecture_spec(arg)]
-
     def parse_lecture_spec(self, string):
         if len(self) == 0:
             return 0
@@ -172,7 +146,7 @@ class Lectures(Basis, list):
         for n in r:
             try:
                 self[int(n)-1].file_path
-                if n < 10:
+                if int(n) < 10:
                     n = '0{}'.format(n)
                 body += r'\input{lectures/' + utils.number2filename(n) + '}\n'
             except IndexError:
