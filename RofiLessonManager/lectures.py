@@ -7,12 +7,16 @@ from glob import glob
 import locale
 import re
 import subprocess
+import yaml
 
 from RofiLessonManager import Basis as Basis
 import RofiLessonManager.utils as utils
 
 
 locale.setlocale(locale.LC_TIME, "en_US.utf8")
+
+info = open('{}/info.yaml'.format(Basis().current_course))
+info = yaml.load(info, Loader=yaml.FullLoader)
 
 
 class Lecture(Basis):
@@ -38,7 +42,9 @@ class Lecture(Basis):
 
         date_str = lecture_match.group(2)
         date = datetime.strptime(date_str, self.date_format)
-        week = utils.get_week(date)
+        start_date_str = info['start_date']
+        start_date = datetime.strptime(start_date_str, self.date_format)
+        week = int(utils.get_week(date)) - int(utils.get_week(start_date)) + 1
         title = lecture_match.group(3)
 
         self.date_str = date_str

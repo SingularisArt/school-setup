@@ -9,7 +9,7 @@ echo "Adding configuration template ..."
 
 echo "calendar_id: primary
 code_dir: $(pwd)
-editor: nvim
+editor: ${HOME}/.local/bin/dvim
 viewer: zathura
 terminal: xfce4-terminal
 notes_dir: ${HOME}/Documents/notes/school-notes

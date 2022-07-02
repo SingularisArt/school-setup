@@ -35,21 +35,21 @@ class Assignment(Basis):
 
     def parse_command(self, cmd):
         if cmd == 'edit_latex':
-            os.system('xfce4-terminal -e "nvim {}/week-{}.tex"'.format(
-                self.assignments_latex_folder, self.number))
+            os.system('xfce4-terminal -e "{} {}/week_{}.tex"'.format(
+                self.editor, self.assignments_latex_folder, self.number))
         elif cmd == 'edit_yaml':
-            os.system('xfce4-terminal -e "nvim {}/week-{}.yaml"'.format(
-                self.assignments_latex_folder, self.number))
+            os.system('xfce4-terminal -e "{} {}/week_{}.yaml"'.format(
+                self.editor, self.assignments_yaml_folder, self.number))
         elif cmd == 'open_pdf':
             if not os.path.exists(
-                    '{}/week-{}.pdf'.format(
+                    '{}/week_{}.pdf'.format(
                         self.assignments_pdf_folder, self.number)):
                 utils.error_message(
                     'No PDF file found for assignment number {}'.format(
                         self.number))
                 exit(1)
 
-            os.system('zathura {}/week-{}.pdf'.format(
+            os.system('zathura {}/week_{}.pdf'.format(
                 self.assignments_pdf_folder, self.number))
 
     def new(self):
@@ -58,9 +58,10 @@ class Assignment(Basis):
         due_date = rofi.date_entry('Due Date (ex: 05-30-22)',
                                    formats=['%m-%d-%y'])
         due_date = due_date.strftime('%m-%d-%y')
-        _, _, selected = utils.rofi('Submitted', ['Yes', 'No'])
+        _, _, submitted = utils.rofi('Submitted', ['Yes', 'No'])
 
-        yaml_file = self.path.replace('.tex', '.yaml')
+        yaml_file = "{}/week_{}.yaml".format(
+            self.assignments_yaml_folder, self.number)
 
         with open(self.path, 'x') as file:
             pass
@@ -70,7 +71,7 @@ class Assignment(Basis):
         with open(yaml_file, 'w') as file:
             file.write('name: {}\n'.format(title))
             file.write('due_date: {}\n'.format(due_date))
-            file.write('submitted: {}\n'.format(selected))
+            file.write('submitted: {}\n'.format(submitted))
 
     def get_info(self):
         due_date = self.info['due_date']
