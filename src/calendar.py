@@ -226,7 +226,8 @@ def main(end=False):
         new_events = []
         for event in events:
             try:
-                summary = re.search(r'(.+) \(CLASS\)', event['summary']).group(1)
+                summary = re.search(r'(.+) \(CLASS\)',
+                                    event['summary']).group(1)
                 event_dict = {
                     'summary': summary,
                     'location': event.get('location', None),
