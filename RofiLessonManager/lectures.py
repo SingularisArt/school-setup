@@ -152,8 +152,6 @@ class Lectures(Basis, list):
         for n in r:
             try:
                 self[int(n)-1].file_path
-                if int(n) < 10:
-                    n = '0{}'.format(n)
                 body += r'\input{lectures/' + utils.number2filename(n) + '}\n'
             except IndexError:
                 pass

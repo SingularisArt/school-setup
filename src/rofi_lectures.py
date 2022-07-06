@@ -7,12 +7,6 @@ from RofiLessonManager import utils as utils
 
 
 def main():
-    """
-    This main function will display all the lectures in the current course to
-    the user. When the user selects a lecture, that lecture will open and he
-    can edit it.
-    """
-
     lectures = Lectures()
     sorted_lectures = sorted(lectures, key=lambda l: -int(l.number))
 
