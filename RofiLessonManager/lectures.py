@@ -65,8 +65,8 @@ class Lecture(Basis):
             args = ['--listen', '/tmp/nvim.pipe']
         args = ' '.join(str(e) for e in args if e)
 
-        os.system('xfce4-terminal -e "nvim {} {}/lectures/lec-{}.tex"'.format(
-            args, self.current_course, self.number))
+        os.system('xfce4-terminal -e "{} {} {}/lectures/lec-{}.tex"'.format(
+            self.editor, args, self.current_course, self.number))
 
     def new(self):
         """ Creates the lecture if it doesn't exist. """
