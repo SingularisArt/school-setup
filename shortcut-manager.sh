@@ -30,8 +30,7 @@ night_template+="
 
 $log_time
 
-\contentment{}
-\finalnote{}"
+\contentment{}"
 
 open_xournal () {
   cd "$today_journal_dir" || exit
