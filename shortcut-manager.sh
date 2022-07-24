@@ -23,8 +23,8 @@ basic_template="\time_of_day
 
 log_time="\\time{$(date '+%I:%M:%S %p')}"
 morning_template=$(echo "$basic_template" | sed "s/time_of_day/morning/" | sed "s/env/goals/")
-afternoon_template=$(echo "$basic_template" | sed "s/time_of_day/afternoon/" | sed "s/env/stats/")
-evening_template=$(echo "$basic_template" | sed "s/time_of_day/evening/" | sed "s/env/stats/")
+afternoon_template=$(echo "$basic_template" | sed "s/time_of_day/afternoon/" | sed "s/env/status/")
+evening_template=$(echo "$basic_template" | sed "s/time_of_day/evening/" | sed "s/env/status/")
 night_template=$(echo "$basic_template" | sed "s/time_of_day/night/" | sed "s/env/results/")
 night_template+="
 
@@ -80,19 +80,19 @@ open_note_for_today() {
   #   Evening: 5 pm - 10 pm
   #   Night: 10 pm - 6 am
 
-  if [[ "$h" -ge 6 && "$h" -le 12 ]]; then
+  if [[ "$h" -ge 6 && "$h" -lt 12 ]]; then
     if [[ ! $(cat "$today_journal_dir/note.tex" | grep '\\morning') ]]; then
       echo "$morning_template" >> "$today_journal_dir/note.tex"
     fi
-  elif [[ "$h" -ge 12 && "$h" -le 17 ]]; then
+  elif [[ "$h" -ge 12 && "$h" -lt 17 ]]; then
     if [[ ! $(cat "$today_journal_dir/note.tex" | grep '\\afternoon') ]]; then
       echo "$afternoon_template" >> "$today_journal_dir/note.tex"
     fi
-  elif [[ "$h" -ge 17 && "$h" -le 22 ]]; then
+  elif [[ "$h" -ge 17 && "$h" -lt 22 ]]; then
     if [[ ! $(cat "$today_journal_dir/note.tex" | grep '\\evening') ]]; then
       echo "$evening_template" >> "$today_journal_dir/note.tex"
     fi
-  elif [[ "$h" -ge 22 || "$h" -le 6 ]]; then
+  elif [[ "$h" -ge 22 || "$h" -lt 6 ]]; then
     if [[ ! $(cat "$today_journal_dir/note.tex" | grep '\\night') ]]; then
       echo "$night_template" >> "$today_journal_dir/note.tex"
       xfce4-terminal -e "dvim $today_journal_dir/note.tex"
