@@ -137,28 +137,68 @@ class Course(Basis):
         if not os.path.exists(path):
             self.create_course()
 
-        info = open('{}/info.yaml'.format(path))
+        info = open("{}/info.yaml".format(path))
         self.info = yaml.load(info, Loader=yaml.FullLoader)
         self._lectures = None
 
     def create_course(self):
-        """ Create a new course. """
+        """Create a new course."""
 
-        name = self.name.replace(' ', '_').replace(' ', '-').title()
+        name = self.name.replace(" ", "_").replace(" ", "-").title()
 
-        folders = ['lectures', 'assignments', 'figures', 'UltiSnips',
-                   'assignments/latex-files', 'assignments/pdf-files']
-        keys = ['title', 'short', 'url', 'calendar_name']
-        values = [name, name[:3], 'https://', name]
+        assignment_folders = ["image-files",
+                              "latex-files", "pdf-files", "yaml-files"]
+        folders = [
+            "lectures",
+            "assignments",
+            "figures",
+            "UltiSnips",
+        ]
+
+        [
+            folders.append("assignments/{}".format(folder))
+            for folder in assignment_folders
+        ]
+
+        keys = [
+            "title",
+            "topic",
+            "calendar_title",
+            "short",
+            "start_date",
+            "end_date",
+            "url",
+            "type",
+        ]
+
+        topic = ""
+        calendar_title = name
+        short = ""
+        start_date = ""
+        end_date = ""
+        url = ""
+        type = ""
+
+        values = [
+            name,
+            topic,
+            calendar_title,
+            short,
+            start_date,
+            end_date,
+            url,
+            type,
+        ]
+        print(values)
 
         os.makedirs(self.path)
         for folder in folders:
-            os.makedirs('{}/{}'.format(self.path, folder))
+            os.makedirs("{}/{}".format(self.path, folder))
 
-        info = open('{}/info.yaml'.format(self.path), 'w')
+        info = open("{}/info.yaml".format(self.path), "w")
 
         for key, value in zip(keys, values):
-            info.write('{}: {}\n'.format(key, value))
+            info.write("{}: {}\n".format(key, value))
 
     @property
     def lectures(self):
@@ -181,7 +221,7 @@ class Course(Basis):
             - str: String representation of the class.
         """
 
-        return '<Course: {}>'.format(self.name)
+        return "<Course: {}>".format(self.name)
 
     def __eq__(self, other):
         """
@@ -231,12 +271,12 @@ class Courses(Basis, list):
     """
 
     def __init__(self):
-        """ This will initialize the class. """
+        """This will initialize the class."""
 
         Basis.__init__(self)
         list.__init__(self, self.read_files())
         self.rofi_options.append(len(self))
-        self.names = [c.info['title'] for c in self]
+        self.names = [c.info["title"] for c in self]
         self.rofi_names = []
         self.paths = [c.path for c in self]
 
@@ -251,7 +291,7 @@ class Courses(Basis, list):
             - list: List of Course objects, pointing to the courses.
         """
 
-        courses = glob('{}/*'.format(self.root))
+        courses = glob("{}/*".format(self.root))
         return sorted((Course(f) for f in courses), key=lambda c: c.name)
 
     @property
