@@ -1,56 +1,63 @@
 #!/usr/bin/env bash
 
-echo "Removing config.yaml ..."
-
-source ~/.config/zsh/exports.zsh
-true > config.yaml
+export DOCUMENTS="$HOME/Documents"
+export NOTES_DIR="$DOCUMENTS/school-notes"
+export CURRENT_COURSE="$NOTES_DIR/current-course"
+export ASSIGNMENTS_DIR="$CURRENT_COURSE/assignments"
 
 echo "Adding configuration template ..."
 
-echo "calendar_id: primary
-code_dir: $(pwd)
-editor: ${HOME}/.local/bin/dvim
-viewer: zathura
-terminal: xfce4-terminal
-notes_dir: ${HOME}/Documents/school-notes
-root: ${ROOT}
-current_course: ${HOME}/Documents/school-notes/current-course
-master_file: ${HOME}/Documents/school-notes/current-course/master.tex
-source_lessons_location: ${HOME}/Documents/school-notes/current-course/source-lectures.tex
-projects_dir: ${HOME}/Documents/school-notes/projects
-assignments_dir: ${HOME}/Documents/school-notes/current-course/assignments
-assignments_latex_folder: ${HOME}/Documents/school-notes/current-course/assignments/latex-files
-assignments_yaml_folder: ${HOME}/Documents/school-notes/current-course/assignments/yaml-files
-assignments_pdf_folder: ${HOME}/Documents/school-notes/current-course/assignments/pdf-files
-unit_info_name: unit-info.tex
-new_chap: False
-home: ${HOME}
-user: ${USER}
-LESSON_RANGE_NUMBER: 1000
+echo "calendar_id: \"primary\"
+base_url: \"URL\"
+
+code_dir: \"$DOCUMENTS/school-setup\"
+editor: \"$HOME/.local/bin/dvim\"
+viewer: \"sioyek\"
+terminal: \"xfce4-terminal\"
+
+notes_dir: \"$DOCUMENTS/school-notes\"
+root: \"$NOTES_DIR/College/Year-2/semester-1\"
+current_course: \"$NOTES_DIR/current-course\"
+master_file: \"$CURRENT_COURSE/master.tex\"
+source_lessons_location: \"$CURRENT_COURSE/source-lectures.tex\"
+
+assignments_dir: \"$CURRENT_COURSE/assignments\"
+assignments_latex_folder: \"$ASSIGNMENTS_DIR/latex-files\"
+assignments_yaml_folder: \"$ASSIGNMENTS_DIR/yaml-files\"
+assignments_pdf_folder: \"$ASSIGNMENTS_DIR/pdf-files\"
+
+new_chap: \"False\"
+home: \"$HOME\"
+user: \"$USER\"
 
 rofi_options:
-  - -lines
-  - 5
-  - -markup-rows
-  - -kb-row-down
-  - Down
-  - -kb-custom-1
-  - Ctrl+n
+  - \"-lines\"
+  - \"5\"
+  - \"-markup-rows\"
+  - \"-kb-row-down\"
+  - \"Down\"
+  - \"-kb-custom-1\"
+  - \"Ctrl+n\"
 
 tex_types:
-  - .tex
-  - .latex
+  - \".tex\"
+  - \".latex\"
 
 discourage_folders:
-  - images
-  - assignments
-  - figures
-  - projects
-  - .git
-  - media
-  - current-course" >> config.yaml
-  
+  - \"images\"
+  - \"assignments\"
+  - \"figures\"
+  - \"projects\"
+  - \".git\"
+  - \"media\"
+  - \"current-course\"
 
-mkdir -p ~/.config/lesson-manager/
-rm -rf ~/.config/lesson-manager/config.yaml
-cp $(pwd)/config.yaml ~/.config/lesson-manager/config.yaml
+folders:
+  - \"assignments\"
+  - \"assignments/image-files\"
+  - \"assignments/latex-files\"
+  - \"assignments/pdf-files\"
+  - \"assignments/yaml-files\"
+  - \"lectures\"
+  - \"figures\"
+  - \"UltiSnips\"" >> ~/.config/lesson-manager/config.yaml

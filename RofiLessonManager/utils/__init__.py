@@ -3,6 +3,7 @@ from RofiLessonManager.utils.colored_text import colored_text
 from RofiLessonManager.utils.display_number import display_number
 from RofiLessonManager.utils.error_message import error_message
 from RofiLessonManager.utils.filename2number import filename2number
+from RofiLessonManager.utils.folder2name import folder2name
 from RofiLessonManager.utils.formatdd import formatdd
 from RofiLessonManager.utils.format_time import format_time
 from RofiLessonManager.utils.generate_short_title import generate_short_title

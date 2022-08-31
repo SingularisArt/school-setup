@@ -1,6 +1,6 @@
 install:
+	mkdir -p ~/.config/lesson-manager
+	cp -r ~/.config/lesson-manager/config.yaml ~/.config/lesson-manager/config.yaml.back || echo ""
 	./init-config.sh
-	mkdir -p ~/.config/lesson-manager/
-	cp ./config.yaml ~/.config/lesson-manager/
 uninstall:
 	rm -rf ~/.config/lesson-manager/
