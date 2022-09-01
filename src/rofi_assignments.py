@@ -10,6 +10,9 @@ def main():
     second_options = []
 
     assignments = Assignments()
+    if len(assignments) == 0:
+        utils.rofi.error_message("You don't have any assignments.")
+        return
     sorted_assignments = sorted(assignments, key=lambda l: -int(l.number))
     due_dates = [a.due_date for a in sorted_assignments]
 
@@ -34,25 +37,37 @@ def main():
     # Check if we have any assignments
     # If we don't, just give an error and return
     if not assignments:
-        utils.error_message("No assignments found")
+        utils.rofi.error_message("No assignments found")
         exit(1)
 
-    key, index, selected = utils.rofi(
+    key, index, selected = utils.rofi.select(
         "Select Assignment", options, assignments.rofi_options
     )
 
     if index < 0:
         sys.exit(0)
 
-    tex_path = "{}/week-{}".format(assignments.assignments_latex_folder, sorted_assignments[index].number)
-    yaml_path = "{}/week-{}".format(assignments.assignments_yaml_folder, sorted_assignments[index].number)
-    pdf_path = "{}/week-{}".format(assignments.assignments_pdf_folder, sorted_assignments[index].number)
+    tex_path = "{}/week-{}".format(
+        assignments.my_assignments_latex_folder, sorted_assignments[index].number
+    )
+    yaml_path = "{}/week-{}".format(
+        assignments.my_assignments_yaml_folder, sorted_assignments[index].number
+    )
+    pdf_path = "{}/week-{}".format(
+        assignments.my_assignments_pdf_folder, sorted_assignments[index].number
+    )
 
-    second_options.append("View LaTeX") if os.path.exists("{}.tex".format(tex_path)) else ""
-    second_options.append("View YAML") if os.path.exists("{}.yaml".format(yaml_path)) else ""
-    second_options.append("View PDF") if os.path.exists("{}.pdf".format(pdf_path)) else ""
+    second_options.append("View LaTeX") if os.path.exists(
+        "{}.tex".format(tex_path)
+    ) else ""
+    second_options.append("View YAML") if os.path.exists(
+        "{}.yaml".format(yaml_path)
+    ) else ""
+    second_options.append("View PDF") if os.path.exists(
+        "{}.pdf".format(pdf_path)
+    ) else ""
 
-    second_key, second_index, second_selected = utils.rofi(
+    second_key, second_index, second_selected = utils.rofi.select(
         "Which One for assignment: {}".format(sorted_assignments[index].title),
         second_options,
         assignments.rofi_options,
@@ -61,7 +76,7 @@ def main():
     if second_index < 0:
         sys.exit(0)
 
-    os.chdir(assignments.assignments_latex_folder)
+    os.chdir(assignments.my_assignments_latex_folder)
 
     sorted_assignments[index].parse_command(commands[second_index])
 

@@ -37,7 +37,7 @@ def get_flash_drives(user):
     try:
         drives = [x for x in os.listdir('/run/media/{}'.format(user))]
     except Exception:
-        utils.error_message('No flash drives found!')
+        utils.rofi.error_message('No flash drives found!')
         exit(1)
 
     drives_with_style = []

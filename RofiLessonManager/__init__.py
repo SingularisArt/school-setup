@@ -22,13 +22,16 @@ class Basis(object):
 
         self.notes_dir = self.data["notes_dir"]
         self.root = self.data["root"]
-        self.current_course = Path(self.data['current_course']).expanduser()
+        self.current_course = Path(self.data["current_course"]).expanduser()
         self.master_file = self.data["master_file"]
         self.source_lessons_location = self.data["source_lessons_location"]
+
         self.assignments_dir = self.data["assignments_dir"]
-        self.assignments_latex_folder = self.data["assignments_latex_folder"]
-        self.assignments_yaml_folder = self.data["assignments_yaml_folder"]
-        self.assignments_pdf_folder = self.data["assignments_pdf_folder"]
+        self.graded_assignments_folder = self.data["graded_assignments_folder"]
+        self.online_assignments_folder = self.data["online_assignments_folder"]
+        self.my_assignments_latex_folder = self.data["my_assignments_latex_folder"]
+        self.my_assignments_yaml_folder = self.data["my_assignments_yaml_folder"]
+        self.my_assignments_pdf_folder = self.data["my_assignments_pdf_folder"]
 
         self.home = self.data["home"]
         self.user = self.data["user"]
@@ -40,6 +43,7 @@ class Basis(object):
 
         self.placeholder = self.get_placeholder()
         self.date_format = "%b %d %Y %a (%H:%M:%S)"
+        self.lecture_regex = r"lesson\{(.*?)\}\{(.*?)\}\{(.*)\}"
 
     def get_placeholder(self):
         len_of_notes_dir = int(len(self.notes_dir) + 1)

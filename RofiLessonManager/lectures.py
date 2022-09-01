@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-from rofi import Rofi
 import os
 from datetime import datetime
 from glob import glob
@@ -15,7 +14,7 @@ import RofiLessonManager.utils as utils
 
 locale.setlocale(locale.LC_TIME, "en_US.utf8")
 
-info = open('{}/info.yaml'.format(Basis().current_course))
+info = open("{}/info.yaml".format(Basis().current_course))
 info = yaml.load(info, Loader=yaml.FullLoader)
 
 
@@ -42,7 +41,7 @@ class Lecture(Basis):
 
         date_str = lecture_match.group(2)
         date = datetime.strptime(date_str, self.date_format)
-        start_date_str = info['start_date']
+        start_date_str = info["start_date"]
         start_date = datetime.strptime(start_date_str, self.date_format)
         week = int(utils.get_week(date)) - int(utils.get_week(start_date)) + 1
         title = lecture_match.group(3)
@@ -54,38 +53,42 @@ class Lecture(Basis):
         self.title = title
 
     def edit(self):
-        """ Edits the lecture. """
+        """Edits the lecture."""
 
-        listen_location = '/tmp/nvim.pipe'
+        listen_location = "/tmp/nvim.pipe"
         args = []
 
         if os.path.exists(listen_location):
-            args = ['--server', '/tmp/nvim.pipe', '--remote']
+            args = ["--server", "/tmp/nvim.pipe", "--remote"]
         elif not os.path.exists(listen_location):
-            args = ['--listen', '/tmp/nvim.pipe']
-        args = ' '.join(str(e) for e in args if e)
+            args = ["--listen", "/tmp/nvim.pipe"]
+        args = " ".join(str(e) for e in args if e)
 
-        os.system('xfce4-terminal -e "{} {} {}/lectures/lec-{}.tex"'.format(
-            self.editor, args, self.current_course, self.number))
+        os.system(
+            'xfce4-terminal -e "{} {} {}/lectures/lec-{}.tex"'.format(
+                self.editor, args, self.current_course, self.number
+            )
+        )
 
     def new(self):
-        """ Creates the lecture if it doesn't exist. """
+        """Creates the lecture if it doesn't exist."""
 
-        rofi = Rofi()
-        title = rofi.text_entry('Title')
-        date = datetime.now().strftime(self.date_format)
+        title = utils.rofi.input("Title")
+        date = datetime.now().strftime(self.course_and_lecture_date_format)
         number = utils.filename2number(os.path.basename(self.file_path))
-        label = 'les_{}:{}'.format(number, title.lower().replace(' ', '_'))
+        label = "les_{}:{}".format(number, title.lower().replace(" ", "_"))
 
-        template = [fr'\lesson{{{number}}}{{{date}}}{{{title}}}',
-                    fr'\label{{{label}}}',
-                    '',
-                    '',
-                    '',
-                    r'\newpage']
+        template = [
+            rf"\lesson{{{number}}}{{{date}}}{{{title}}}",
+            rf"\label{{{label}}}",
+            "",
+            "",
+            "",
+            r"\newpage",
+        ]
 
-        with open(self.file_path, 'w') as f:
-            f.write('\n'.join(template))
+        with open(self.file_path, "w") as f:
+            f.write("\n".join(template))
 
     def __str__(self):
         """
@@ -94,9 +97,7 @@ class Lecture(Basis):
             - str: Lecture as a string.
         """
 
-        return '<Lecture Title: {}" {} {}>'.format(
-            self.title, self.number, self.week
-        )
+        return '<Lecture Title: {}" {} {}>'.format(self.title, self.number, self.week)
 
     def __eq__(self, other):
         """
@@ -112,7 +113,7 @@ class Lecture(Basis):
 
 class Lectures(Basis, list):
     def __init__(self):
-        """ Initializes the class. """
+        """Initializes the class."""
 
         Basis.__init__(self)
 
@@ -120,7 +121,7 @@ class Lectures(Basis, list):
         self.titles = [lec.title for lec in self]
 
     def read_files(self):
-        files = glob('{}/lectures/*.tex'.format(self.current_course))
+        files = glob("{}/lectures/*.tex".format(self.current_course))
         return sorted((Lecture(f) for f in files), key=lambda l: l.number)
 
     def parse_lecture_spec(self, string):
@@ -129,34 +130,33 @@ class Lectures(Basis, list):
 
         if string.isdigit():
             return int(string)
-        elif string == 'last':
+        elif string == "last":
             return self[-1].number
-        elif string == 'prev':
+        elif string == "prev":
             return self[-1].number - 1
 
     def parse_range_string(self, arg):
         all_numbers = [lecture.number for lecture in self]
-        if 'all' in arg:
+        if "all" in arg:
             return all_numbers
 
-        if '-' in arg:
-            start, end = [
-                self.parse_lecture_spec(bit) for bit in arg.split('-')
-            ]
-            return list(range(start, end+1))
+        if "-" in arg:
+            start, end = [self.parse_lecture_spec(
+                bit) for bit in arg.split("-")]
+            return list(range(start, end + 1))
 
         return [self.parse_lecture_spec(arg)]
 
     def update_lectures_in_master(self, r):
-        body = ''
+        body = ""
         for n in r:
             try:
-                self[int(n)-1].file_path
-                body += r'\input{lectures/' + utils.number2filename(n) + '}\n'
+                self[int(n) - 1].file_path
+                body += r"\input{lectures/" + utils.number2filename(n) + "}\n"
             except IndexError:
                 pass
 
-        with open(self.source_lectures_location, 'w') as f:
+        with open(self.source_lectures_location, "w") as f:
             f.write(body)
 
     def compile_master(self):
@@ -167,14 +167,13 @@ class Lectures(Basis, list):
         """
 
         result = subprocess.run(
-            ['pdflatex', str(self.master_file)],
-            cwd=str(self.current_course)
+            ["pdflatex", str(self.master_file)], cwd=str(self.current_course)
         )
 
         if result.returncode == 0:
-            utils.success_message('Compilation successful')
+            utils.rofi.success_message("Compilation successful")
         else:
-            utils.error_message('Compilation failed')
+            utils.rofi.error_message("Compilation failed")
 
         return result.returncode
 

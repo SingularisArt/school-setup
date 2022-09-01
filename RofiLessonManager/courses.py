@@ -25,8 +25,6 @@ class Course(Basis):
         self._lectures = None
 
     def create_course(self):
-        rofi = Rofi()
-
         name = self.name.replace(" ", "_").title()
 
         keys = [
@@ -43,26 +41,28 @@ class Course(Basis):
         categories = ["Science", "Math", "Writing", "English"]
         types = ["In Person", "Online", "Remote"]
 
-        _, _, topic = utils.rofi(
+        topic = utils.rofi.select(
             "Select category of class",
             [c for c in categories],
             ["-auto-select", "-no-custom", "-lines", len(categories)],
-        )
+        )[2]
 
         calendar_title = utils.folder2name(name)
-        short = rofi.text_entry(
+        short = utils.rofi.input(
             "Short version of course name ({})".format(utils.folder2name(name))
+        )[1]
+        start_date = utils.rofi.input("Start Date (08-31-22)")[1]
+        end_date = utils.rofi.input("End Date (08-31-22)")[1]
+        url = (
+            self.base_url
+            + "/"
+            + utils.rofi.input("Enter last 5 digits of url to the course")[1]
         )
-        start_date = rofi.text_entry("Start Date (08-31-22)")
-        end_date = rofi.text_entry("End Date (08-31-22)")
-        url = self.base_url + rofi.text_entry(
-            "Enter last 5 digits of url to the course"
-        )
-        _, _, type = utils.rofi(
+        type = utils.rofi.select(
             "Select type of class",
             [t for t in types],
             ["-auto-select", "-no-custom", "-lines", len(types)],
-        )
+        )[2]
 
         values = [
             utils.folder2name(name),
@@ -74,7 +74,6 @@ class Course(Basis):
             url,
             type,
         ]
-        print(values)
 
         os.makedirs(self.path)
         for folder in self.folders:

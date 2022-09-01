@@ -8,23 +8,40 @@ from RofiLessonManager import utils as utils
 
 
 def main():
-    """ This main function will change the current course. """
+    """This main function will change the current course."""
 
     courses = Courses()
     current = courses.current
+    options = [
+        "<b>{title: <{fill}}</b> <span size='smaller'><i>({topic})</i></span>".format(
+            title=c.info["title"],
+            topic=c.info["topic"],
+            fill=34,
+        )
+        for c in courses
+    ]
+    print(options[0])
 
     try:
         current_index = courses.index(current)
-        args = ['-a', current_index]
+        args = ["-a", current_index]
     except Exception:
         args = []
 
-    key, index, selected = utils.rofi(
-        'Select course', [c.info['title'] for c in courses], [
-            '-auto-select',
-            '-no-custom',
-            '-lines', len(courses)
-        ] + args)
+    key, index, selected = utils.rofi.select(
+        "Select course",
+        options,
+        [
+            "-lines",
+            len(courses),
+            "-markup-rows",
+            "-kb-row-down",
+            "Down",
+            "-kb-custom-1",
+            "Ctrl+n",
+        ]
+        + args,
+    )
 
     if index >= 0:
         courses.current = courses[index]

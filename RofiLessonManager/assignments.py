@@ -20,26 +20,39 @@ class Assignment(Basis):
             self.new()
 
         self.name = os.path.basename(path)
-        self.number = utils.filename2number(os.path.basename(path), "assignment")
+        self.number = utils.filename2number(
+            os.path.basename(path), "assignment")
 
         info_file_name = self.name.replace("tex", "yaml")
-        info = open("{}/{}".format(self.assignments_yaml_folder, info_file_name))
-        self.info_file = "{}/{}".format(self.assignments_latex_folder, info_file_name)
+        info = open(
+            "{}/{}".format(self.my_assignments_yaml_folder, info_file_name))
+        self.info_file = "{}/{}".format(
+            self.my_assignments_latex_folder, info_file_name
+        )
         self.info = yaml.load(info, Loader=yaml.FullLoader)
 
-        self.number, self.title, self.due_date, self.submit = self.get_info()
+        try:
+            self.number, self.title, self.due_date, self.submit = self.get_info()
+        except Exception:
+            self.number = -1
+            self.title = ""
+            self.due_date = ""
+            self.submit = False
 
     def parse_command(self, cmd):
         terminal = "xfce4-terminal -e"
         editor = self.editor if cmd != "open_pdf" else "zathura"
 
-        tex_path = "{}/week-{}".format(self.assignments_latex_folder, self.number)
-        yaml_path = "{}/week-{}".format(self.assignments_yaml_folder, self.number)
-        pdf_path = "{}/week-{}".format(self.assignments_pdf_folder, self.number)
+        tex_path = "{}/week-{}".format(
+            self.my_assignments_latex_folder, self.number)
+        yaml_path = "{}/week-{}".format(
+            self.my_assignments_yaml_folder, self.number)
+        pdf_path = "{}/week-{}".format(
+            self.my_assignments_pdf_folder, self.number)
 
-        tex_extension = '.tex'
-        yaml_extension = '.yaml'
-        pdf_extension = '.pdf'
+        tex_extension = ".tex"
+        yaml_extension = ".yaml"
+        pdf_extension = ".pdf"
 
         path = (
             tex_path + tex_extension
@@ -61,11 +74,14 @@ class Assignment(Basis):
     def new(self):
         rofi = Rofi()
         title = rofi.text_entry("Title")
-        due_date = rofi.date_entry("Due Date (ex: 05-30-22)", formats=["%m-%d-%y"])
+        due_date = rofi.date_entry(
+            "Due Date (ex: 05-30-22)", formats=["%m-%d-%y"])
         due_date = due_date.strftime("%m-%d-%y")
-        _, _, submitted = utils.rofi("Submitted", ["Yes", "No"])
+        _, _, submitted = utils.rofi.select("Submitted", ["Yes", "No"])
 
-        yaml_file = "{}/week-{}.yaml".format(self.assignments_yaml_folder, self.number)
+        yaml_file = "{}/week-{}.yaml".format(
+            self.my_assignments_yaml_folder, self.number
+        )
 
         with open(self.path, "x") as file:
             pass
@@ -83,7 +99,8 @@ class Assignment(Basis):
         title = utils.generate_short_title(self.info["name"], 22)
         number = self.name[5:-4]
 
-        logo, due_date, late = utils.check_if_assignment_is_due(due_date, submit)
+        logo, due_date, late = utils.check_if_assignment_is_due(
+            due_date, submit)
 
         if not submit:
             submit = "No"
@@ -115,7 +132,8 @@ class Assignments(Basis, list):
         self.titles = [a.name for a in self]
 
     def read_files(self):
-        files = natsorted(glob("{}/*.tex".format(self.assignments_latex_folder)))
+        files = natsorted(
+            glob("{}/*.tex".format(self.my_assignments_latex_folder)))
 
         return sorted((Assignment(f) for f in files), key=lambda a: a.number)
 

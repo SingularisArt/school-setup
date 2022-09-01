@@ -15,9 +15,9 @@ def main():
             fill=38,
             number=utils.display_number(lecture.number),
             title=utils.generate_short_title(lecture.title, 39),
-            date=lecture.date.strftime('%a %d %b (%I:%M %p)'),
+            date=lecture.date.strftime("%a %d %b (%I:%M %p)"),
             fill_2=25,
-            week=lecture.week
+            week=lecture.week,
         )
         for lecture in sorted_lectures
     ]
@@ -25,14 +25,15 @@ def main():
     # Check if we have any lectures
     # If we don't, just give an error and return
     if not lectures:
-        utils.error_message('No lectures found')
+        utils.rofi.error_message("No lectures found")
         exit(1)
 
-    key, index, selected = utils.rofi('Select Lesson', options,
-                                      lectures.rofi_options)
+    key, index, selected = utils.rofi.select(
+        "Select Lesson", options, lectures.rofi_options
+    )
 
     if index >= 0:
-        os.chdir('{}/lectures'.format(lectures.current_course))
+        os.chdir("{}/lectures".format(lectures.current_course))
         sorted_lectures[index].edit()
 
 

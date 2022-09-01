@@ -1,56 +1,23 @@
 #!/usr/bin/env python3
 
-"""
-Function rofi:
-    - RofiLessonManager.utils.rofi
-
-    Run rofi with the given prompt and options.
-
-    Args:
-        - prompt (str): The prompt to display.
-        - options (list): A list of options to display.
-        - rofi_args (list): A list of arguments to pass to rofi. (default: [])
-        - fuzzy (bool): Whether to use fuzzy matching. (default: True)
-
-    Returns:
-        - key (int): The status code of the rofi process.
-        - index (int): The index of the selected option.
-        - selected (str): The selected option.
-"""
-
 import subprocess
 
 
-def rofi(prompt, options, rofi_args=[], fuzzy=True):
-    """
-    Run rofi with the given prompt and options.
+def select(prompt, options, rofi_args=[], fuzzy=True):
+    optionstr = "\n".join(option.replace("\n", " ") for option in options)
 
-    Args:
-        - prompt (str): The prompt to display.
-        - options (list): A list of options to display.
-        - rofi_args (list): A list of arguments to pass to rofi. (default: [])
-        - fuzzy (bool): Whether to use fuzzy matching. (default: True)
-
-    Returns:
-        - key (int): The status code of the rofi process.
-        - index (int): The index of the selected option.
-        - selected (str): The selected option.
-    """
-
-    optionstr = '\n'.join(option.replace('\n', ' ') for option in options)
-
-    args = ['rofi', '-sort', '-no-levenshtein-sort']
+    args = ["rofi", "-markup"]
 
     if fuzzy:
-        args += ['-matching', 'fuzzy']
+        args += ["-matching", "fuzzy"]
 
-    args += ['-dmenu', '-p', prompt, '-format', 's', '-i']
+    args += ["-dmenu", "-p", prompt, "-format", "s", "-i"]
     args += rofi_args
     args = [str(arg) for arg in args]
 
-    result = subprocess.run(args, input=optionstr,
-                            stdout=subprocess.PIPE,
-                            universal_newlines=True)
+    result = subprocess.run(
+        args, input=optionstr, stdout=subprocess.PIPE, universal_newlines=True
+    )
 
     returncode = result.returncode
     stdout = result.stdout.strip()
@@ -63,10 +30,70 @@ def rofi(prompt, options, rofi_args=[], fuzzy=True):
         index = -1
 
     if returncode == 0:
-        key = 0
+        code = 0
     if returncode == 1:
-        key = -1
+        code = -1
     if returncode > 9:
-        key = returncode - 9
+        code = returncode - 9
 
-    return key, index, selected
+    return code, index, selected
+
+
+def display_text(prompt, rofi_args=[]):
+    args = ["rofi", "-markup"]
+
+    args += ["-e", prompt]
+    args += rofi_args
+    args = [str(arg) for arg in args]
+
+    result = subprocess.run(
+        args, input=prompt, stdout=subprocess.PIPE, universal_newlines=True
+    )
+
+    returncode = result.returncode
+
+    if returncode == 0:
+        code = 0
+    if returncode == 1:
+        code = -1
+    if returncode > 9:
+        code = returncode - 9
+
+    return code
+
+
+def input(prompt, rofi_args=[]):
+    args = [
+        "rofi",
+        "-lines",
+        "0",
+        "-separator-style",
+        "'none'",
+    ]
+
+    args += ["-dmenu", "-p", prompt]
+    args += rofi_args
+
+    args = [str(arg) for arg in args]
+
+    result = subprocess.run(args, stdout=subprocess.PIPE,
+                            universal_newlines=True)
+
+    returncode = result.returncode
+
+    if returncode == 0:
+        code = 0
+    if returncode == 1:
+        code = -1
+    if returncode > 9:
+        code = returncode - 9
+
+    return code, result.stdout.strip("\n")
+
+
+def error_message(msg):
+    display_text("<span color='red'><b>{}</b></span>".format(msg))
+
+
+def success_message(msg):
+    display_text("<span color='green'><b>{}</b></span>".format(msg))

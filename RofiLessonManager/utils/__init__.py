@@ -1,7 +1,6 @@
 from RofiLessonManager.utils.check_if_assignment_is_due import check_if_assignment_is_due
 from RofiLessonManager.utils.colored_text import colored_text
 from RofiLessonManager.utils.display_number import display_number
-from RofiLessonManager.utils.error_message import error_message
 from RofiLessonManager.utils.filename2number import filename2number
 from RofiLessonManager.utils.folder2name import folder2name
 from RofiLessonManager.utils.formatdd import formatdd
@@ -14,6 +13,5 @@ from RofiLessonManager.utils.join import join
 from RofiLessonManager.utils.load_data import load_data
 from RofiLessonManager.utils.location import location
 from RofiLessonManager.utils.number2filename import number2filename
-from RofiLessonManager.utils.rofi import rofi
-from RofiLessonManager.utils.success_message import success_message
+import RofiLessonManager.utils.rofi
 from RofiLessonManager.utils.summary import summary
