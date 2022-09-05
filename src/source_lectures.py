@@ -5,7 +5,7 @@ import RofiLessonManager.utils as utils
 def main():
     lectures = Lectures()
     if not lectures:
-        utils.rofi.error_message("No lectures found!")
+        utils.rofi.msg("No lectures found!")
         return
 
     commands = ["last", "prev_last", "all", "prev"]

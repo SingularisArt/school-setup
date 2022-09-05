@@ -68,42 +68,6 @@ def authenticate():
     return service
 
 
-def formatdd(begin, end):
-    """
-    Converts the time given into a readable human format.
-
-    Args:
-        - begin (datetime.datetime): The begin time of the class.
-        - end (datetime.datetime): The end time of the class.
-
-    Returns:
-        - A human readable format of when the next class will start. EX:
-            - 1 minute
-            - 38 minutes
-            - 1 hour
-            - 8 hours
-            - 2:38 hours
-    """
-
-    minutes = math.ceil((end - begin).seconds / 60)
-
-    if minutes == 1:
-        return "1 minute"
-
-    if minutes < 60:
-        return "{} minutes".format(minutes)
-
-    hours = math.floor(minutes / 60)
-    rest_minutes = minutes % 60
-
-    if hours == 1 and rest_minutes == 0:
-        return "1 hour"
-    elif hours > 5 or rest_minutes == 0:
-        return "{} hours".format(hours)
-
-    return "{}:{:02d} hours".format(hours, rest_minutes)
-
-
 def text(events, now, end):
     """
 
@@ -124,31 +88,36 @@ def text(events, now, end):
     if not current:
         nxt = next((e for e in events if now <= e["start"]), None)
         if nxt:
+            print(utils.format_date_and_time(now, nxt["start"]))
             return utils.join(
                 utils.colored_text(nxt["type"]),
                 utils.summary(nxt["summary"]),
                 utils.colored_text("starts in"),
-                formatdd(now, nxt["start"]),
+                utils.format_date_and_time(now, nxt["start"]),
                 utils.location(nxt["location"]),
                 "   ",
                 utils.format_time(nxt["start"]),
             )
         return ""
     nxt = next((e for e in events if e["start"] >= current["end"]), None)
+    print(utils.format_date_and_time(now, current["end"]))
     if not nxt:
+        print(utils.format_date_and_time(now, nxt["start"]))
         return utils.join(
             utils.colored_text(current["type"]),
             utils.colored_text("Ends in"),
-            formatdd(now, current["end"]) + "!",
+            utils.format_date_and_time(now, current["end"]) + "!",
             "   ",
             utils.format_time(current["end"]),
         )
 
     if current["end"] == nxt["start"]:
+        print(utils.format_date_and_time(now, current["end"]) + utils.colored_text("."))
         return utils.join(
             utils.colored_text(nxt["type"]),
             utils.colored_text("Ends in"),
-            formatdd(now, current["end"]) + utils.colored_text("."),
+            utils.format_date_and_time(
+                now, current["end"]) + utils.colored_text("."),
             utils.colored_text("Next:"),
             utils.summary(nxt["summary"]),
             utils.location(nxt["location"]),
@@ -156,15 +125,17 @@ def text(events, now, end):
             utils.format_time(nxt["start"]),
         )
 
+    print(utils.format_date_and_time(current["end"], nxt["start"]))
     return utils.join(
         utils.colored_text(nxt["type"]),
         utils.colored_text("Ends in"),
-        formatdd(now, current["end"]) + utils.colored_text("."),
+        utils.format_date_and_time(
+            now, current["end"]) + utils.colored_text("."),
         utils.colored_text("Next:"),
         utils.summary(nxt["summary"]),
         utils.location(nxt["location"]),
         utils.colored_text("after a"),
-        formatdd(current["end"], nxt["start"]),
+        utils.format_date_and_time(current["end"], nxt["start"]),
         utils.colored_text("break."),
         "   ",
         utils.format_time(current["end"]),
@@ -267,7 +238,6 @@ def main(end=False):
 
     def print_message():
         now = datetime.datetime.now(tz=TZ)
-        print(text(events, now, end))
         if now < evening:
             scheduler.enter(DELAY, 1, print_message)
 

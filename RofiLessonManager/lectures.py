@@ -49,7 +49,7 @@ class Lecture(Basis):
         self.date_str = date_str
         self.date = date
         self.week = week
-        self.number = utils.filename2number(os.path.basename(file_path))
+        self.number = utils.filename_to_number(os.path.basename(file_path))
         self.title = title
 
     def edit(self):
@@ -75,7 +75,7 @@ class Lecture(Basis):
 
         title = utils.rofi.input("Title")
         date = datetime.now().strftime(self.course_and_lecture_date_format)
-        number = utils.filename2number(os.path.basename(self.file_path))
+        number = utils.filename_to_number(os.path.basename(self.file_path))
         label = "les_{}:{}".format(number, title.lower().replace(" ", "_"))
 
         template = [
@@ -152,7 +152,8 @@ class Lectures(Basis, list):
         for n in r:
             try:
                 self[int(n) - 1].file_path
-                body += r"\input{lectures/" + utils.number2filename(n) + "}\n"
+                body += r"\input{lectures/" + \
+                    utils.number_to_filename(n) + "}\n"
             except IndexError:
                 pass
 
@@ -171,9 +172,9 @@ class Lectures(Basis, list):
         )
 
         if result.returncode == 0:
-            utils.rofi.success_message("Compilation successful")
+            utils.rofi.msg("Compilation successful", err=False)
         else:
-            utils.rofi.error_message("Compilation failed")
+            utils.rofi.msg("Compilation failed")
 
         return result.returncode
 

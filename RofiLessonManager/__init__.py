@@ -10,7 +10,8 @@ class Basis(object):
         """Initializes the class."""
 
         # Load the data from the config file
-        self.data = utils.load_data()
+        self.data = utils.load_data(
+            "~/.config/lesson-manager/config.yaml", "yaml")
 
         # Assign the data to the variables
         self.calendar_id = self.data["calendar_id"]
@@ -24,7 +25,7 @@ class Basis(object):
         self.root = self.data["root"]
         self.current_course = Path(self.data["current_course"]).expanduser()
         self.master_file = self.data["master_file"]
-        self.source_lessons_location = self.data["source_lessons_location"]
+        self.source_lectures_location = self.data["source_lessons_location"]
 
         self.assignments_dir = self.data["assignments_dir"]
         self.graded_assignments_folder = self.data["graded_assignments_folder"]

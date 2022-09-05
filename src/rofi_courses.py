@@ -13,10 +13,11 @@ def main():
     courses = Courses()
     current = courses.current
     options = [
-        "<b>{title: <{fill}}</b> <span size='smaller'><i>({topic})</i></span>".format(
-            title=c.info["title"],
+        "<b>{title: <{fill}}</b> <i>({topic}: <b>{number})</b></i>".format(
+            title=utils.generate_short_title(c.info["title"]),
             topic=c.info["topic"],
             fill=34,
+            number=c.info["class_number"],
         )
         for c in courses
     ]

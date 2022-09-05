@@ -1,9 +1,79 @@
 #!/usr/bin/env python3
 
+"""
+Function select:
+    Allow the user to select an item from a list, via Rofi.
+
+    Args:
+        prompt (str): The prompt to display to the user.
+        options (list): The list of options for the user to select from.
+        rofi_args (list): Optional arguments to pass to Rofi directly.
+            Default: [].
+        fuzzy (bool): Allow the user to fuzzy search. Default: True.
+
+    Returns:
+        tuple:
+            status code (int)
+            index (int)
+            selected (str)
+
+Function input:
+    Get user input, via Rofi.
+
+    Args:
+        prompt (str): The prompt to display to the user.
+        rofi_args (list): Optional arguments to pass to Rofi directly.
+
+    Returns:
+        tuple:
+            status code (int)
+            user input (str)
+
+Function display_text:
+    Display text to the user, via Rofi.
+
+    Args:
+        prompt (str): The prompt to display to the user.
+        rofi_args (list): Optional arguments to pass to Rofi directly.
+
+    Returns:
+        status code (int)
+
+Function msg:
+    Display a message, via Rofi. The text provided will be colored red, if the
+        message is an error. Else, the color will be green. The default styles
+        are: Bold
+
+    Args:
+        msg (str): The string to display.
+        bold (bool): String to be bold or not. Default: True.
+        italic (bool): String to be italic or not. Default: False.
+        underline (bool): String to be underlined or not. Default: False.
+        err (bool): If the message is an error message or not. If it is, then
+            the color of the text will be red. Else, green.
+"""
+
 import subprocess
 
 
-def select(prompt, options, rofi_args=[], fuzzy=True):
+def select(prompt: str, options: list, rofi_args=[], fuzzy=True) -> tuple:
+    """
+    Allow the user to select an item from a list, via Rofi.
+
+    Args:
+        prompt (str): The prompt to display to the user.
+        options (list): The list of options for the user to select from.
+        rofi_args (list): Optional arguments to pass to Rofi directly.
+            Default: [].
+        fuzzy (bool): Allow the user to fuzzy search. Default: True.
+
+    Returns:
+        tuple:
+            status code (int)
+            index (int)
+            selected (str)
+    """
+
     optionstr = "\n".join(option.replace("\n", " ") for option in options)
 
     args = ["rofi", "-markup"]
@@ -39,30 +109,20 @@ def select(prompt, options, rofi_args=[], fuzzy=True):
     return code, index, selected
 
 
-def display_text(prompt, rofi_args=[]):
-    args = ["rofi", "-markup"]
+def input(prompt: str, rofi_args=[]) -> tuple:
+    """
+    Get user input, via Rofi.
 
-    args += ["-e", prompt]
-    args += rofi_args
-    args = [str(arg) for arg in args]
+    Args:
+        prompt (str): The prompt to display to the user.
+        rofi_args (list): Optional arguments to pass to Rofi directly.
 
-    result = subprocess.run(
-        args, input=prompt, stdout=subprocess.PIPE, universal_newlines=True
-    )
+    Returns:
+        tuple:
+            status code (int)
+            user input (str)
+    """
 
-    returncode = result.returncode
-
-    if returncode == 0:
-        code = 0
-    if returncode == 1:
-        code = -1
-    if returncode > 9:
-        code = returncode - 9
-
-    return code
-
-
-def input(prompt, rofi_args=[]):
     args = [
         "rofi",
         "-lines",
@@ -91,9 +151,66 @@ def input(prompt, rofi_args=[]):
     return code, result.stdout.strip("\n")
 
 
-def error_message(msg):
-    display_text("<span color='red'><b>{}</b></span>".format(msg))
+def display_text(prompt: str, rofi_args=[]) -> tuple:
+    """
+    Display text to the user, via Rofi.
+
+    Args:
+        prompt (str): The prompt to display to the user.
+        rofi_args (list): Optional arguments to pass to Rofi directly.
+
+    Returns:
+        status code (int)
+    """
+
+    args = ["rofi", "-markup"]
+
+    args += ["-e", prompt]
+    args += rofi_args
+    args = [str(arg) for arg in args]
+
+    result = subprocess.run(
+        args, input=prompt, stdout=subprocess.PIPE, universal_newlines=True
+    )
+
+    returncode = result.returncode
+
+    if returncode == 0:
+        code = 0
+    if returncode == 1:
+        code = -1
+    if returncode > 9:
+        code = returncode - 9
+
+    return code
 
 
-def success_message(msg):
-    display_text("<span color='green'><b>{}</b></span>".format(msg))
+def msg(msg: str, bold=True, italic=False, underline=False, err=False) -> None:
+    """
+    Display a message, via Rofi. The text provided will be colored red, if the
+        message is an error. Else, the color will be green. The default styles
+        are: Bold
+
+    Args:
+        msg (str): The string to display.
+        bold (bool): String to be bold or not. Default: True.
+        italic (bool): String to be italic or not. Default: False.
+        underline (bool): String to be underlined or not. Default: False.
+        err (bool): If the message is an error message or not. If it is, then
+            the color of the text will be red. Else, green.
+    """
+
+    beginning = (
+        f"{'<b>' if bold else ''}"
+        + f"{'<i>' if italic else ''}"
+        + f"{'<u>' if underline else ''}"
+    )
+    end = (
+        f"{'</u>' if underline else ''}"
+        + f"{'</i>' if italic else ''}"
+        + f"{'</b>' if bold else ''}"
+    )
+    text = f"{beginning}{msg}{end}"
+
+    display_text(
+        f"<span color='{'red' if not err else 'green'}'>{text}</span>")

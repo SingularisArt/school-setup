@@ -47,9 +47,9 @@ class Course(Basis):
             ["-auto-select", "-no-custom", "-lines", len(categories)],
         )[2]
 
-        calendar_title = utils.folder2name(name)
+        calendar_title = utils.folder_to_name(name)
         short = utils.rofi.input(
-            "Short version of course name ({})".format(utils.folder2name(name))
+            "Short version of course name ({})".format(utils.folder_to_name(name))
         )[1]
         start_date = utils.rofi.input("Start Date (08-31-22)")[1]
         end_date = utils.rofi.input("End Date (08-31-22)")[1]
@@ -65,7 +65,7 @@ class Course(Basis):
         )[2]
 
         values = [
-            utils.folder2name(name),
+            utils.folder_to_name(name),
             topic,
             calendar_title,
             short,

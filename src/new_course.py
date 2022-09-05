@@ -24,7 +24,7 @@ def main():
     name = name.replace(' ', '-').replace('_', '-').lower()
 
     if '{}/{}'.format(b.root, name) in Courses().paths:
-        utils.rofi.error_message('Course already exists')
+        utils.rofi.msg('Course already exists')
         return
 
     Course('{}/{}'.format(b.root, name))

@@ -11,7 +11,7 @@ def main():
 
     assignments = Assignments()
     if len(assignments) == 0:
-        utils.rofi.error_message("You don't have any assignments.")
+        utils.rofi.msg("You don't have any assignments.")
         return
     sorted_assignments = sorted(assignments, key=lambda l: -int(l.number))
     due_dates = [a.due_date for a in sorted_assignments]
@@ -37,7 +37,7 @@ def main():
     # Check if we have any assignments
     # If we don't, just give an error and return
     if not assignments:
-        utils.rofi.error_message("No assignments found")
+        utils.rofi.msg("No assignments found")
         exit(1)
 
     key, index, selected = utils.rofi.select(

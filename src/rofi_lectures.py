@@ -12,20 +12,21 @@ def main():
 
     options = [
         "{number: >2}. <b>{title: <{fill}} </b> <span size='smaller'>{date: <{fill_2}} (Week: {week})</span>".format(
-            fill=38,
-            number=utils.display_number(lecture.number),
-            title=utils.generate_short_title(lecture.title, 39),
+            fill=30,
+            number=utils.display_number(str(lecture.number)),
+            title=utils.generate_short_title(lecture.title, 30),
             date=lecture.date.strftime("%a %d %b (%I:%M %p)"),
-            fill_2=25,
+            fill_2=15,
             week=lecture.week,
         )
         for lecture in sorted_lectures
     ]
+    print(options[0])
 
     # Check if we have any lectures
     # If we don't, just give an error and return
     if not lectures:
-        utils.rofi.error_message("No lectures found")
+        utils.rofi.msg("No lectures found")
         exit(1)
 
     key, index, selected = utils.rofi.select(

@@ -2,43 +2,67 @@
 
 """
 Function load_data:
-    - RofiLessonManager.utils.load_data
+    Load the data from given file.
 
-    Loads the data from a config.yaml file. It first checks if there
-    exists a config.yaml file in ~/.config/lesson-manager/ and if not,
-    it just loads the default config.yaml file.
+    Args:
+        data_file (str): The location to the yaml file you wish to load.
+        type (str): Type of data file: yaml, json
 
     Returns:
-        - data (dict): The data from the config.yaml file.
+        data (dict): The data from the yaml data file file.
+
+    Raises:
+        FileNotFoundError: If the given file doesn't exist.
+        YAMLError: If there's an error loading the actual data from the given
+            yaml data file.
+        JSONDecodeError: If there's an error loading the actual data from the
+            given json data file.
 """
 
-import yaml
+import json
 from pathlib import Path
+import yaml
 
 
-def load_data():
+def load_data(data_file: str, type: str) -> dict:
     """
-    Loads the data from a config.yaml file. It first checks if there
-    exists a config.yaml file in ~/.config/lesson-manager/ and if not,
-    it just loads the default config.yaml file.
+    Load the data from given file.
+
+    Args:
+        data_file (str): The location to the yaml file you wish to load.
+        type (str): Type of data file: yaml, json
 
     Returns:
-        - data (dict): The data from the config.yaml file.
+        data (dict): The data from the yaml data file file.
+
+    Raises:
+        FileNotFoundError: If the given file doesn't exist.
+        YAMLError: If there's an error loading the actual data from the given
+            yaml data file.
+        JSONDecodeError: If there's an error loading the actual data from the
+            given json data file.
     """
 
-    # Check if there exists a ~/.config/lesson-manager/config.yaml file
-    # If not, use the default config.yaml file which is located
-    # ./config.yaml
-    config_file = Path('~/.config/lesson-manager/config.yaml').expanduser()
+    # Check if the data file exists.
+    config_file = Path(data_file).expanduser()
+    # If not, raise an error.
     if not config_file.exists():
-        config_file = Path('./config.yaml')
+        raise FileNotFoundError(f"File {data_file} couldn't be loaded.")
 
-    # Load all of the data from the config file
-    with open(config_file, 'r') as config_file_open:
+    # Load all of the data from the config file.
+    config_file_open = open(config_file, "r").read()
+
+    if type == "yaml":
         try:
-            data = yaml.safe_load(config_file_open)
+            # Return the data from the config file.
+            return yaml.safe_load(config_file_open)
         except yaml.YAMLError as exc:
             raise exc
-
-    # Return the data from the config file
-    return data
+    elif type == "json":
+        try:
+            # Return the data from the config file.
+            return json.load(config_file_open)
+        except json.decoder.JSONDecodeError as exc:
+            raise exc
+    else:
+        raise
