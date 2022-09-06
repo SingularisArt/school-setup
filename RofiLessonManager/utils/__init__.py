@@ -8,6 +8,7 @@ from RofiLessonManager.utils.folder_to_name import folder_to_name
 from RofiLessonManager.utils.format_date_and_time import format_date_and_time
 from RofiLessonManager.utils.format_time import format_time
 from RofiLessonManager.utils.generate_short_title import generate_short_title
+from RofiLessonManager.utils.get_placeholder import get_placeholder
 from RofiLessonManager.utils.get_week import get_week
 from RofiLessonManager.utils.join import join
 from RofiLessonManager.utils.load_data import load_data

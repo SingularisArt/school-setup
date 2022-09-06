@@ -2,26 +2,34 @@
 
 import os
 
+from config import date_format, rofi_options, current_course
+
 from RofiLessonManager.lectures import Lectures as Lectures
 from RofiLessonManager import utils as utils
 
 
 def main():
+    # Get all our assignments.
     lectures = Lectures()
+
+    # Check if we have any assignments
+    # If we don't, just give an error and return
+    if not lectures:
+        utils.rofi.msg("You don't have any assignments.")
+        exit(1)
+
+    # Sort the assignments by reverse order. The latest assignment must show up
+    # first.
     sorted_lectures = sorted(lectures, key=lambda l: -int(l.number))
 
+    # Create the assignment options for the user to select from.
     options = [
-        "{number: >2}. <b>{title: <{fill}} </b> <span size='smaller'>{date: <{fill_2}} (Week: {week})</span>".format(
-            fill=30,
-            number=utils.display_number(str(lecture.number)),
-            title=utils.generate_short_title(lecture.title, 30),
-            date=lecture.date.strftime("%a %d %b (%I:%M %p)"),
-            fill_2=15,
-            week=lecture.week,
-        )
-        for lecture in sorted_lectures
+        f"{utils.display_number(str(lec.number)): >2}. "
+        + f"<b>{utils.generate_short_title(lec.title, 27): <{27}} </b> "
+        + f"<span size='smaller'>{lec.date.strftime(date_format): <{15}} "
+        + f"(Week: {lec.week})</span>"
+        for lec in sorted_lectures
     ]
-    print(options[0])
 
     # Check if we have any lectures
     # If we don't, just give an error and return
@@ -29,13 +37,17 @@ def main():
         utils.rofi.msg("No lectures found")
         exit(1)
 
+    # Ask the user to select one.
     key, index, selected = utils.rofi.select(
-        "Select Lesson", options, lectures.rofi_options
+        "Select Lesson", options, rofi_options
     )
 
-    if index >= 0:
-        os.chdir("{}/lectures".format(lectures.current_course))
-        sorted_lectures[index].edit()
+    # If the user didn't select one, exit.
+    if index < 0:
+        exit(1)
+
+    os.chdir("{}/lectures".format(current_course))
+    sorted_lectures[index].edit()
 
 
 if __name__ == "__main__":

@@ -1,16 +1,5 @@
 #!/usr/bin/env python3.10
 
-"""
-Function summary:
-    Summary of the text.
-
-    Args:
-        text (str): The text to summarize.
-
-    Returns:
-        str: The summary of the text.
-"""
-
 import re
 
 import RofiLessonManager.utils as utils
@@ -23,8 +12,7 @@ def summary(text: str) -> str:
     Args:
         text (str): The text to summarize.
 
-    Returns:
-        str: The summary of the text.
+    Returns: str: The summary of the text.
     """
 
     return utils.generate_short_title(

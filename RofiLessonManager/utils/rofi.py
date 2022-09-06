@@ -1,58 +1,5 @@
 #!/usr/bin/env python3
 
-"""
-Function select:
-    Allow the user to select an item from a list, via Rofi.
-
-    Args:
-        prompt (str): The prompt to display to the user.
-        options (list): The list of options for the user to select from.
-        rofi_args (list): Optional arguments to pass to Rofi directly.
-            Default: [].
-        fuzzy (bool): Allow the user to fuzzy search. Default: True.
-
-    Returns:
-        tuple:
-            status code (int)
-            index (int)
-            selected (str)
-
-Function input:
-    Get user input, via Rofi.
-
-    Args:
-        prompt (str): The prompt to display to the user.
-        rofi_args (list): Optional arguments to pass to Rofi directly.
-
-    Returns:
-        tuple:
-            status code (int)
-            user input (str)
-
-Function display_text:
-    Display text to the user, via Rofi.
-
-    Args:
-        prompt (str): The prompt to display to the user.
-        rofi_args (list): Optional arguments to pass to Rofi directly.
-
-    Returns:
-        status code (int)
-
-Function msg:
-    Display a message, via Rofi. The text provided will be colored red, if the
-        message is an error. Else, the color will be green. The default styles
-        are: Bold
-
-    Args:
-        msg (str): The string to display.
-        bold (bool): String to be bold or not. Default: True.
-        italic (bool): String to be italic or not. Default: False.
-        underline (bool): String to be underlined or not. Default: False.
-        err (bool): If the message is an error message or not. If it is, then
-            the color of the text will be red. Else, green.
-"""
-
 import subprocess
 
 

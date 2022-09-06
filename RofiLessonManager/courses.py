@@ -3,17 +3,15 @@
 from glob import glob
 import os
 import yaml
-from rofi import Rofi
 
-from RofiLessonManager import Basis as Basis
+from config import current_course, base_url, folders, root
+
 from RofiLessonManager.lectures import Lectures as Lectures
 from RofiLessonManager import utils as utils
 
 
-class Course(Basis):
+class Course:
     def __init__(self, path):
-        Basis.__init__(self)
-
         self.path = path
         self.name = os.path.basename(path)
 
@@ -48,13 +46,11 @@ class Course(Basis):
         )[2]
 
         calendar_title = utils.folder_to_name(name)
-        short = utils.rofi.input(
-            "Short version of course name ({})".format(utils.folder_to_name(name))
-        )[1]
+        short = utils.rofi.input("Short version of course name")[1]
         start_date = utils.rofi.input("Start Date (08-31-22)")[1]
         end_date = utils.rofi.input("End Date (08-31-22)")[1]
         url = (
-            self.base_url
+            base_url
             + "/"
             + utils.rofi.input("Enter last 5 digits of url to the course")[1]
         )
@@ -76,7 +72,7 @@ class Course(Basis):
         ]
 
         os.makedirs(self.path)
-        for folder in self.folders:
+        for folder in folders:
             os.makedirs("{}/{}".format(self.path, folder))
 
         info = open("{}/info.yaml".format(self.path), "w")
@@ -94,36 +90,29 @@ class Course(Basis):
         return "<Course: {}>".format(self.name)
 
     def __eq__(self, other):
-        if not other:
-            return False
-        return self.path == other.path
+        return self.path == str(other.resolve())
 
 
-class Courses(Basis, list):
+class Courses(list):
     def __init__(self):
-        Basis.__init__(self)
         list.__init__(self, self.read_files())
 
         self.names = [c.info["title"] for c in self]
-        self.rofi_names = []
         self.paths = [c.path for c in self]
 
-        for name in self.names:
-            self.rofi_names.append('<span color="blue">{}</span>'.format(name))
-
     def read_files(self):
-        courses = glob("{}/*".format(self.root))
+        courses = glob("{}/*".format(root))
         return sorted((Course(f) for f in courses), key=lambda c: c.name)
 
     @property
     def current(self):
-        return Course(self.current_course.resolve()).name
+        return Course(current_course.resolve()).name
 
     @current.setter
     def current(self, course):
-        self.current_course.unlink()
-        self.current_course.symlink_to(course.path)
-        self.current_course.lstat
+        current_course.unlink()
+        current_course.symlink_to(course.path)
+        current_course.lstat
 
     def __len__(self):
         return len(self.read_files())

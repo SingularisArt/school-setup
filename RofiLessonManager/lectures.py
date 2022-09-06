@@ -8,26 +8,19 @@ import re
 import subprocess
 import yaml
 
-from RofiLessonManager import Basis as Basis
+from config import current_course, master_file, editor, date_format
+
 import RofiLessonManager.utils as utils
 
 
 locale.setlocale(locale.LC_TIME, "en_US.utf8")
 
-info = open("{}/info.yaml".format(Basis().current_course))
+info = open("{}/info.yaml".format(current_course))
 info = yaml.load(info, Loader=yaml.FullLoader)
 
 
-class Lecture(Basis):
+class Lecture:
     def __init__(self, file_path):
-        """
-        Initializes the class.
-        Args:
-            file_path (str): Path to the lecture file.
-        """
-
-        Basis.__init__(self)
-
         self.file_path = file_path
 
         if not os.path.isfile(file_path):
@@ -35,14 +28,15 @@ class Lecture(Basis):
 
         with open(file_path) as f:
             for line in f:
-                lecture_match = re.search(self.lecture_regex, line)
+                lecture_match = re.search(
+                    r"lesson\{(.*?)\}\{(.*?)\}\{(.*)\}", line)
                 if lecture_match:
                     break
 
         date_str = lecture_match.group(2)
-        date = datetime.strptime(date_str, self.date_format)
+        date = datetime.strptime(date_str, date_format)
         start_date_str = info["start_date"]
-        start_date = datetime.strptime(start_date_str, self.date_format)
+        start_date = datetime.strptime(start_date_str, date_format)
         week = int(utils.get_week(date)) - int(utils.get_week(start_date)) + 1
         title = lecture_match.group(3)
 
@@ -53,8 +47,6 @@ class Lecture(Basis):
         self.title = title
 
     def edit(self):
-        """Edits the lecture."""
-
         listen_location = "/tmp/nvim.pipe"
         args = []
 
@@ -66,13 +58,11 @@ class Lecture(Basis):
 
         os.system(
             'xfce4-terminal -e "{} {} {}/lectures/lec-{}.tex"'.format(
-                self.editor, args, self.current_course, self.number
+                editor, args, current_course, self.number
             )
         )
 
     def new(self):
-        """Creates the lecture if it doesn't exist."""
-
         title = utils.rofi.input("Title")
         date = datetime.now().strftime(self.course_and_lecture_date_format)
         number = utils.filename_to_number(os.path.basename(self.file_path))
@@ -91,37 +81,19 @@ class Lecture(Basis):
             f.write("\n".join(template))
 
     def __str__(self):
-        """
-        Returns the lecture as a string.
-        Returns:
-            - str: Lecture as a string.
-        """
-
-        return '<Lecture Title: {}" {} {}>'.format(self.title, self.number, self.week)
+        return "<Lecture: {} {} {}>".format(self.title, self.number, self.week)
 
     def __eq__(self, other):
-        """
-        Checks if two lectures are equal.
-        Args:
-            - other (Lecture): Lecture to compare with.
-        Returns:
-            - bool: True if equal, False otherwise.
-        """
-
         return self.number == other.number
 
 
-class Lectures(Basis, list):
+class Lectures(list):
     def __init__(self):
-        """Initializes the class."""
-
-        Basis.__init__(self)
-
         list.__init__(self, self.read_files())
         self.titles = [lec.title for lec in self]
 
     def read_files(self):
-        files = glob("{}/lectures/*.tex".format(self.current_course))
+        files = glob("{}/lectures/*.tex".format(current_course))
         return sorted((Lecture(f) for f in files), key=lambda l: l.number)
 
     def parse_lecture_spec(self, string):
@@ -161,15 +133,8 @@ class Lectures(Basis, list):
             f.write(body)
 
     def compile_master(self):
-        """
-        Compiles the master file.
-        Returns:
-            - int: 0 if successful, 1 otherwise.
-        """
-
         result = subprocess.run(
-            ["pdflatex", str(self.master_file)], cwd=str(self.current_course)
-        )
+            ["pdflatex", str(master_file)], cwd=str(current_course))
 
         if result.returncode == 0:
             utils.rofi.msg("Compilation successful", err=False)
@@ -179,10 +144,4 @@ class Lectures(Basis, list):
         return result.returncode
 
     def __len__(self):
-        """
-        Gets the number of lectures.
-        Returns:
-            - int: Number of lectures.
-        """
-
         return len(self.read_files())

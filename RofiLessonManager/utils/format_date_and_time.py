@@ -1,16 +1,5 @@
 #!/usr/bin/env python3
 
-"""
-Function format_date_and_time:
-    Return the time between the beginning and end in a human readable format.
-
-    Args:
-        begin (datetime): The beginning of the time.
-        end (datetime): The end of the time.
-
-    Returns:
-        str: The time between the beginning and end.
-"""
 
 import math
 

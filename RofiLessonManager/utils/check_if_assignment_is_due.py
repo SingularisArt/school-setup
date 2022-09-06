@@ -1,31 +1,5 @@
 #!/usr/bin/env python3
 
-"""
-Function check_if_assignment_is_due:
-    Checks if an assignment is due or not. If it is due, it returns either if
-    it' LATE, or if it's due TODAY, TOMORROW, or it returns the number of days
-    left until the assignment is due.
-
-    Args:
-        assignment_due_date (str): The date the assignment is due.
-        assignment_submitted (str): The assignment submitted (True/False).
-
-    Returns:
-        str: Returns either:
-            "X DAYS LATE" if the assignment is late.
-            "YESTERDAY" if the assignment was due yesterday.
-            "TODAY" if the assignment is due today.
-            "TOMORROW" if the assignment is due tomorrow.
-            "X DAYS LEFT" if the assignment is due in X days.
-
-    Example:
-        check_if_assignment_is_due("09-10-22", False) -> (
-            " (6 DAYS LEFT)", "Sep 10 (Sat)", False)
-        )
-        check_if_assignment_is_due("08-10-22", False) -> (
-            " (25 DAYS LATE)", "Aug 10 (Wed)", True)
-        )
-"""
 
 import datetime
 

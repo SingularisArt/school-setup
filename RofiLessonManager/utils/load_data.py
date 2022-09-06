@@ -1,24 +1,5 @@
 #!/usr/bin/env python3
 
-"""
-Function load_data:
-    Load the data from given file.
-
-    Args:
-        data_file (str): The location to the yaml file you wish to load.
-        type (str): Type of data file: yaml, json
-
-    Returns:
-        data (dict): The data from the yaml data file file.
-
-    Raises:
-        FileNotFoundError: If the given file doesn't exist.
-        YAMLError: If there's an error loading the actual data from the given
-            yaml data file.
-        JSONDecodeError: If there's an error loading the actual data from the
-            given json data file.
-"""
-
 import json
 from pathlib import Path
 import yaml

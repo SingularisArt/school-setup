@@ -3,6 +3,8 @@ This file uses the RofiLessonManager.courses module to help switch between
 different courses.
 """
 
+from config import current_course
+
 from RofiLessonManager.courses import Courses as Courses
 from RofiLessonManager import utils as utils
 
@@ -12,6 +14,7 @@ def main():
 
     courses = Courses()
     current = courses.current
+
     options = [
         "<b>{title: <{fill}}</b> <i>({topic}: <b>{number})</b></i>".format(
             title=utils.generate_short_title(c.info["title"]),
@@ -19,9 +22,8 @@ def main():
             fill=34,
             number=c.info["class_number"],
         )
-        for c in courses
+        for c in courses if c != current_course
     ]
-    print(options[0])
 
     try:
         current_index = courses.index(current)

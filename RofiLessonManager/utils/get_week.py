@@ -1,19 +1,5 @@
 #!/usr/bin/env python3
 
-"""
-Function get_week:
-    Get the week number of the year.
-
-    Args:
-        d (datetime): The date to get the week number of. Default:
-            datetime.today()).
-
-    Returns:
-        int: The week number of the year.
-
-    Example:
-        get_week() -> 13
-"""
 
 from datetime import datetime
 
