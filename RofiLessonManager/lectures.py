@@ -57,9 +57,8 @@ class Lecture:
         args = " ".join(str(e) for e in args if e)
 
         os.system(
-            'xfce4-terminal -e "{} {} {}/lectures/lec-{}.tex"'.format(
-                editor, args, current_course, self.number
-            )
+            f"xfce4-terminal -e '{editor} {args} "
+            + f"{current_course}/lectures/lec-{self.number}.tex'"
         )
 
     def new(self):

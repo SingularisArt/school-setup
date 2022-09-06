@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 
-def filename_to_number(s: str) -> int:
+def filename_to_number(s: str) -> str:
     """
     Convert the file name number.
 
@@ -9,7 +9,7 @@ def filename_to_number(s: str) -> int:
         s (str): The file name.
 
     Returns:
-        int: The number.
+        str: The number.
 
     Example:
         filename_to_number("lec-04.tex") -> 04
@@ -25,7 +25,7 @@ def filename_to_number(s: str) -> int:
         filename_to_number("week-04.png") -> 04
     """
 
-    n = int(
+    n = str(
         str(s)
         .replace("lec-", "")
         .replace("week-", "")
@@ -35,6 +35,7 @@ def filename_to_number(s: str) -> int:
         .replace(".bib", "")
         .replace(".png", "")
     )
-    if n < 10:
-        return int(f"0{n}")
-    return int(n)
+
+    if int(n) < 10 and len(str(n)) == 1:
+        return str(f"0{n}")
+    return str(n)

@@ -3,6 +3,13 @@
 import os
 import sys
 
+from config import (
+    rofi_options,
+    my_assignments_latex_folder,
+    my_assignments_yaml_folder,
+    my_assignments_pdf_folder,
+)
+
 from RofiLessonManager.assignments import Assignments
 import RofiLessonManager.utils as utils
 
@@ -105,8 +112,7 @@ def main():
 
     # Ask the user to select one.
     key, index, selected = utils.rofi.select(
-        "Select Assignment", options, assignments.rofi_options
-    )
+        "Select Assignment", options, rofi_options)
 
     # If the user didn't select one, exit.
     if index < 0:
@@ -114,18 +120,18 @@ def main():
 
     # Create the path to the latex file for the selected assignment.
     tex_path = (
-        f"{assignments.my_assignments_latex_folder}/week-"
+        f"{my_assignments_latex_folder}/week-"
         + f"{sorted_assignments[index].number}.tex"
     )
     # Create the path to the yaml file for the selected assignment.
     yaml_path = (
-        f"{assignments.my_assignments_yaml_folder}/week-"
+        f"{my_assignments_yaml_folder}/week-"
         + f"{sorted_assignments[index].number}.yaml"
     )
     # Create the path to the pdf file for the selected assignment.
     pdf_path = (
-        f"{assignments.my_assignments_pdf_folder}/week-"
-        + f"{sorted_assignments[index].number}.pdf"
+        f"{my_assignments_pdf_folder}/week-" +
+        f"{sorted_assignments[index].number}.pdf"
     )
 
     # If the latex file exists, add the command `view latex`.
@@ -138,7 +144,7 @@ def main():
     second_key, second_index, second_selected = utils.rofi.select(
         f"Which one for assignment: {sorted_assignments[index].title}",
         second_options,
-        assignments.rofi_options,
+        rofi_options,
     )
 
     # If the user didn't select one, exit.

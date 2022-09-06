@@ -16,15 +16,9 @@ def display_number(n: int) -> int:
         display_number(08):  8
         display_number(02):  2
         display_number(2):   2
-
-    Raises:
-        IndexError: If n < 10 and len(n) == 1, then n will be returned.
     """
 
-    if int(n) < 10:
-        try:
-            return int(n[1])
-        except IndexError:
-            return int(n)
+    if int(n) < 10 and len(n) == 2:
+        return int(n[1])
     else:
         return int(n)

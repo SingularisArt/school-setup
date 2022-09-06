@@ -4,27 +4,33 @@ from rofi import Rofi
 from glob import glob
 from natsort import natsorted
 import os
-import yaml
 
-from RofiLessonManager import Basis as Basis
+from config import (
+    my_assignments_latex_folder,
+    my_assignments_yaml_folder,
+    my_assignments_pdf_folder,
+    terminal,
+    terminal_commands,
+    editor,
+    pdf_viewer,
+)
+
 import RofiLessonManager.utils as utils
 
 
-class Assignment(Basis):
+class Assignment:
     def __init__(self, path):
-        Basis.__init__(self)
-
         self.path = path
 
         if not os.path.exists(self.path):
             self.new()
 
         self.name = os.path.basename(path)
-        self.number = utils.filename_to_number(os.path.basename(path))
+        self.number = str(utils.filename_to_number(self.name))
 
-        self.tex_file = f"{self.my_assignments_latex_folder}/week-{self.number}.tex"
-        self.yaml_file = f"{self.my_assignments_yaml_folder}/week-{self.number}.yaml"
-        self.pdf_file = f"{self.my_assignments_pdf_folder}/week-{self.number}.pdf"
+        self.tex_file = f"{my_assignments_latex_folder}/week-{self.number}.tex"
+        self.yaml_file = f"{my_assignments_yaml_folder}/week-{self.number}.yaml"
+        self.pdf_file = f"{my_assignments_pdf_folder}/week-{self.number}.pdf"
 
         self.info = utils.load_data(self.yaml_file, "yaml")
 
@@ -33,11 +39,9 @@ class Assignment(Basis):
         except Exception:
             pass
 
-    def parse_command(self, cmd):
-        terminal = f"{self.terminal} {self.terminal_command}"
-        # xfce4-terminal -e
-        editor = self.editor if cmd != "open_pdf" else self.pdf_viewer
+        self.terminal = f"{terminal} {terminal_commands}"
 
+    def parse_command(self, cmd):
         path = (
             self.tex_file
             if cmd == "edit_latex"
@@ -49,7 +53,9 @@ class Assignment(Basis):
         )
 
         full_command = (
-            f"{terminal} '{editor} {path}'" if cmd != "open_pdf" else f"{editor} {path}"
+            f"{terminal} {terminal_commands} '{editor} {path}'"
+            if cmd != "open_pdf"
+            else f"{pdf_viewer} {path}"
         )
 
         os.system(full_command)
@@ -99,15 +105,13 @@ class Assignment(Basis):
         return self.number
 
 
-class Assignments(Basis, list):
+class Assignments(list):
     def __init__(self):
-        Basis.__init__(self)
-
         list.__init__(self, self.read_files())
 
         self.titles = [a.name for a in self]
 
     def read_files(self):
-        files = natsorted(glob(f"{self.my_assignments_latex_folder}/*.tex"))
+        files = natsorted(glob(f"{my_assignments_latex_folder}/*.tex"))
 
         return sorted((Assignment(f) for f in files), key=lambda a: a.number)

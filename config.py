@@ -18,6 +18,8 @@ code_dir = Path(data["code_dir"]).expanduser()
 editor = data["editor"]
 viewer = data["viewer"]
 terminal = data["terminal"]
+terminal_commands = data["terminal_commands"]
+pdf_viewer = data["pdf_viewer"]
 
 notes_dir = Path(data["notes_dir"]).expanduser()
 root = Path(data["root"]).expanduser()
@@ -31,6 +33,8 @@ graded_assignments_folder = Path(
 online_assignments_folder = Path(
     data["online_assignments_folder"]).expanduser()
 
+my_assignments_image_folder = Path(
+    data["my_assignments_image_folder"]).expanduser()
 my_assignments_latex_folder = Path(
     data["my_assignments_latex_folder"]).expanduser()
 my_assignments_yaml_folder = Path(
