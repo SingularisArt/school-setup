@@ -3,8 +3,6 @@ This file uses the RofiLessonManager.courses module to help switch between
 different courses.
 """
 
-from config import current_course
-
 from RofiLessonManager.courses import Courses as Courses
 from RofiLessonManager import utils as utils
 
@@ -22,7 +20,7 @@ def main():
             fill=34,
             number=c.info["class_number"],
         )
-        for c in courses if c != current_course
+        for c in courses
     ]
 
     try:

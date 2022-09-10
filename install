@@ -38,7 +38,7 @@ echo "calendar_id: \"primary\"
 base_url: \"URL\"
 
 code_dir: \"$DOCUMENTS/school-setup\"
-editor: \"$HOME/.local/bin/dvim\"
+editor: \"nvim\"
 viewer: \"sioyek\"
 terminal: \"xfce4-terminal\"
 terminal_commands: \"-e\"
