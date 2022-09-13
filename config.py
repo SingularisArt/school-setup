@@ -48,5 +48,3 @@ discourage_folders = data["discourage_folders"]
 folders = data["folders"]
 
 date_format = data["date_format"]
-
-placeholder = utils.get_placeholder(root.name, notes_dir.name)

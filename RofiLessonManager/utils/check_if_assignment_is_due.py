@@ -13,10 +13,12 @@ def check_if_assignment_is_due(
     left until the assignment is due.
 
     Args:
+    -----
         assignment_due_date (str): The date the assignment is due.
         assignment_submitted (str): The assignment submitted (True/False).
 
     Returns:
+    --------
         str: Returns either:
             "X DAYS LATE" if the assignment is late.
             "YESTERDAY" if the assignment was due yesterday.
@@ -25,6 +27,7 @@ def check_if_assignment_is_due(
             "X DAYS LEFT" if the assignment is due in X days.
 
     Example:
+    --------
         check_if_assignment_is_due("09-10-22", False) -> (
             " (6 DAYS LEFT)", "Sep 10 (Sat)", False)
         )

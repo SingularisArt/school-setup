@@ -29,7 +29,9 @@ class Lecture:
         with open(file_path) as f:
             for line in f:
                 lecture_match = re.search(
-                    r"lesson\{(.*?)\}\{(.*?)\}\{(.*)\}", line)
+                    r"lesson\{(.*?)\}\{(.*?)\}\{(.*)\}",
+                    line,
+                )
                 if lecture_match:
                     break
 
@@ -106,41 +108,63 @@ class Lectures(list):
         elif string == "prev":
             return self[-1].number - 1
 
+    @staticmethod
+    def get_header_footer(filepath):
+        part = 0
+        header = ""
+        footer = ""
+        with filepath.open() as f:
+            for line in f:
+                # order of if-statements is important here!
+                if "end lectures" in line:
+                    part = 2
+
+                if part == 0:
+                    header += line
+                if part == 2:
+                    footer += line
+
+                if "start lectures" in line:
+                    part = 1
+        return (header, footer)
+
     def parse_range_string(self, arg):
         all_numbers = [lecture.number for lecture in self]
         if "all" in arg:
             return all_numbers
 
         if "-" in arg:
-            start, end = [self.parse_lecture_spec(
-                bit) for bit in arg.split("-")]
+            start, end = [
+                self.parse_lecture_spec(bit)
+                for bit in arg.split(
+                    "-",
+                )
+            ]
             return list(range(start, end + 1))
 
         return [self.parse_lecture_spec(arg)]
 
     def update_lectures_in_master(self, r):
-        body = ""
-        for n in r:
-            try:
-                self[int(n) - 1].file_path
-                body += r"\input{lectures/" + \
-                    utils.number_to_filename(n) + "}\n"
-            except IndexError:
-                pass
+        header, footer = self.get_header_footer(master_file)
+        body = "".join(
+            r"  \input{lectures/" + utils.number_to_filename(number) + "}\n"
+            for number in r
+            if os.path.exists(
+                f"{current_course}/lectures/{utils.number_to_filename(number)}"
+            )
+        )
 
-        with open(self.source_lectures_location, "w") as f:
-            f.write(body)
+        master_file.write_text(header + body + footer)
 
     def compile_master(self):
         result = subprocess.run(
-            ["pdflatex", str(master_file)], cwd=str(current_course))
+            ["pdflatex", str(master_file)],
+            cwd=str(current_course),
+        )
 
         if result.returncode == 0:
-            utils.rofi.msg("Compilation successful", err=False)
+            utils.rofi.msg("Compilation successful!", err=False)
         else:
-            utils.rofi.msg("Compilation failed")
+            utils.rofi.msg("Compilation failed!")
 
         return result.returncode
-
-    def __len__(self):
-        return len(self.read_files())

@@ -7,12 +7,15 @@ def number_to_filename(n: int) -> str:
     than 10, then 0 will be added in front of n.
 
     Args:
+    -----
         n (int): Lecture number.
 
     Returns:
+    --------
         str: Filename.
 
     Example:
+    --------
         number_to_filename(3) -> lec-03.tex
         number_to_filename(14) -> lec-14.tex
     """

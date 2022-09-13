@@ -10,9 +10,12 @@ def summary(text: str) -> str:
     Summary of the text.
 
     Args:
+    -----
         text (str): The text to summarize.
 
-    Returns: str: The summary of the text.
+    Returns:
+    --------
+        str: The summary of the text.
     """
 
     return utils.generate_short_title(

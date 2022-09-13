@@ -6,12 +6,15 @@ def filename_to_number(s: str) -> str:
     Convert the file name number.
 
     Args:
+    -----
         s (str): The file name.
 
     Returns:
+    --------
         str: The number.
 
     Example:
+    --------
         filename_to_number("lec-04.tex") -> 04
         filename_to_number("lec-04.yaml") -> 04
         filename_to_number("lec-04.pdf") -> 04

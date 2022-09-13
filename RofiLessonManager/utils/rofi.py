@@ -61,10 +61,12 @@ def input(prompt: str, rofi_args=[]) -> tuple:
     Get user input, via Rofi.
 
     Args:
+    -----
         prompt (str): The prompt to display to the user.
         rofi_args (list): Optional arguments to pass to Rofi directly.
 
     Returns:
+    --------
         tuple:
             status code (int)
             user input (str)
@@ -103,10 +105,12 @@ def display_text(prompt: str, rofi_args=[]) -> tuple:
     Display text to the user, via Rofi.
 
     Args:
+    -----
         prompt (str): The prompt to display to the user.
         rofi_args (list): Optional arguments to pass to Rofi directly.
 
     Returns:
+    --------
         status code (int)
     """
 
@@ -139,6 +143,7 @@ def msg(msg: str, bold=True, italic=False, underline=False, err=False) -> None:
         are: Bold
 
     Args:
+    -----
         msg (str): The string to display.
         bold (bool): String to be bold or not. Default: True.
         italic (bool): String to be italic or not. Default: False.
@@ -160,4 +165,4 @@ def msg(msg: str, bold=True, italic=False, underline=False, err=False) -> None:
     text = f"{beginning}{msg}{end}"
 
     display_text(
-        f"<span color='{'red' if not err else 'green'}'>{text}</span>")
+        f"<span color='{'red' if err else 'green'}'>{text}</span>")

@@ -1,18 +1,24 @@
 #!/usr/bin/env python3
 
 
+import datetime
 import math
 
 
-def format_date_and_time(begin, end):
+def format_date_and_time(
+    begin: datetime.datetime,
+    end: datetime.datetime,
+) -> str:
     """
     Return the time between the beginning and end in a human readable format.
 
     Args:
+    -----
         begin (datetime): The beginning of the time.
         end (datetime): The end of the time.
 
     Returns:
+    --------
         str: The time between the beginning and end.
     """
 
