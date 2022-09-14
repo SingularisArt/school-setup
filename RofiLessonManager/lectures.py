@@ -8,22 +8,15 @@ import re
 import subprocess
 import yaml
 
-from config import (
-    current_course,
-    master_file,
-    editor,
-    date_format,
-    terminal,
-    terminal_commands,
-)
+import config
 
 import RofiLessonManager.utils as utils
 
 
 locale.setlocale(locale.LC_TIME, "en_US.utf8")
 
-info = open("{}/info.yaml".format(current_course))
-info = yaml.load(info, Loader=yaml.FullLoader)
+info: open = open("{}/info.yaml".format(config.current_course))
+info: yaml.load = yaml.load(info, Loader=yaml.FullLoader)
 
 
 class Lecture:
@@ -62,7 +55,7 @@ class Lecture:
         # Parse the lecture file, getting all the required information.
         with open(file_path) as f:
             for line in f:
-                lecture_match = re.search(
+                lecture_match: re.search = re.search(
                     r"lesson\{(.*?)\}\{(.*?)\}\{(.*)\}",
                     line,
                 )
@@ -70,10 +63,13 @@ class Lecture:
                     break
 
         # Get the lecture date.
-        date_str = lecture_match.group(2)
+        date_str: str = lecture_match.group(2)
 
         # Format the date.
-        date = datetime.strptime(date_str, date_format)
+        date: datetime.strptime = datetime.strptime(
+            date_str,
+            config.date_format,
+        )
 
         # Get the start date of the course.
         # The reason I'm doing this is because we need to get the week of the
@@ -82,58 +78,74 @@ class Lecture:
         # 23, which is correct, but not what I want. I want the week, starting
         # from the start date of the course. If we start from the start date of
         # the course, the week would be number 9, instead of 23.
-        start_date_str = info["start_date"]
+        start_date_str: str = info["start_date"]
 
         # Format the date.
-        start_date = datetime.strptime(start_date_str, date_format)
+        start_date: datetime.strptime = datetime.strptime(
+            start_date_str,
+            config.date_format,
+        )
 
         # Get the week the notes were taken.
-        week = int(utils.get_week(date)) - int(utils.get_week(start_date)) + 1
+        week: int = (
+            int(utils.get_week(date))
+            - int(
+                utils.get_week(start_date),
+            )
+            + 1
+        )
 
         # Get the title.
-        title = lecture_match.group(3)
+        title: title = lecture_match.group(3)
 
-        self.date = date
-        self.week = week
-        self.number = utils.filename_to_number(os.path.basename(file_path))
-        self.title = title
+        self.date: datetime.strptime = date
+        self.week: int = week
+        self.number: int = utils.filename_to_number(
+            os.path.basename(file_path),
+        )
+        self.title: str = title
 
     def edit(self) -> None:
         """Edit the current lecture."""
 
-        listen_location = "/tmp/nvim.pipe"
-        args = []
+        listen_location: str = "/tmp/nvim.pipe"
+        args: list = []
 
         if os.path.exists(listen_location):
-            args = ["--server", "/tmp/nvim.pipe", "--remote"]
+            args: list = ["--server", "/tmp/nvim.pipe", "--remote"]
         elif not os.path.exists(listen_location):
-            args = ["--listen", "/tmp/nvim.pipe"]
-        args = " ".join(str(e) for e in args if e)
+            args: list = ["--listen", "/tmp/nvim.pipe"]
 
-        terminal_cmd = f"{terminal} {terminal_commands}"
+        args: str = " ".join(str(e) for e in args if e)
+
+        terminal_cmd: str = f"{config.terminal} {config.terminal_commands}"
 
         os.system(
-            f"{terminal_cmd} '{editor} {args} "
-            + f"{current_course}/lectures/lec-{self.number}.tex'"
+            f"{terminal_cmd} '{config.eitor} {args} "
+            + f"{config.current_course}/lectures/lec-{self.number}.tex'"
         )
 
     def new(self) -> None:
         """Create a new lecture."""
 
         # Ask the user for the title of the lecture, via Rofi.
-        title = utils.rofi.input("Title")
+        title: title = utils.rofi.input("Title")
 
         # Get the current date.
-        date = datetime.now().strftime(self.course_and_lecture_date_format)
+        date: datetime.now = datetime.now().strftime(
+            self.course_and_lecture_date_format
+        )
 
         # Get the lecture number.
-        number = utils.filename_to_number(os.path.basename(self.file_path))
+        number: int = utils.filename_to_number(
+            os.path.basename(self.file_path),
+        )
 
         # Create the label.
-        label = f"les_{number}:{title.lower().replace().replace(' ', '_')}"
+        label: str = f"les_{number}:{title.lower().replace(' ', '_')}"
 
         # Create the lecture template.
-        template = [
+        template: list[str] = [
             rf"\lesson{{{number}}}{{{date}}}{{{title}}}",
             rf"\label{{{label}}}",
             "",
@@ -149,16 +161,40 @@ class Lecture:
 
 
 class Lectures(list):
+    """
+    A class that's a list of Lecture objects. You can go Lectures[0], and get
+    the first lecture. So, just treat this class like a list.
+
+    Methods:
+    --------
+        read_files(self) -> list[Lecture]:
+            Get all the lectures within the current course, sorted from
+            greatest to least using the lecture number.
+
+        parse_lecture_spec(self, string: str) -> int:
+            Get the lecture number based on the command.
+
+        get_header_footer(self, filepath: str) -> tuple(str):
+            Get the header and footer of the master.tex file.
+
+
+        parse_range_string(self, arg: str) -> list[int]:
+            A range of numbers.
+
+        update_lectures_in_master(self, numbers: list) -> None:
+            Update the lectures within the master.tex file.
+
+        compile_master(self) -> None:
+            Compile the master.tex file.
+    """
+
     def __init__(self) -> None:
         """Initialize the Lectures class."""
 
         # Initialize the list class with all the lectures.
         list.__init__(self, self.read_files())
 
-        # Get all the lecture titles.
-        self.titles = [lec.title for lec in self]
-
-    def read_files(self) -> list:
+    def read_files(self) -> list[Lecture]:
         """
         Get all the lectures within the current course, sorted from greatest
         to least using the lecture number.
@@ -169,7 +205,9 @@ class Lectures(list):
                 lecture number.
         """
 
-        files = glob("{}/lectures/*.tex".format(current_course))
+        files: list[str] = glob(
+            f"{config.current_course}/lectures/*.tex"
+        )
         return sorted((Lecture(f) for f in files), key=lambda l: l.number)
 
     def parse_lecture_spec(self, string: str) -> int:
@@ -186,14 +224,13 @@ class Lectures(list):
 
         Example:
         --------
-            parse_range_string("last") -> self[-1].number
-                (The last lecture)
-            parse_range_string("prev") -> self[-1].number - 1
-                (The second to last)
+            parse_range_string("last") -> self[-1].number (The last lecture)
+            parse_range_string("prev") -> self[-1].number - 1 (The second to
+                last)
             parse_range_string(4) -> 4
         """
 
-        all_numbers = [int(lecture.number) for lecture in self]
+        all_numbers: list[int] = [int(lecture.number) for lecture in self]
 
         if len(self) == 0:
             return 0
@@ -209,7 +246,7 @@ class Lectures(list):
         elif string == "prev":
             return all_numbers[0:-1]
 
-    def get_header_footer(self, filepath: str) -> tuple:
+    def get_header_footer(self, filepath: str) -> tuple(str):
         r"""
         Get the header and footer of the master.tex file.
 
@@ -264,17 +301,17 @@ class Lectures(list):
         # 0 = The header of the file.
         # 1 = The start of the lectures section.
         # 2 = The footer of the file.
-        part = 0
+        part: int = 0
 
-        header = ""
-        footer = ""
+        header: str = ""
+        footer: str = ""
 
         with filepath.open() as f:
             for line in f:
                 # Check if we've reached the end of the file.
                 # If we have, set part = 2.
                 if "end lectures" in line:
-                    part = 2
+                    part: int = 2
 
                 # Check if we're on the header of the file.
                 # If we have, set part = 2.
@@ -287,11 +324,11 @@ class Lectures(list):
 
                 # Check if we're at the start lectures section of the file.
                 if "start lectures" in line:
-                    part = 1
+                    part: str = 1
 
         return (header, footer)
 
-    def parse_range_string(self, arg: str) -> list:
+    def parse_range_string(self, arg: str) -> list[int]:
         """
         A range of numbers.
 
@@ -343,23 +380,24 @@ class Lectures(list):
                 lectures to the master.tex file.
         """
 
-        header, footer = self.get_header_footer(master_file)
-        body = "".join(
+        header, footer = self.get_header_footer(config.master_file)
+        body: str = "".join(
             r"  \input{lectures/" + utils.number_to_filename(number) + "}\n"
             for number in numbers
             if os.path.exists(
-                f"{current_course}/lectures/{utils.number_to_filename(number)}"
+                f"{config.current_course}/lectures/ "
+                f"{utils.number_to_filename(number)}"
             )
         )
 
-        master_file.write_text(header + body + footer)
+        config.master_file.write_text(header + body + footer)
 
     def compile_master(self) -> None:
         """Compile the master.tex file."""
 
-        result = subprocess.run(
-            ["pdflatex", str(master_file)],
-            cwd=str(current_course),
+        result: subprocess.run = subprocess.run(
+            ["pdflatex", str(config.master_file)],
+            cwd=str(config.current_course),
         )
 
         if result.returncode == 0:
