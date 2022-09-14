@@ -174,7 +174,7 @@ class Lectures(list):
         parse_lecture_spec(self, string: str) -> int:
             Get the lecture number based on the command.
 
-        get_header_footer(self, filepath: str) -> tuple(str):
+        get_header_footer(self, filepath: str) -> tuple:
             Get the header and footer of the master.tex file.
 
 
@@ -205,9 +205,7 @@ class Lectures(list):
                 lecture number.
         """
 
-        files: list[str] = glob(
-            f"{config.current_course}/lectures/*.tex"
-        )
+        files: list[str] = glob(f"{config.current_course}/lectures/*.tex")
         return sorted((Lecture(f) for f in files), key=lambda l: l.number)
 
     def parse_lecture_spec(self, string: str) -> int:
@@ -236,7 +234,7 @@ class Lectures(list):
             return 0
 
         if string.isdigit():
-            return int(string)
+            return [int(string)]
         elif string == "last":
             return [all_numbers[-1]]
         elif string == "prev_last":
@@ -246,7 +244,7 @@ class Lectures(list):
         elif string == "prev":
             return all_numbers[0:-1]
 
-    def get_header_footer(self, filepath: str) -> tuple(str):
+    def get_header_footer(self, filepath: str) -> tuple:
         r"""
         Get the header and footer of the master.tex file.
 
@@ -381,11 +379,12 @@ class Lectures(list):
         """
 
         header, footer = self.get_header_footer(config.master_file)
+
         body: str = "".join(
             r"  \input{lectures/" + utils.number_to_filename(number) + "}\n"
             for number in numbers
             if os.path.exists(
-                f"{config.current_course}/lectures/ "
+                f"{config.current_course}/lectures/"
                 f"{utils.number_to_filename(number)}"
             )
         )

@@ -4,14 +4,26 @@ from glob import glob
 import os
 import yaml
 
-from config import current_course, base_url, folders, root
+from config import (
+    current_course,
+    base_url,
+    folders,
+    root,
+)
 
 from RofiLessonManager.lectures import Lectures as Lectures
 from RofiLessonManager import utils as utils
 
 
 class Course:
-    def __init__(self, path):
+    def __init__(self, path: str) -> None:
+        """
+        Initialize the Course class.
+
+        Args:
+            path (str): The path to the course.
+        """
+
         self.path = path
         self.name = os.path.basename(path)
 
