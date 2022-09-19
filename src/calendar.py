@@ -6,7 +6,6 @@ import os
 import os.path
 import sys
 
-import math
 import re
 
 import sched
@@ -21,6 +20,8 @@ from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 from google.auth.exceptions import RefreshError
+
+import config
 
 from RofiLessonManager.courses import Courses as Courses
 import RofiLessonManager.utils as utils
@@ -231,7 +232,7 @@ def main(end=False):
 
         return new_events
 
-    events = get_events(courses.calendar_id)
+    events = get_events(config.calendar_id)
     print("Done")
 
     DELAY = 60

@@ -33,8 +33,10 @@ class Lecture:
 
     Methods:
     --------
-        edit() -> None: Edit the current lecture.
-        new() -> None: Create a new lecture.
+        edit() -> None:
+            Edit the current lecture.
+        new() -> None:
+            Create a new lecture.
     """
 
     def __init__(self, file_path: str) -> None:
@@ -121,7 +123,7 @@ class Lecture:
         terminal_cmd: str = f"{config.terminal} {config.terminal_commands}"
 
         os.system(
-            f"{terminal_cmd} '{config.eitor} {args} "
+            f"{terminal_cmd} '{config.editor} {args} "
             + f"{config.current_course}/lectures/lec-{self.number}.tex'"
         )
 
