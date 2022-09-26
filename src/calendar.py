@@ -58,8 +58,7 @@ def authenticate():
                 sys.exit()
         else:
             print("Need to allow access")
-            flow = InstalledAppFlow.from_client_secrets_file(
-                "credentials.json", SCOPES)
+            flow = InstalledAppFlow.from_client_secrets_file("credentials.json", SCOPES)
             creds = flow.run_local_server(port=0)
         # Save the credentials for the next run
         with open("token.pickle", "wb") as token:
@@ -69,7 +68,7 @@ def authenticate():
     return service
 
 
-def text(events, now, end):
+def text(events, now):
     """
 
     Args:
@@ -82,8 +81,7 @@ def text(events, now, end):
         - str: Information on the next event.
     """
 
-    current = next(
-        (e for e in events if e["start"] < now and now < e["end"]), None)
+    current = next((e for e in events if e["start"] < now and now < e["end"]), None)
 
     # Check if we have an event right now
     if not current:
@@ -117,8 +115,7 @@ def text(events, now, end):
         return utils.join(
             utils.colored_text(nxt["type"]),
             utils.colored_text("Ends in"),
-            utils.format_date_and_time(
-                now, current["end"]) + utils.colored_text("."),
+            utils.format_date_and_time(now, current["end"]) + utils.colored_text("."),
             utils.colored_text("Next:"),
             utils.summary(nxt["summary"]),
             utils.location(nxt["location"]),
@@ -130,8 +127,7 @@ def text(events, now, end):
     return utils.join(
         utils.colored_text(nxt["type"]),
         utils.colored_text("Ends in"),
-        utils.format_date_and_time(
-            now, current["end"]) + utils.colored_text("."),
+        utils.format_date_and_time(now, current["end"]) + utils.colored_text("."),
         utils.colored_text("Next:"),
         utils.summary(nxt["summary"]),
         utils.location(nxt["location"]),
@@ -211,22 +207,23 @@ def main(end=False):
         new_events = []
 
         for event in events:
-            regex = r"^(.+): (CLASS|LAB)$"
+            regex = r"^([ a-zA-Z0-9]+): (CLASS|LAB)$"
 
             try:
                 parsed_event = re.search(regex, event["summary"])
                 summary = parsed_event.group(1)
                 type = parsed_event.group(2).title()
-                print("hello")
 
-                event_dict = {
-                    "summary": summary,
-                    "location": event.get("location", None),
-                    "start": parse(event["start"]["dateTime"]),
-                    "end": parse(event["end"]["dateTime"]),
-                    "type": type,
-                }
-                new_events.append(event_dict)
+                if 'dateTime' in event['start']:
+                    event_dict = {
+                        "summary": summary,
+                        "location": event.get("location", None),
+                        "start": parse(event["start"]["dateTime"]),
+                        "end": parse(event["end"]["dateTime"]),
+                        "type": type,
+                    }
+
+                    new_events.append(event_dict)
             except Exception:
                 pass
 
@@ -239,6 +236,7 @@ def main(end=False):
 
     def print_message():
         now = datetime.datetime.now(tz=TZ)
+        print(text(events, now))
         if now < evening:
             scheduler.enter(DELAY, 1, print_message)
 
