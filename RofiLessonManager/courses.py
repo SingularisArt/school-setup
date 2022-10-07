@@ -114,7 +114,10 @@ class Courses(list):
 
     def read_files(self):
         courses = glob("{}/*".format(root))
-        return sorted((Course(f) for f in courses), key=lambda c: c.name)
+        return sorted(
+            (Course(f) for f in courses if os.path.isdir(f)),
+            key=lambda c: c.name,
+        )
 
     @property
     def current(self):

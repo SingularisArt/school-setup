@@ -4,27 +4,17 @@ key="$1"
 node="/usr/bin/node"
 
 root="$HOME/Documents"
-journal_dir="$root/journal"
-today_journal_dir="$journal_dir/$(date +%Y/%m/%d)"
 
 school_notes_root="$root/school-notes"
 current_course="$school_notes_root/current-course"
-papers="$current_course/papers"
+papers="${current_course}/papers"
 instant_reference="$HOME/Singularis/third-party-tools/instant-reference/copy-reference.js"
 master_pdf="$current_course/master.pdf"
-
-# book_notes_root="$root/book-notes"
-
-open_xournal () {
-  cd "$today_journal_dir" || exit
-
-  xournalpp note.xopp
-}
 
 compile () {
   cd "${1}" || exit
   pdflatex master.tex && pdflatex master.tex;
-  status=$(echo "$?")
+  status=$("$?")
   if [[ "$status" == 130 ]]; then
     rofi -e "<span color='red'><b>Failed to compile!</b></span>" -markup
   elif [[ "$status" == 0 ]]; then
@@ -33,27 +23,25 @@ compile () {
 }
 
 open_browser () {
-  url=$(cat "$current_course/info.yaml" | shyaml get-value url)
+  url=$(shyaml get-value url < "$current_course/info.yaml" || exit)
   google-chrome-stable --profile-directory="Profile 1" --app="$url"
 }
 
 open_research_paper() {
   cd "$papers" || exit
-  pdf_file="$(ls . | rofi -i -dmenu)"
+  pdf_file="$(find . -maxdepth 1 -type f | rofi -i -dmenu -window-title 'Select paper')"
   [ "$pdf_file" = "" ] && exit 0
-  [ -f "$pdf_file" ] && zathura "$(realpath "$pdf_file")" || google-chrome-stable --profile-directory="Profile 2" --app="https://google.com/search?q=$pdf_file"
+  ([ -f "$pdf_file" ] && zathura "$(realpath "$pdf_file")") || google-chrome-stable --profile-directory="Profile 2" --app="https://google.com/search?q=$pdf_file"
 }
 
 create_figure() {
   figure_name=$(rofi -dmenu -window-title "Inkscape figure name");
-  if [ ! -z "$figure_name" ]; then
+  if [ -n "$figure_name" ]; then
     inkscape-figures create "$figure_name" "$current_course/figures" | xclip -selection clipboard;
   else
     exit;
   fi
 }
-
-mkdir -p "$today_journal_dir";
 
 case $key in
   # School Notes.
@@ -79,7 +67,9 @@ case $key in
   p ) open_research_paper ;;
   # Open my notes.norg file for the current course.
   n ) cd "$current_course" || exit;
-    xfce4-terminal -e "nvim notes.norg" ;;
+    xfce4-terminal -e "nvim notes.md" ;;
+  N ) cd "$school_notes_root" || exit;
+    xfce4-terminal -e "nvim notes.md" ;;
 
   # Custom made scripts.
   a ) ~/Documents/school-setup/main.py --rofi-assignments ;;
