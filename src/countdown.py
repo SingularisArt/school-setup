@@ -1,30 +1,25 @@
 #!/usr/bin/python3
 
-import pickle
-
+import datetime
 import os
 import os.path
-import sys
-
+import pickle
 import re
-
 import sched
-import datetime
+import sys
 import time
-import pytz
-from dateutil.parser import parse
-
 import urllib.request
 
-from googleapiclient.discovery import build
-from google_auth_oauthlib.flow import InstalledAppFlow
-from google.auth.transport.requests import Request
+from dateutil.parser import parse
 from google.auth.exceptions import RefreshError
-
-import config
+from google.auth.transport.requests import Request
+from google_auth_oauthlib.flow import InstalledAppFlow
+from googleapiclient.discovery import build
+import pytz
 
 from RofiLessonManager.courses import Courses as Courses
 import RofiLessonManager.utils as utils
+import config
 
 courses = Courses()
 
@@ -58,7 +53,10 @@ def authenticate():
                 sys.exit()
         else:
             print("Need to allow access")
-            flow = InstalledAppFlow.from_client_secrets_file("credentials.json", SCOPES)
+            flow = InstalledAppFlow.from_client_secrets_file(
+                "credentials.json",
+                SCOPES,
+            )
             creds = flow.run_local_server(port=0)
         # Save the credentials for the next run
         with open("token.pickle", "wb") as token:
@@ -81,8 +79,12 @@ def text(events, now):
         - str: Information on the next event.
     """
 
-    current = next((e for e in events if e["start"] < now and now < e["end"]), None)
+    current = next(
+        (e for e in events if e["start"] < now and now < e["end"]),
+        None,
+    )
 
+    period = utils.colored_text(".")
     # Check if we have an event right now
     if not current:
         nxt = next((e for e in events if now <= e["start"]), None)
@@ -99,9 +101,7 @@ def text(events, now):
             )
         return ""
     nxt = next((e for e in events if e["start"] >= current["end"]), None)
-    print(utils.format_date_and_time(now, current["end"]))
     if not nxt:
-        print(utils.format_date_and_time(now, nxt["start"]))
         return utils.join(
             utils.colored_text(current["type"]),
             utils.colored_text("Ends in"),
@@ -111,11 +111,10 @@ def text(events, now):
         )
 
     if current["end"] == nxt["start"]:
-        print(utils.format_date_and_time(now, current["end"]) + utils.colored_text("."))
         return utils.join(
             utils.colored_text(nxt["type"]),
             utils.colored_text("Ends in"),
-            utils.format_date_and_time(now, current["end"]) + utils.colored_text("."),
+            utils.format_date_and_time(now, current["end"]) + period,
             utils.colored_text("Next:"),
             utils.summary(nxt["summary"]),
             utils.location(nxt["location"]),
@@ -123,11 +122,10 @@ def text(events, now):
             utils.format_time(nxt["start"]),
         )
 
-    print(utils.format_date_and_time(current["end"], nxt["start"]))
     return utils.join(
         utils.colored_text(nxt["type"]),
         utils.colored_text("Ends in"),
-        utils.format_date_and_time(now, current["end"]) + utils.colored_text("."),
+        utils.format_date_and_time(now, current["end"]) + period,
         utils.colored_text("Next:"),
         utils.summary(nxt["summary"]),
         utils.location(nxt["location"]),
@@ -156,14 +154,10 @@ def activate_course(event):
         courses.current = course
 
 
-def main(end=False):
+def main():
     """
     Gets information about the current class from the google calendar api
     Also, it activates the class.
-
-    Args:
-        - end (boolean): If you want the time for the next class or when the
-            current class ends, pass end=True when calling this function.
 
     Returns:
         - None.
@@ -172,10 +166,14 @@ def main(end=False):
     scheduler = sched.scheduler(time.time, time.sleep)
 
     print("Initializing")
+
+    TZ = ""
+
     if "TZ" in os.environ:
         TZ = pytz.timezone(os.environ["TZ"])
     else:
         print("Warning: TZ environ variable not set")
+        return
 
     service = authenticate()
 
@@ -211,19 +209,21 @@ def main(end=False):
 
             try:
                 parsed_event = re.search(regex, event["summary"])
-                summary = parsed_event.group(1)
-                type = parsed_event.group(2).title()
 
-                if 'dateTime' in event['start']:
-                    event_dict = {
-                        "summary": summary,
-                        "location": event.get("location", None),
-                        "start": parse(event["start"]["dateTime"]),
-                        "end": parse(event["end"]["dateTime"]),
-                        "type": type,
-                    }
+                if parsed_event:
+                    summary = parsed_event.group(1)
+                    type = parsed_event.group(2).title()
 
-                    new_events.append(event_dict)
+                    if "dateTime" in event["start"]:
+                        event_dict = {
+                            "summary": summary,
+                            "location": event.get("location", None),
+                            "start": parse(event["start"]["dateTime"]),
+                            "end": parse(event["end"]["dateTime"]),
+                            "type": type,
+                        }
+
+                        new_events.append(event_dict)
             except Exception:
                 pass
 
@@ -231,6 +231,8 @@ def main(end=False):
 
     events = get_events(config.calendar_id)
     print("Done")
+    time.sleep(1)
+    print("")
 
     DELAY = 60
 

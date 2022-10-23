@@ -2,17 +2,12 @@
 
 from glob import glob
 import os
+
 import yaml
 
-from config import (
-    current_course,
-    base_url,
-    folders,
-    root,
-)
-
-from RofiLessonManager.lectures import Lectures as Lectures
 from RofiLessonManager import utils as utils
+from RofiLessonManager.lectures import Lectures as Lectures
+from config import base_url, current_course, current_course_watch_file, folders, root
 
 
 class Course:
@@ -95,7 +90,7 @@ class Course:
     @property
     def lectures(self):
         if not self._lectures:
-            self._lectures = Lectures(self)
+            self._lectures = Lectures()
         return self._lectures
 
     def __repr__(self):
@@ -128,6 +123,9 @@ class Courses(list):
         current_course.unlink()
         current_course.symlink_to(course.path)
         current_course.lstat
+        current_course_watch_file.write_text(
+            f"{course.info['short']}\n",
+        )
 
     def __len__(self):
         return len(self.read_files())

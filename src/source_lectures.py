@@ -4,6 +4,7 @@ import RofiLessonManager.utils as utils
 
 def main():
     lectures = Lectures()
+
     if not lectures:
         utils.rofi.msg("No lectures found!")
         return
@@ -16,7 +17,7 @@ def main():
         "Previous lectures",
     ]
 
-    key, index, selected = utils.rofi.select(
+    _, index, selected = utils.rofi.select(
         "Select view", options, ["-lines", 4, "-auto-select"]
     )
 

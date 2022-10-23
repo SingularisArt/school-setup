@@ -25,6 +25,4 @@ def number_to_filename(n: int) -> str:
     else:
         n = n
 
-    print(f"lec-{n}.tex")
-
     return f"lec-{n}.tex"

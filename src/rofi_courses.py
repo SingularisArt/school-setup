@@ -3,8 +3,8 @@ This file uses the RofiLessonManager.courses module to help switch between
 different courses.
 """
 
-from RofiLessonManager.courses import Courses as Courses
 from RofiLessonManager import utils as utils
+from RofiLessonManager.courses import Courses as Courses
 
 
 def main():
@@ -29,7 +29,7 @@ def main():
     except Exception:
         args = []
 
-    key, index, selected = utils.rofi.select(
+    _, index, _ = utils.rofi.select(
         "Select course",
         options,
         [

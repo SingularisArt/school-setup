@@ -11,23 +11,23 @@ import RofiLessonManager.utils as utils
 
 
 def main():
-    """ This function creates a new course. """
+    """This function creates a new course."""
 
     b = Basis()
     r = Rofi()
 
-    name = r.text_entry('Course Name')
+    name = r.text_entry("Course Name")
 
     if not name:
         return
 
-    name = name.replace(' ', '-').replace('_', '-').lower()
+    name = name.replace(" ", "-").replace("_", "-").lower()
 
-    if '{}/{}'.format(b.root, name) in Courses().paths:
-        utils.rofi.msg('Course already exists')
+    if f"{b.root}/{name}" in Courses().paths:
+        utils.rofi.msg("Course already exists")
         return
 
-    Course('{}/{}'.format(b.root, name))
+    Course(f"{b.root}/{name}")
 
 
 if __name__ == "__main__":

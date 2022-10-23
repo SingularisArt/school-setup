@@ -12,17 +12,17 @@ from RofiLessonManager.lectures import Lectures as Lectures
 
 
 def main():
-    """ This main function will open and edit the selected lecture. """
+    """This main function will open and edit the selected lecture."""
 
     lectures = Lectures()
 
     rofi = Rofi()
-    n = rofi.integer_entry('Enter lecture number')
-    if n < 10:
-        n = '0{}'.format(n)
+    n = rofi.integer_entry("Enter lecture number")
+    if int(n) < 10:
+        n = f"0{n}"
 
     if n:
-        Lecture('{}/lectures/lec-{}.tex'.format(lectures.current_course, n))
+        Lecture(f"{lectures.current_course}/lectures/lec-{n}.tex")
 
 
 if __name__ == "__main__":

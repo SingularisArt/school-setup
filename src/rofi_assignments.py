@@ -3,15 +3,14 @@
 import os
 import sys
 
-from config import (
-    rofi_options,
-    my_assignments_latex_folder,
-    my_assignments_yaml_folder,
-    my_assignments_pdf_folder,
-)
-
 from RofiLessonManager.assignments import Assignments
 import RofiLessonManager.utils as utils
+from config import (
+    my_assignments_latex_folder,
+    my_assignments_pdf_folder,
+    my_assignments_yaml_folder,
+    rofi_options,
+)
 
 
 def main():
@@ -111,28 +110,23 @@ def main():
     ]
 
     # Ask the user to select one.
-    key, index, selected = utils.rofi.select(
-        "Select Assignment", options, rofi_options)
+    _, index, _ = utils.rofi.select(
+        "Select Assignment",
+        options,
+        rofi_options,
+    )
 
     # If the user didn't select one, exit.
     if index < 0:
         exit(1)
 
+    assignment = sorted_assignments[index].number
     # Create the path to the latex file for the selected assignment.
-    tex_path = (
-        f"{my_assignments_latex_folder}/week-"
-        + f"{sorted_assignments[index].number}.tex"
-    )
+    tex_path = f"{my_assignments_latex_folder}/week-" + f"{assignment}.tex"
     # Create the path to the yaml file for the selected assignment.
-    yaml_path = (
-        f"{my_assignments_yaml_folder}/week-"
-        + f"{sorted_assignments[index].number}.yaml"
-    )
+    yaml_path = f"{my_assignments_yaml_folder}/week-" + f"{assignment}.yaml"
     # Create the path to the pdf file for the selected assignment.
-    pdf_path = (
-        f"{my_assignments_pdf_folder}/week-" +
-        f"{sorted_assignments[index].number}.pdf"
-    )
+    pdf_path = f"{my_assignments_pdf_folder}/week-" + f"{assignment}.pdf"
 
     # If the latex file exists, add the command `view latex`.
     second_options.append("View LaTeX") if os.path.exists(tex_path) else ""
@@ -141,7 +135,7 @@ def main():
     # If the pdf file exists, add the command `view pdf`.
     second_options.append("View PDF") if os.path.exists(pdf_path) else ""
 
-    second_key, second_index, second_selected = utils.rofi.select(
+    _, second_index, _ = utils.rofi.select(
         f"Which one for assignment: {sorted_assignments[index].title}",
         second_options,
         rofi_options,

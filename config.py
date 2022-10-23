@@ -24,6 +24,7 @@ pdf_viewer = data["pdf_viewer"]
 notes_dir = Path(data["notes_dir"]).expanduser()
 root = Path(data["root"]).expanduser()
 current_course = Path(data["current_course"]).expanduser()
+current_course_watch_file = Path('/tmp/current_course').expanduser()
 master_file = Path(data["master_file"]).expanduser()
 source_lectures_location = Path(data["source_lessons_location"]).expanduser()
 

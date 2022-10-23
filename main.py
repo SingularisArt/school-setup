@@ -63,13 +63,19 @@ def main():
         help="Source lectures",
         action="store_true",
     )
+    parser.add_argument(
+        "-sn",
+        "--sync-notes",
+        help="Sync notes to google drive",
+        action="store_true",
+    )
 
     args = parser.parse_args()
 
     os.chdir(sys.path[0])
 
     if args.calendar:
-        import src.calendar as ca
+        import src.countdown as ca
 
         print("Waiting for connection")
         ca.check_internet()
@@ -102,6 +108,10 @@ def main():
         import src.source_lectures as sl
 
         sl.main()
+    elif args.sync_notes:
+        import src.sync_notes as sn
+
+        sn.main()
 
 
 if __name__ == "__main__":

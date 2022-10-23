@@ -2,10 +2,9 @@
 
 import os
 
-from config import date_format, rofi_options, current_course
-
-from RofiLessonManager.lectures import Lectures as Lectures
 from RofiLessonManager import utils as utils
+from RofiLessonManager.lectures import Lectures as Lectures
+from config import current_course, date_format, rofi_options
 
 
 def main():
@@ -38,8 +37,8 @@ def main():
         exit(1)
 
     # Ask the user to select one.
-    key, index, selected = utils.rofi.select(
-        "Select Lesson", options, rofi_options
+    _, index, _ = utils.rofi.select(
+        "Select Lecture", options, rofi_options
     )
 
     # If the user didn't select one, exit.

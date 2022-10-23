@@ -54,18 +54,22 @@ class Lecture:
         if not os.path.isfile(file_path):
             self.new()
 
+        lecture_match = ""
         # Parse the lecture file, getting all the required information.
         with open(file_path) as f:
             for line in f:
                 lecture_match: re.search = re.search(
-                    r"lesson\{(.*?)\}\{(.*?)\}\{(.*)\}",
+                    r"lecture\{(.*?)\}\{(.*)\}",
                     line,
                 )
                 if lecture_match:
                     break
 
+        if lecture_match == "":
+            return
+
         # Get the lecture date.
-        date_str: str = lecture_match.group(2)
+        date_str: str = lecture_match.group(1)
 
         # Format the date.
         date: datetime.strptime = datetime.strptime(
@@ -98,7 +102,7 @@ class Lecture:
         )
 
         # Get the title.
-        title: title = lecture_match.group(3)
+        title: str = lecture_match.group(2)
 
         self.date: datetime.strptime = date
         self.week: int = week
@@ -148,7 +152,7 @@ class Lecture:
 
         # Create the lecture template.
         template: list[str] = [
-            rf"\lesson{{{number}}}{{{date}}}{{{title}}}",
+            rf"\lecture{{{date}}}{{{title}}}",
             rf"\label{{{label}}}",
             "",
             "",
