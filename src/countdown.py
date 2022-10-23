@@ -211,20 +211,22 @@ def main():
             try:
                 parsed_event = re.search(regex, event["summary"])
 
-                if parsed_event:
-                    summary = parsed_event.group(1)
-                    type = parsed_event.group(2).title()
+                if not parsed_event:
+                    return
 
-                    if "dateTime" in event["start"]:
-                        event_dict = {
-                            "summary": summary,
-                            "location": event.get("location", None),
-                            "start": parse(event["start"]["dateTime"]),
-                            "end": parse(event["end"]["dateTime"]),
-                            "type": type,
-                        }
+                summary = parsed_event.group(1)
+                type = parsed_event.group(2).title()
 
-                        new_events.append(event_dict)
+                if "dateTime" in event["start"]:
+                    event_dict = {
+                        "summary": summary,
+                        "location": event.get("location", None),
+                        "start": parse(event["start"]["dateTime"]),
+                        "end": parse(event["end"]["dateTime"]),
+                        "type": type,
+                    }
+
+                    new_events.append(event_dict)
             except Exception:
                 pass
 

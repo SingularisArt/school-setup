@@ -1,61 +1,101 @@
 #!/usr/bin/env python3
 
-import os.path
-import pickle
-import sys
-
-from google.auth.exceptions import RefreshError
-from google.auth.transport.requests import Request
-from google_auth_oauthlib.flow import InstalledAppFlow
-from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from googleapiclient.http import MediaFileUpload
 
 from RofiLessonManager import utils as utils
 from RofiLessonManager.courses import Courses as Courses
+from config import my_assignments_pdf_folder as pdf_folder
 
 
-def authenticate():
-    """
-    Authenticates the user to access the google drive api.
+def get_files(id):
+    return (
+        service.files()
+        .list(
+            q=f"'{id}' in parents",
+            spaces="drive",
+            fields="files(id, name)",
+        )
+        .execute()
+    )
 
-    Returns:
-        - googleapiclient.discovery.build
-    """
 
-    print("Authenticating")
-    # If modifying these scopes, delete the file token.pickle.
-    SCOPES = ["https://www.googleapis.com/auth/drive"]
+def sync_file(file, name, course_name, id):
+    try:
+        file_metadata = {
+            "name": name,
+            "parents": [id],
+        }
 
-    creds = None
-    # The file token.pickle stores the user's access and refresh tokens, and is
-    # created automatically when the authorization flow completes for the first
-    # time.
-    if os.path.exists("credentials/sync.pickle"):
-        with open("credentials/sync.pickle", "rb") as token:
-            creds = pickle.load(token)
+        media = MediaFileUpload(
+            file,
+            mimetype="application/pdf",
+        )
 
-    # If there are no (valid) credentials available, let the user log in.
-    if not creds or not creds.valid:
-        if creds and creds.expired and creds.refresh_token:
-            try:
-                creds.refresh(Request())
-            except RefreshError as e:
-                print(e)
-                sys.exit()
-        else:
-            print("Need to allow access")
-            flow = InstalledAppFlow.from_client_secrets_file(
-                "credentials/sync.json",
-                SCOPES,
-            )
-            creds = flow.run_local_server(port=0)
-        # Save the credentials for the next run
-        with open("credentials/sync.pickle", "wb") as token:
-            pickle.dump(creds, token)
+        service.files().create(
+            body=file_metadata, media_body=media, fields="id"
+        ).execute()
+    except HttpError:
+        utils.rofi.msg(
+            f"Failed to sync {name} for course {course_name}",
+            err=True,
+        )
 
-    service = build("drive", "v3", credentials=creds)
-    return service
+        return False
+
+    return True
+
+
+def sync_notes(course):
+    notes_folder = course.info["folder"]["notes_folder"]
+
+    drive_notes = get_files(notes_folder)
+    if len(drive_notes["files"]) > 2:
+        for note in drive_notes["files"]:
+            if note["name"] == "Notes":
+                service.files().delete(fileId=note["id"]).execute()
+
+    lectures = course.lectures
+
+    r = lectures.parse_range_string("all")
+    lectures.update_lectures_in_master(r)
+    lectures.compile_master()
+
+    path = f"{course.path}/master.pdf"
+
+    if not sync_file(path, "Notes", course.name, notes_folder):
+        return
+
+
+def sync_assignments(course):
+    assignments_folder = course.info["folder"]["assignments_folder"]
+    files = utils.get_files(pdf_folder)
+    named_files = sorted(
+        [utils.replace_str(f, [".pdf", ""], ["-", " "]).title() for f in files]
+    )
+
+    drive_assignments = get_files(assignments_folder)
+    if len(drive_assignments["files"]) > 1:
+        for assignment in drive_assignments["files"]:
+            if assignment["name"] in named_files:
+                service.files().delete(fileId=assignment["id"]).execute()
+
+    for file in files:
+        if "pdf" not in file:
+            continue
+
+        path = f"{pdf_folder}/{file}"
+        name = f"Week {utils.filename_to_number(file)}"
+
+        if not sync_file(path, name, course.name, assignments_folder):
+            return
+
+
+service = utils.authenticate(
+    "drive",
+    ["https://www.googleapis.com/auth/drive"],
+    "credentials/sync.json",
+)
 
 
 def main():
@@ -63,39 +103,37 @@ def main():
     current = courses.current
     index = 0
 
-    service = authenticate()
+    options = ["Sync Notes", "Sync Assignments", "Sync Notes and Assignments"]
+    _, op_index, _ = utils.rofi.select("Select", options)
+
+    if op_index < 0:
+        exit(1)
 
     for x, course in enumerate(courses):
         if course.name == current:
             index = x
 
         courses.current = course
-        lectures = course.lectures
 
-        r = lectures.parse_range_string("all")
-        lectures.update_lectures_in_master(r)
-        lectures.compile_master()
+        if op_index == 0 or op_index == 2:
+            sync_notes(course)
+        if op_index == 1 or op_index == 2:
+            sync_assignments(course)
 
-        try:
-            file_metadata = {
-                "name": "Notes",
-                "parents": [course.info["folder"]],
-            }
+        stuff = ""
+        if op_index == 0:
+            stuff = "notes"
+        elif op_index == 1:
+            stuff = "assignments"
+        elif op_index == 2:
+            stuff = "notes and assignments"
 
-            media = MediaFileUpload(
-                f"{course.path}/master.pdf",
-                mimetype="application/pdf",
-            )
-
-            service.files().create(
-                body=file_metadata, media_body=media, fields="id"
-            ).execute()
-        except HttpError:
-            utils.rofi.msg(
-                f"Failed to sync notes for course {course.info['name']}",
-                err=True,
-            )
-
-            utils.rofi.msg(f"Synced notes for course {course.info['name']}")
-
+        utils.rofi.msg(
+            f"Successfully synced your {stuff} to the cloud for "
+            + f"the course {utils.folder_to_name(course.name)}"
+        )
     courses.current = courses[index]
+
+
+if __name__ == "__main__":
+    main()

@@ -401,7 +401,7 @@ class Lectures(list):
         """Compile the master.tex file."""
 
         result: subprocess.run = subprocess.run(
-            ["pdflatex", str(config.master_file)],
+            ["make"],
             cwd=str(config.current_course),
         )
 
