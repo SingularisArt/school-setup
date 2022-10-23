@@ -4,21 +4,6 @@ import subprocess
 
 
 def get_input(prompt: str, rofi_args=[]) -> tuple:
-    """
-    Get user input, via Rofi.
-
-    Args:
-    -----
-        prompt (str): The prompt to display to the user.
-        rofi_args (list): Optional arguments to pass to Rofi directly.
-
-    Returns:
-    --------
-        tuple:
-            status code (int)
-            user input (str)
-    """
-
     args = [
         "rofi",
         "-lines",

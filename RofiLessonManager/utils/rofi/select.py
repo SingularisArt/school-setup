@@ -4,23 +4,6 @@ import subprocess
 
 
 def select(prompt: str, options: list, rofi_args=[], fuzzy=True) -> tuple:
-    """
-    Allow the user to select an item from a list, via Rofi.
-
-    Args:
-        prompt (str): The prompt to display to the user.
-        options (list): The list of options for the user to select from.
-        rofi_args (list): Optional arguments to pass to Rofi directly.
-            Default: [].
-        fuzzy (bool): Allow the user to fuzzy search. Default: True.
-
-    Returns:
-        tuple:
-            status code (int)
-            index (int)
-            selected (str)
-    """
-
     optionstr = "\n".join(option.replace("\n", " ") for option in options)
 
     args = ["rofi", "-markup"]

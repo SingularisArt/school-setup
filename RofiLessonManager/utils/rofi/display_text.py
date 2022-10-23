@@ -4,19 +4,6 @@ import subprocess
 
 
 def display_text(prompt: str, rofi_args=[]) -> tuple:
-    """
-    Display text to the user, via Rofi.
-
-    Args:
-    -----
-        prompt (str): The prompt to display to the user.
-        rofi_args (list): Optional arguments to pass to Rofi directly.
-
-    Returns:
-    --------
-        status code (int)
-    """
-
     args = ["rofi", "-markup"]
 
     args += ["-e", prompt]

@@ -9,19 +9,6 @@ def format_date_and_time(
     begin: datetime.datetime,
     end: datetime.datetime,
 ) -> str:
-    """
-    Return the time between the beginning and end in a human readable format.
-
-    Args:
-    -----
-        begin (datetime): The beginning of the time.
-        end (datetime): The end of the time.
-
-    Returns:
-    --------
-        str: The time between the beginning and end.
-    """
-
     minutes = math.ceil((end - begin).seconds / 60)
 
     if minutes == 1:

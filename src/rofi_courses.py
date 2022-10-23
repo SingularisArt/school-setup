@@ -1,15 +1,8 @@
-"""
-This file uses the RofiLessonManager.courses module to help switch between
-different courses.
-"""
-
 from RofiLessonManager import utils as utils
 from RofiLessonManager.courses import Courses as Courses
 
 
 def main():
-    """This main function will change the current course."""
-
     courses = Courses()
     current = courses.current
 

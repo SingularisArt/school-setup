@@ -25,26 +25,14 @@ courses = Courses()
 
 
 def authenticate():
-    """
-    Authenticates the user to access the google calendar api.
-
-    Returns:
-        - googleapiclient.discovery.build
-    """
-
     print("Authenticating")
 
-    # If modifying these scopes, delete the file token.pickle.
     SCOPES = ["https://www.googleapis.com/auth/calendar.readonly"]
     creds = None
-    # The file token.pickle stores the user's access and refresh tokens, and is
-    # created automatically when the authorization flow completes for the first
-    # time.
     if os.path.exists("credentials/calendar.pickle"):
         with open("credentials/calendar.pickle", "rb") as token:
             creds = pickle.load(token)
 
-    # If there are no (valid) credentials available, let the user log in.
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
             try:
@@ -59,7 +47,6 @@ def authenticate():
                 SCOPES,
             )
             creds = flow.run_local_server(port=0)
-        # Save the credentials for the next run
         with open("credentials/calendar.pickle", "wb") as token:
             pickle.dump(creds, token)
 
@@ -68,25 +55,12 @@ def authenticate():
 
 
 def text(events, now):
-    """
-
-    Args:
-        - events (dict): Dictionary collection of the current items in there
-            google calendar.
-        - now (datetime.datetime): The current time.
-        - end (datetime.datetime): The end time of the class.
-
-    Returns:
-        - str: Information on the next event.
-    """
-
     current = next(
         (e for e in events if e["start"] < now and now < e["end"]),
         None,
     )
 
     period = utils.colored_text(".")
-    # Check if we have an event right now
     if not current:
         nxt = next((e for e in events if now <= e["start"]), None)
         if nxt:
@@ -156,14 +130,6 @@ def activate_course(event):
 
 
 def main():
-    """
-    Gets information about the current class from the google calendar api
-    Also, it activates the class.
-
-    Returns:
-        - None.
-    """
-
     scheduler = sched.scheduler(time.time, time.sleep)
 
     print("Initializing")
@@ -180,7 +146,6 @@ def main():
 
     print("Authenticated")
 
-    # Call the Calendar API
     now = datetime.datetime.now(tz=TZ)
 
     morning = now.replace(hour=6, minute=0, microsecond=0)
@@ -246,12 +211,10 @@ def main():
             scheduler.enter(DELAY, 1, print_message)
 
     for event in events:
-        # absolute entry, priority 1
         scheduler.enterabs(
             event["start"].timestamp(), 1, activate_course, argument=(event,)
         )
 
-    # Immediate, priority 1
     scheduler.enter(0, 1, print_message)
     scheduler.run()
 
