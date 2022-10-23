@@ -11,6 +11,11 @@ Managing LaTeX Lecture Notes
 - You can sync your notes and assignments to the cloud.
 - You can source all lecture notes, the current one, the last two, specific
   lecture notes, or a range of lecture notes.
+- You can create a lecture note, assignment, or even a course in just 1 click.
+- Insane keymappings already setup for you.
+- Amazing UI, via Rofi.
+- Easy to install.
+- Will take about 30 minutes to setup after installation.
 
 # TODO
 
