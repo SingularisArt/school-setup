@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 
-from RofiLessonManager.utils import replace_str
+from RofiLessonManager import utils as utils
 
 
 def filename_to_number(s: str) -> str:
-    n = replace_str(
+    n = utils.replace_str(
         s,
         ["lec-", ""],
         ["week-", ""],

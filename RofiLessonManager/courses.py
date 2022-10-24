@@ -7,25 +7,19 @@ import yaml
 
 from RofiLessonManager import utils as utils
 from RofiLessonManager.lectures import Lectures as Lectures
-from config import base_url, current_course, current_course_watch_file, folders, root
+from config import base_url, current_course
+from config import current_course_watch_file, folders, root
 
 
 class Course:
     def __init__(self, path: str) -> None:
-        """
-        Initialize the Course class.
-
-        Args:
-            path (str): The path to the course.
-        """
-
         self.path = path
         self.name = os.path.basename(path)
 
         if not os.path.exists(path):
             self.create_course()
 
-        info = open("{}/info.yaml".format(path))
+        info = open(f"{path}/info.yaml")
         self.info = yaml.load(info, Loader=yaml.FullLoader)
         self._lectures = None
 
@@ -80,12 +74,12 @@ class Course:
 
         os.makedirs(self.path)
         for folder in folders:
-            os.makedirs("{}/{}".format(self.path, folder))
+            os.makedirs(f"{self.path}/{folder}")
 
-        info = open("{}/info.yaml".format(self.path), "w")
+        info = open(f"{self.path}/info.yaml", "w")
 
         for key, value in zip(keys, values):
-            info.write("{}: {}\n".format(key, value))
+            info.write(f"{key}: {value}\n")
 
     @property
     def lectures(self):
@@ -94,7 +88,7 @@ class Course:
         return self._lectures
 
     def __repr__(self):
-        return "<Course: {}>".format(self.name)
+        return f"<Course: {self.name}>"
 
     def __eq__(self, other):
         return self.path == str(other.resolve())
@@ -108,7 +102,7 @@ class Courses(list):
         self.paths = [c.path for c in self]
 
     def read_files(self):
-        courses = glob("{}/*".format(root))
+        courses = glob(f"{root}/*")
         return sorted(
             (Course(f) for f in courses if os.path.isdir(f)),
             key=lambda c: c.name,

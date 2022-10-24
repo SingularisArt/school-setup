@@ -3,7 +3,6 @@
 import datetime
 import os
 import os.path
-import pickle
 import re
 import sched
 import sys
@@ -11,10 +10,6 @@ import time
 import urllib.request
 
 from dateutil.parser import parse
-from google.auth.exceptions import RefreshError
-from google.auth.transport.requests import Request
-from google_auth_oauthlib.flow import InstalledAppFlow
-from googleapiclient.discovery import build
 import pytz
 
 from RofiLessonManager.courses import Courses as Courses
@@ -24,91 +19,71 @@ import config
 courses = Courses()
 
 
-def authenticate():
-    print("Authenticating")
-
-    SCOPES = ["https://www.googleapis.com/auth/calendar.readonly"]
-    creds = None
-    if os.path.exists("credentials/calendar.pickle"):
-        with open("credentials/calendar.pickle", "rb") as token:
-            creds = pickle.load(token)
-
-    if not creds or not creds.valid:
-        if creds and creds.expired and creds.refresh_token:
-            try:
-                creds.refresh(Request())
-            except RefreshError as e:
-                print(e)
-                sys.exit()
-        else:
-            print("Need to allow access")
-            flow = InstalledAppFlow.from_client_secrets_file(
-                "credentials/calendar.json",
-                SCOPES,
-            )
-            creds = flow.run_local_server(port=0)
-        with open("credentials/calendar.pickle", "wb") as token:
-            pickle.dump(creds, token)
-
-    service = build("calendar", "v3", credentials=creds)
-    return service
-
-
 def text(events, now):
+    MAX_LENGTH = 140
     current = next(
         (e for e in events if e["start"] < now and now < e["end"]),
         None,
     )
 
     period = utils.colored_text(".")
+
     if not current:
         nxt = next((e for e in events if now <= e["start"]), None)
         if nxt:
-            print(utils.format_date_and_time(now, nxt["start"]))
-            return utils.join(
-                utils.colored_text(nxt["type"]),
-                utils.summary(nxt["summary"]),
-                utils.colored_text("starts in"),
-                utils.format_date_and_time(now, nxt["start"]),
-                utils.location(nxt["location"]),
-                "   ",
-                utils.format_time(nxt["start"]),
+            return utils.generate_short_title(
+                utils.join(
+                    utils.colored_text(nxt["type"]),
+                    utils.summary(nxt["summary"]),
+                    utils.colored_text("starts in"),
+                    utils.format_date_and_time(now, nxt["start"]),
+                    utils.location(nxt["location"]) + period,
+                    "(" + utils.format_time(nxt["start"]) + ")",
+                ),
+                MAX_LENGTH=MAX_LENGTH,
             )
         return ""
+
     nxt = next((e for e in events if e["start"] >= current["end"]), None)
     if not nxt:
-        return utils.join(
-            utils.colored_text(current["type"]),
-            utils.colored_text("Ends in"),
-            utils.format_date_and_time(now, current["end"]) + "!",
-            "   ",
-            utils.format_time(current["end"]),
+        return utils.generate_short_title(
+            utils.join(
+                utils.colored_text(current["type"]),
+                utils.colored_text("Ends in"),
+                utils.format_date_and_time(now, current["end"]) + period,
+                "(" + utils.format_time(current["end"]) + ")",
+            ),
+            MAX_LENGTH=MAX_LENGTH,
         )
 
     if current["end"] == nxt["start"]:
-        return utils.join(
+        return utils.generate_short_title(
+            utils.join(
+                utils.colored_text(nxt["type"]),
+                utils.colored_text("Ends in"),
+                utils.format_date_and_time(now, current["end"]) + period,
+                utils.colored_text("Next is"),
+                utils.summary(nxt["summary"]),
+                utils.location(nxt["location"]) + period,
+                "(" + utils.format_time(nxt["start"]) + ")",
+            ),
+            MAX_LENGTH=MAX_LENGTH,
+        )
+
+    return utils.generate_short_title(
+        utils.join(
             utils.colored_text(nxt["type"]),
             utils.colored_text("Ends in"),
             utils.format_date_and_time(now, current["end"]) + period,
-            utils.colored_text("Next:"),
+            utils.colored_text("Next is"),
             utils.summary(nxt["summary"]),
             utils.location(nxt["location"]),
-            "   ",
-            utils.format_time(nxt["start"]),
-        )
-
-    return utils.join(
-        utils.colored_text(nxt["type"]),
-        utils.colored_text("Ends in"),
-        utils.format_date_and_time(now, current["end"]) + period,
-        utils.colored_text("Next:"),
-        utils.summary(nxt["summary"]),
-        utils.location(nxt["location"]),
-        utils.colored_text("after a"),
-        utils.format_date_and_time(current["end"], nxt["start"]),
-        utils.colored_text("break."),
-        "   ",
-        utils.format_time(current["end"]),
+            utils.colored_text("after a"),
+            utils.format_date_and_time(current["end"], nxt["start"]),
+            utils.colored_text("break."),
+            "(" + utils.format_time(current["end"]) + ")",
+        ),
+        MAX_LENGTH=MAX_LENGTH,
     )
 
 
@@ -142,7 +117,11 @@ def main():
         print("Warning: TZ environ variable not set")
         return
 
-    service = authenticate()
+    service = utils.authenticate(
+        "calendar",
+        ["https://www.googleapis.com/auth/calendar.readonly"],
+        "credentials/calendar.json",
+    )
 
     print("Authenticated")
 
@@ -171,13 +150,10 @@ def main():
         new_events = []
 
         for event in events:
-            regex = r"^([ a-zA-Z0-9]+): (CLASS|LAB)$"
+            regex = r"^([ a-zA-Z0-9-]+): (CLASS|LAB)$"
 
             try:
                 parsed_event = re.search(regex, event["summary"])
-
-                if not parsed_event:
-                    return
 
                 summary = parsed_event.group(1)
                 type = parsed_event.group(2).title()
@@ -220,13 +196,6 @@ def main():
 
 
 def check_internet(host="http://google.com"):
-    """
-    Checks if connected to the internet.
-
-    Args:
-        - host (str): Checks if connected (Default: https://google.com).
-    """
-
     while True:
         try:
             urllib.request.urlopen(host)

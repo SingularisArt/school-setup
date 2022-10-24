@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-
 import datetime
 import math
 
@@ -23,8 +22,10 @@ def format_date_and_time(
     if hours == 1 and rest_minutes == 0:
         return "1 hour"
     elif hours == 1:
-        return f"1 hour and {rest_minutes} minutes"
-    elif hours > 5 or rest_minutes == 0:
+        return f"1 hour {rest_minutes} min"
+    elif rest_minutes == 0:
+        return f"{hours} hours"
+    elif hours > 5:
         return f"{hours} hours"
 
-    return f"{hours} hours {rest_minutes:02d} minutes"
+    return f"{hours} hr {rest_minutes:02d} min"

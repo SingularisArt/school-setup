@@ -1,6 +1,7 @@
 from .authenticate import authenticate
 from .check_if_assignment_is_due import check_if_assignment_is_due
 from .colored_text import colored_text
+from .convert_filename_to_name import convert_filename_to_name
 from .display_number import display_number
 from .filename_to_number import filename_to_number
 from .folder_to_name import folder_to_name
@@ -15,4 +16,5 @@ from .location import location
 from .number_to_filename import number_to_filename
 from .replace_str import replace_str
 from .summary import summary
+from .sync_file import sync_file
 from . import rofi
