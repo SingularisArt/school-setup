@@ -4,6 +4,11 @@ from RofiLessonManager.courses import Courses as Courses
 
 def main():
     courses = Courses()
+
+    if not courses:
+        utils.rofi.msg("No courses found!", err=True)
+        exit(1)
+
     current = courses.current
 
     options = [

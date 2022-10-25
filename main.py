@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-
 import argparse
 import os
 import sys
@@ -13,30 +12,6 @@ def main():
         "-ca",
         "--calendar",
         help="Parse google calendar",
-        action="store_true",
-    )
-    parser.add_argument(
-        "-cp",
-        "--change-path",
-        help="Change path",
-        action="store_true",
-    )
-    parser.add_argument(
-        "-na",
-        "--new-assignment",
-        help="New assignment",
-        action="store_true",
-    )
-    parser.add_argument(
-        "-nc",
-        "--new-course",
-        help="New course",
-        action="store_true",
-    )
-    parser.add_argument(
-        "-nl",
-        "--new-lecture",
-        help="New lecture",
         action="store_true",
     )
     parser.add_argument(
@@ -69,6 +44,12 @@ def main():
         help="Sync notes to google drive",
         action="store_true",
     )
+    parser.add_argument(
+        "-ic",
+        "--init-courses",
+        help="Initalize all courses",
+        action="store_true",
+    )
 
     args = parser.parse_args()
 
@@ -80,18 +61,6 @@ def main():
         print("Waiting for connection")
         ca.check_internet()
         ca.main()
-    elif args.new_course:
-        import src.new_course as nc
-
-        nc.main()
-    elif args.new_assignment:
-        import src.new_assignment as na
-
-        na.main()
-    elif args.new_lecture:
-        import src.new_lecture as nl
-
-        nl.main()
     elif args.rofi_assignments:
         import src.rofi_assignments as ra
 
@@ -112,6 +81,10 @@ def main():
         import src.sync_notes as sn
 
         sn.main()
+    elif args.init_courses:
+        import src.init_courses as ic
+
+        ic.main()
 
 
 if __name__ == "__main__":

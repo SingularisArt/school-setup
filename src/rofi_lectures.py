@@ -3,15 +3,15 @@
 import os
 
 from RofiLessonManager import utils as utils
-from RofiLessonManager.lectures import Lectures as Lectures
+from RofiLessonManager.courses import Courses as Courses
 from config import current_course, date_format, rofi_options
 
 
 def main():
-    lectures = Lectures()
+    lectures = Courses().current.lectures
 
     if not lectures:
-        utils.rofi.msg("You don't have any assignments.")
+        utils.rofi.msg("No lectures found!", err=True)
         exit(1)
 
     sorted_lectures = sorted(lectures, key=lambda l: -int(l.number))
@@ -23,10 +23,6 @@ def main():
         + f"(Week: {lec.week})</span>"
         for lec in sorted_lectures
     ]
-
-    if not lectures:
-        utils.rofi.msg("No lectures found")
-        exit(1)
 
     _, index, _ = utils.rofi.select(
         "Select Lecture", options, rofi_options

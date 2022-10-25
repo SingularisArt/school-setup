@@ -1,29 +1,25 @@
 #!/usr/bin/env python3
 
-from rofi import Rofi
 from glob import glob
-from natsort import natsorted
 import os
 
-from config import (
-    my_assignments_latex_folder,
-    my_assignments_yaml_folder,
-    my_assignments_pdf_folder,
-    terminal,
-    terminal_commands,
-    editor,
-    pdf_viewer,
-)
+from natsort import natsorted
 
 import RofiLessonManager.utils as utils
+from config import (
+    editor,
+    my_assignments_latex_folder,
+    my_assignments_pdf_folder,
+    my_assignments_yaml_folder,
+    pdf_viewer,
+    terminal,
+    terminal_commands,
+)
 
 
 class Assignment:
     def __init__(self, path):
         self.path = path
-
-        if not os.path.exists(self.path):
-            self.new()
 
         self.name = os.path.basename(path)
         self.number = str(utils.filename_to_number(self.name))
@@ -60,30 +56,13 @@ class Assignment:
 
         os.system(full_command)
 
-    def new(self):
-        rofi = Rofi()
-        title = rofi.text_entry("Title")
-        due_date = rofi.date_entry(
-            "Due Date (ex: 05-30-22)", formats=["%m-%d-%y"])
-        due_date = due_date.strftime("%m-%d-%y")
-        _, _, submitted = utils.rofi.select("Submitted", ["Yes", "No"])
-
-        open(self.path, "x")
-        open(self.yaml_file, "x")
-
-        with open(self.yaml_file, "w") as file:
-            file.write(f"name: {title}\n")
-            file.write(f"due_date: {due_date}\n")
-            file.write(f"submitted: {submitted}\n")
-
     def get_info(self):
         due_date = self.info["due_date"]
         submit = self.info["submitted"]
         title = self.info["name"]
         number = self.name[5:-4]
 
-        logo, due_date, late = utils.check_if_assignment_is_due(
-            due_date, submit)
+        logo, due_date, late = utils.check_if_assignment_is_due(due_date, submit)
 
         if not submit:
             submit = "No"
