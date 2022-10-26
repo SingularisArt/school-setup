@@ -23,6 +23,7 @@ def main():
         + f"(Week: {lec.week})</span>"
         for lec in sorted_lectures
     ]
+    print(options)
 
     _, index, _ = utils.rofi.select(
         "Select Lecture", options, rofi_options

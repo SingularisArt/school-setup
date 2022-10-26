@@ -9,23 +9,15 @@ def main():
         utils.rofi.msg("No courses found!", err=True)
         exit(1)
 
-    current = courses.current
-
     options = [
-        "<b>{title: <{fill}}</b> <i>({topic}: <b>{number})</b></i>".format(
+        "<b>{title: <{fill}}</b> <i>({topic}: <b>{crn_number})</b></i>".format(
             title=utils.generate_short_title(c.info["title"]),
             topic=c.info["topic"],
             fill=34,
-            number=c.info["class_number"],
+            crn_number=c.info["class_number"],
         )
         for c in courses
     ]
-
-    try:
-        current_index = courses.index(current)
-        args = ["-a", current_index]
-    except Exception:
-        args = []
 
     _, index, _ = utils.rofi.select(
         "Select course",
@@ -38,8 +30,7 @@ def main():
             "Down",
             "-kb-custom-1",
             "Ctrl+n",
-        ]
-        + args,
+        ],
     )
 
     if index >= 0:

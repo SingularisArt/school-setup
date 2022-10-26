@@ -23,22 +23,28 @@ notes_dir = Path(data["notes_dir"]).expanduser()
 root = Path(data["root"]).expanduser()
 templates_dir = Path(data["templates_dir"]).expanduser()
 current_course = Path(data["current_course"]).expanduser()
-current_course_watch_file = Path('/tmp/current_course').expanduser()
+current_course_watch_file = Path("/tmp/current_course").expanduser()
 
 assignments_dir = Path(data["assignments_dir"]).expanduser()
 graded_assignments_folder = Path(
-    data["graded_assignments_folder"]).expanduser()
+    data["graded_assignments_folder"],
+).expanduser()
 online_assignments_folder = Path(
-    data["online_assignments_folder"]).expanduser()
+    data["online_assignments_folder"],
+).expanduser()
 
 my_assignments_image_folder = Path(
-    data["my_assignments_image_folder"]).expanduser()
+    data["my_assignments_image_folder"],
+).expanduser()
 my_assignments_latex_folder = Path(
-    data["my_assignments_latex_folder"]).expanduser()
+    data["my_assignments_latex_folder"],
+).expanduser()
 my_assignments_yaml_folder = Path(
-    data["my_assignments_yaml_folder"]).expanduser()
+    data["my_assignments_yaml_folder"],
+).expanduser()
 my_assignments_pdf_folder = Path(
-    data["my_assignments_pdf_folder"]).expanduser()
+    data["my_assignments_pdf_folder"],
+).expanduser()
 
 rofi_options = data["rofi_options"]
 files = data["files"]
