@@ -30,25 +30,23 @@ if [[ -e "$SRC" ]]; then
   msg "Backing up config.yaml"
 
   mv "$SRC" "$SRC.back"
+  rm -rf "$SRC"
 fi
 
 msg "Adding configuration template"
 
 echo "calendar_id: \"primary\"
-base_url: \"URL\"
 
 code_dir: \"$DOCUMENTS/school-setup\"
 editor: \"nvim\"
-viewer: \"sioyek\"
 terminal: \"xfce4-terminal\"
 terminal_commands: \"-e\"
 pdf_viewer: \"zathura\"
 
 notes_dir: \"$DOCUMENTS/school-notes\"
-root: \"$NOTES_DIR/College/Year-2/semester-1\"
+root: \"$NOTES_DIR/College/Year-2/fall\"
+templates_dir: \"$NOTES_DIR/College/Year-2/fall\"
 current_course: \"$NOTES_DIR/current-course\"
-master_file: \"$CURRENT_COURSE/master.tex\"
-source_lessons_location: \"$CURRENT_COURSE/source-lectures.tex\"
 
 assignments_dir: \"$CURRENT_COURSE/assignments\"
 graded_assignments_folder: \"$ASSIGNMENTS_DIR/graded-assignments\"
@@ -56,6 +54,7 @@ my_assignments_folder: \"$ASSIGNMENTS_DIR/my-assignments\"
 online_assignments_folder: \"$ASSIGNMENTS_DIR/online-assignments\"
 
 my_assignments_image_folder: \"$MY_ASSIGNMENTS_DIR/latex-files\"
+my_assignments_bibtex_folder: \"$MY_ASSIGNMENTS_DIR/bibtex-files\"
 my_assignments_latex_folder: \"$MY_ASSIGNMENTS_DIR/latex-files\"
 my_assignments_yaml_folder: \"$MY_ASSIGNMENTS_DIR/yaml-files\"
 my_assignments_pdf_folder: \"$MY_ASSIGNMENTS_DIR/pdf-files\"
@@ -73,27 +72,29 @@ rofi_options:
   - \"-kb-custom-1\"
   - \"Ctrl+n\"
 
-tex_types:
-  - \".tex\"
-  - \".latex\"
-
-discourage_folders:
-  - \"images\"
-  - \"assignments\"
-  - \"figures\"
-  - \"projects\"
-  - \".git\"
-  - \"media\"
-  - \"current-course\"
-
 folders:
   - \"assignments\"
-  - \"assignments/image-files\"
-  - \"assignments/latex-files\"
-  - \"assignments/pdf-files\"
-  - \"assignments/yaml-files\"
+  - \"assignments/graded-assignments\"
+  - \"assignments/online-assignments\"
+  - \"assignments/my-assignments\"
+  - \"assignments/my-assignments/bibtex-files\"
+  - \"assignments/my-assignments/image-files\"
+  - \"assignments/my-assignments/latex-files\"
+  - \"assignments/my-assignments/pdf-files\"
+  - \"assignments/my-assignments/yaml-files\"
+  - \"online-lecture-notes\"
   - \"lectures\"
   - \"figures\"
-  - \"UltiSnips\"" >> ~/.config/lesson-manager/config.yaml
+  - \"UltiSnips\"
+
+files:
+  \"assignments/my-assignments/preamble.tex\": \"symlink\"
+  \"Makefile\": \"symlink\"
+  \"preamble.tex\": \"symlink\"
+  \"assignments/my-assignments/master.tex\": \"copy\"
+  \"intro.tex\": \"copy\"
+  \"master.tex\": \"copy\"
+  \"notes.md\": \"copy\"
+  \"UltiSnips/tex.snippets\": \"copy\"" >> ~/.config/lesson-manager/config.yaml
 
 msg "Successfuly got everything ready"

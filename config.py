@@ -13,10 +13,8 @@ home = Path(data["home"]).expanduser()
 user = data["user"]
 
 calendar_id = data["calendar_id"]
-base_url = data["base_url"]
 code_dir = Path(data["code_dir"]).expanduser()
 editor = data["editor"]
-viewer = data["viewer"]
 terminal = data["terminal"]
 terminal_commands = data["terminal_commands"]
 pdf_viewer = data["pdf_viewer"]
@@ -43,8 +41,6 @@ my_assignments_pdf_folder = Path(
     data["my_assignments_pdf_folder"]).expanduser()
 
 rofi_options = data["rofi_options"]
-tex_types = data["tex_types"]
-discourage_folders = data["discourage_folders"]
 files = data["files"]
 folders = data["folders"]
 
