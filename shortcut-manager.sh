@@ -65,7 +65,4 @@ case $key in
   l ) ~/Documents/school-setup/main.py --rofi-lectures ;;
   s ) ~/Documents/school-setup/main.py --source-lectures ;;
   S ) ~/Documents/school-setup/main.py --sync-notes ;;
-  A ) ~/Documents/school-setup/main.py --new-assignment ;;
-  C ) ~/Documents/school-setup/main.py --new-course ;;
-  L ) ~/Documents/school-setup/main.py --new-lecture ;;
 esac
