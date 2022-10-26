@@ -85,6 +85,7 @@ folders:
   - \"online-lecture-notes\"
   - \"lectures\"
   - \"figures\"
+  - \"papers\"
   - \"UltiSnips\"
 
 files:
