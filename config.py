@@ -23,6 +23,7 @@ pdf_viewer = data["pdf_viewer"]
 
 notes_dir = Path(data["notes_dir"]).expanduser()
 root = Path(data["root"]).expanduser()
+templates_dir = Path(data["templates_dir"]).expanduser()
 current_course = Path(data["current_course"]).expanduser()
 current_course_watch_file = Path('/tmp/current_course').expanduser()
 
@@ -44,6 +45,7 @@ my_assignments_pdf_folder = Path(
 rofi_options = data["rofi_options"]
 tex_types = data["tex_types"]
 discourage_folders = data["discourage_folders"]
+files = data["files"]
 folders = data["folders"]
 
 date_format = data["date_format"]

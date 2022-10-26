@@ -30,7 +30,7 @@ def sync_notes(course):
     lectures.update_lectures_in_master(r)
     lectures.compile_master()
 
-    path = f"{course.path}/master.pdf"
+    path = f"{course.root}/master.pdf"
     utils.sync_file(service, path, "Notes", course.name, notes_folder)
 
 
