@@ -33,6 +33,9 @@ class Lecture:
                 if lecture_match:
                     break
 
+            if not lecture_match:
+                return
+
         class_start_date_str = info["start_date"]
         date_str = lecture_match.group(1)
         date = datetime.strptime(date_str, config.date_format)

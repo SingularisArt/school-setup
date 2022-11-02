@@ -45,7 +45,7 @@ pdf_viewer: \"zathura\"
 
 notes_dir: \"$DOCUMENTS/school-notes\"
 root: \"$NOTES_DIR/College/Year-2/fall\"
-templates_dir: \"$NOTES_DIR/College/Year-2/fall\"
+templates_dir: \"$NOTES_DIR/files/College/Year-2/fall\"
 current_course: \"$NOTES_DIR/current-course\"
 
 assignments_dir: \"$CURRENT_COURSE/assignments\"

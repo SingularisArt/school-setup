@@ -18,16 +18,14 @@ def main():
 
     options = [
         f"{utils.display_number(str(lec.number)): >2}. "
-        + f"<b>{utils.generate_short_title(lec.title, 27): <{27}} </b> "
+        + f"<b>{utils.generate_short_title(lec.title, 26): <{26}} </b> "
         + f"<span size='smaller'>{lec.date.strftime(date_format): <{15}} "
         + f"(Week: {lec.week})</span>"
         for lec in sorted_lectures
     ]
     print(options)
 
-    _, index, _ = utils.rofi.select(
-        "Select Lecture", options, rofi_options
-    )
+    _, index, _ = utils.rofi.select("Select Lecture", options, rofi_options)
 
     if index < 0:
         exit(1)
