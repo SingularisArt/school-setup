@@ -1,9 +1,6 @@
 #!/usr/bin/env python3
 
-from glob import glob
 import os
-
-from natsort import natsorted
 
 import RofiLessonManager.utils as utils
 from config import (
@@ -18,27 +15,37 @@ from config import (
 
 
 class Assignment:
-    def __init__(self, path):
-        self.path = path
+    def __init__(self, root):
+        self.root = root
 
-        self.name = os.path.basename(path)
+        self.name = self.root.stem
         self.number = str(utils.filename_to_number(self.name))
 
-        self.tex_file = f"{my_assignments_latex_folder}/week-{self.number}.tex"
-        self.yaml_file = f"{my_assignments_yaml_folder}/week-{self.number}.yaml"
-        self.pdf_file = f"{my_assignments_pdf_folder}/week-{self.number}.pdf"
+        self.tex_file = my_assignments_latex_folder / f"week-{self.number}.tex"
+        self.yaml_file = my_assignments_yaml_folder / f"week-{self.number}.yaml"
+        self.pdf_file = my_assignments_pdf_folder / f"week-{self.number}.pdf"
+
+        options = []
+        if self.tex_file.exists():
+            options.append("View LaTeX File")
+        if self.yaml_file.exists():
+            options.append("View Yaml File")
+        if self.pdf_file.exists():
+            options.append("View PDF File")
+
+        self.options = options
 
         self.info = utils.load_data(self.yaml_file, "yaml")
 
         try:
-            self.number, self.title, self.due_date, self.submit = self.get_info()
+            self.title, self.due_date, self.submit = self.get_info()
         except Exception:
             pass
 
         self.terminal = f"{terminal} {terminal_commands}"
 
     def parse_command(self, cmd):
-        path = (
+        root = (
             self.tex_file
             if cmd == "edit_latex"
             else self.yaml_file
@@ -49,9 +56,9 @@ class Assignment:
         )
 
         full_command = (
-            f"{terminal} {terminal_commands} '{editor} {path}'"
+            f"{terminal} {terminal_commands} '{editor} {root}'"
             if cmd != "open_pdf"
-            else f"{pdf_viewer} {path}"
+            else f"{pdf_viewer} {root}"
         )
 
         os.system(full_command)
@@ -60,7 +67,6 @@ class Assignment:
         due_date = self.info["due_date"]
         submit = self.info["submitted"]
         title = self.info["name"]
-        number = self.name[5:-4]
 
         logo, due_date, late = utils.check_if_assignment_is_due(due_date, submit)
 
@@ -72,16 +78,10 @@ class Assignment:
 
         due_date = utils.generate_short_title(due_date, 28)
 
-        return number, title, due_date, submit
+        return title, due_date, submit
 
-    def __str__(self):
+    def __repr__(self):
         return f"<Assignment: {self.number}. {self.name} {self.info['due_date']}>"
-
-    def __eq__(self, other):
-        return self.number == other.number
-
-    def __len__(self, other):
-        return self.number
 
 
 class Assignments(list):
@@ -91,6 +91,6 @@ class Assignments(list):
         self.titles = [a.name for a in self]
 
     def read_files(self):
-        files = natsorted(glob(f"{my_assignments_latex_folder}/*.tex"))
+        latex_assignments = [Assignment(x) for x in my_assignments_latex_folder.glob("*.tex")]
 
-        return sorted((Assignment(f) for f in files), key=lambda a: a.number)
+        return sorted(latex_assignments, key=lambda a: a.number)

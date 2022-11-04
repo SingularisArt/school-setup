@@ -29,6 +29,9 @@ assignments_dir = Path(data["assignments_dir"]).expanduser()
 graded_assignments_folder = Path(
     data["graded_assignments_folder"],
 ).expanduser()
+my_assignments_folder = Path(
+    data["my_assignments_folder"],
+).expanduser()
 online_assignments_folder = Path(
     data["online_assignments_folder"],
 ).expanduser()

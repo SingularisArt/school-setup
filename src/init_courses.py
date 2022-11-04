@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+from datetime import datetime
 from os import symlink
 from shutil import copy2
 
@@ -40,3 +41,16 @@ def main():
                 symlink_file(templates_dir / file, course.root / file)
             elif key == "copy":
                 copy_file(templates_dir / file, course.root / file)
+            if file == "master.tex":
+                new_content = (
+                    (course.root / file)
+                    .open()
+                    .read()
+                    .replace("TITLE", course.info["title"])
+                    .replace("AUTHOR", course.info["author"])
+                    .replace("DATE", datetime.today().strftime("%B %d, %Y"))
+                    .replace("TERM", course.info["term"])
+                    .replace("YEAR", f"${course.info['year']}$")
+                    .replace("FACULTY", course.info["faculty"])
+                )
+                (course.root / file).open("w").write(new_content)

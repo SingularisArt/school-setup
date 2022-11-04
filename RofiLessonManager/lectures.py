@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 from datetime import datetime
-import locale
 import os
 import re
 import subprocess
@@ -12,15 +11,18 @@ import RofiLessonManager.utils as utils
 import config
 
 
-locale.setlocale(locale.LC_TIME, "en_US.utf8")
-
 info = open("{}/info.yaml".format(config.current_course))
 info = yaml.load(info, Loader=yaml.FullLoader)
 
 
 class Lecture:
     def __init__(self, file_path):
-        self.file_path = file_path
+        """
+        Initialize Lecture course.
+
+        Parameters:
+            file_path (pathlib.PosixPath): The path to the lecture file.
+        """
 
         lecture_match = ""
 

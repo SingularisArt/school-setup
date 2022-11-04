@@ -17,7 +17,7 @@ class Course:
         if not os.path.exists(root):
             self.create_course()
 
-        info = open(f"{self.root}/info.yaml")
+        info = open(self.root / "info.yaml")
         self.info = yaml.load(info, Loader=yaml.FullLoader)
         self._lectures = None
 
@@ -58,6 +58,3 @@ class Courses(list):
         current_course_watch_file.write_text(
             f"{course.info['short']}\n",
         )
-
-    def __len__(self):
-        return len(self.read_files())
