@@ -29,7 +29,7 @@ class Lecture:
         with open(file_path) as f:
             for line in f:
                 lecture_match = re.search(
-                    r"lecture\{(.*?)\}\{(.*)\}",
+                    r"lecture(\[.*\])?\{(.*?)\}\{(.*)\}",
                     line,
                 )
                 if lecture_match:
@@ -39,7 +39,7 @@ class Lecture:
                 return
 
         class_start_date_str = info["start_date"]
-        date_str = lecture_match.group(1)
+        date_str = lecture_match.group(2)
         date = datetime.strptime(date_str, config.date_format)
         class_start_date = datetime.strptime(
             class_start_date_str,
@@ -47,7 +47,7 @@ class Lecture:
         )
         week = utils.get_week(date) - utils.get_week(class_start_date) + 1
 
-        title = lecture_match.group(2)
+        title = lecture_match.group(3)
 
         self.file_path = file_path
         self.date = date

@@ -92,7 +92,7 @@ def activate_course(event):
         (
             course
             for course in courses
-            if course.info["title"].lower() in event["summary"].lower()
+            if course.info["short"].lower() in event["summary"].lower()
         ),
         None,
     )
