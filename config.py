@@ -23,7 +23,7 @@ notes_dir = Path(data["notes_dir"]).expanduser()
 root = Path(data["root"]).expanduser()
 templates_dir = Path(data["templates_dir"]).expanduser()
 current_course = Path(data["current_course"]).expanduser()
-current_course_watch_file = Path("/tmp/current_course").expanduser()
+current_course_watch_file = Path("~/.local/share/current_course").expanduser()
 
 assignments_dir = Path(data["assignments_dir"]).expanduser()
 graded_assignments_folder = Path(
