@@ -92,7 +92,7 @@ def activate_course(event):
         (
             course
             for course in courses
-            if course.info["short"].lower() in event["summary"].lower()
+            if course.info["short"] in event["summary"]
         ),
         None,
     )
@@ -100,7 +100,7 @@ def activate_course(event):
     if not course:
         return
 
-    if course.info["title"] == event["summary"]:
+    if course.info["short"] == event["summary"]:
         courses.current = course
 
 
