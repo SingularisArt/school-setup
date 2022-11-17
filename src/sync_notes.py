@@ -44,7 +44,7 @@ service = utils.authenticate(
 def main():
     courses = Courses()
 
-    courses_to_display = [utils.folder_to_name(c.name) for c in courses]
+    courses_to_display = [c.name.upper() for c in courses]
     courses_to_display.append("All")
 
     _, index, selected = utils.rofi.select(
