@@ -9,27 +9,24 @@ def main():
         utils.rofi.msg("No lectures found!", err=True)
         return
 
-    commands = ["last", "prev_last", "all", "prev"]
-    options = [
-        "Current lecture",
-        "Last two lectures",
-        "All lectures",
-        "Previous lectures",
-    ]
+    commands = {
+        "Current lecture": "last",
+        "Last two lectures": "prev_last",
+        "All lectures": "all",
+        "Previous lectures": "prev",
+    }
 
     _, index, selected = utils.rofi.select(
         "Select one",
-        options,
+        commands,
         ["-lines", 4, "-auto-select"],
     )
 
     if not selected:
         return
 
-    if selected == "None":
-        return
     if index >= 0:
-        command = commands[index]
+        command = commands[selected]
     else:
         command = selected
 

@@ -8,22 +8,21 @@ import subprocess
 import yaml
 
 import RofiLessonManager.utils as utils
-import config
+from config import (
+    current_course,
+    date_format,
+    terminal,
+    terminal_commands,
+    editor,
+)
 
 
-info = open("{}/info.yaml".format(config.current_course))
+info = open("{}/info.yaml".format(current_course))
 info = yaml.load(info, Loader=yaml.FullLoader)
 
 
 class Lecture:
     def __init__(self, file_path):
-        """
-        Initialize Lecture course.
-
-        Parameters:
-            file_path (pathlib.PosixPath): The path to the lecture file.
-        """
-
         lecture_match = ""
 
         with open(file_path) as f:
@@ -40,10 +39,10 @@ class Lecture:
 
         class_start_date_str = info["start_date"]
         date_str = lecture_match.group(2)
-        date = datetime.strptime(date_str, config.date_format)
+        date = datetime.strptime(date_str, date_format)
         class_start_date = datetime.strptime(
             class_start_date_str,
-            config.date_format,
+            date_format,
         )
         week = utils.get_week(date) - utils.get_week(class_start_date) + 1
 
@@ -54,6 +53,8 @@ class Lecture:
         self.week = week
         self.number = utils.filename_to_number(file_path.stem)
         self.title = title
+
+        self.terminal = f"{terminal} {terminal_commands}"
 
     def edit(self):
         listen_location = "/tmp/nvim.pipe"
@@ -66,11 +67,11 @@ class Lecture:
 
         args = " ".join(str(e) for e in args if e)
 
-        terminal_cmd = f"{config.terminal} {config.terminal_commands}"
+        terminal_cmd = f"{terminal} {terminal_commands}"
 
         os.system(
-            f"{terminal_cmd} '{config.editor} {args} "
-            + f"{config.current_course}/lectures/lec-{self.number}.tex'"
+            f"{terminal_cmd} '{editor} {args} "
+            + f"{current_course}/lectures/lec-{self.number}.tex'"
         )
 
 
@@ -126,12 +127,8 @@ class Lectures(list):
 
     def parse_range_string(self, arg):
         if "-" in arg:
-            start, end = [
-                self.parse_lecture_spec(bit)
-                for bit in arg.split(
-                    "-",
-                )
-            ]
+            start = int(arg.split("-")[0])
+            end = int(arg.split("-")[1])
             return list(range(start, end + 1))
 
         return self.parse_lecture_spec(arg)
@@ -140,11 +137,10 @@ class Lectures(list):
         header, footer = self.get_header_footer(self.master_file)
 
         body = "".join(
-            r"  \input{lectures/" + utils.number_to_filename(number) + "}\n"
+            r"  \lec{" + str(number) + "}\n"
             for number in numbers
             if os.path.exists(
-                f"{config.current_course}/lectures/"
-                f"{utils.number_to_filename(number)}"
+                f"{current_course}/lectures/{utils.number_to_filename(number)}"
             )
         )
 
@@ -153,7 +149,7 @@ class Lectures(list):
     def compile_master(self):
         result = subprocess.run(
             ["make"],
-            cwd=str(config.current_course),
+            cwd=str(current_course),
         )
 
         if result.returncode == 0:

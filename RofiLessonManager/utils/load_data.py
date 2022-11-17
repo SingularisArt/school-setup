@@ -16,12 +16,12 @@ def load_data(data_file: str, type: str) -> dict:
     if type == "yaml":
         try:
             return yaml.safe_load(config_file_open)
-        except yaml.YAMLError as exc:
-            raise exc
+        except yaml.YAMLError:
+            return False
     elif type == "json":
         try:
             return json.load(config_file_open)
-        except json.decoder.JSONDecodeError as exc:
-            raise exc
+        except json.decoder.JSONDecodeError:
+            return False
     else:
         raise
