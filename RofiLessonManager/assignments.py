@@ -45,7 +45,7 @@ class Assignment:
 
         self.info = utils.load_data(self.yaml_file, "yaml")
         if not self.info:
-            return
+            self.info = False
 
         try:
             self.title = self.info["title"]
@@ -124,8 +124,11 @@ class Assignments(list):
         self.titles = [a.name for a in self]
 
     def read_files(self):
-        latex_assignments = [
-            Assignment(x) for x in my_assignments_latex_folder.glob("*.tex")
-        ]
+        latex_assignments = []
+        for x in my_assignments_latex_folder.glob("*.tex"):
+            x = Assignment(x)
+
+            if x.info:
+                latex_assignments.append(x)
 
         return sorted(latex_assignments, key=lambda a: a.number)

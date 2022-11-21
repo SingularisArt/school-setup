@@ -9,7 +9,7 @@ import yaml
 def load_data(data_file: str, type: str) -> dict:
     config_file = Path(data_file).expanduser()
     if not config_file.exists():
-        raise FileNotFoundError(f"File {data_file} couldn't be loaded.")
+        return False
 
     config_file_open = open(config_file, "r").read()
 
