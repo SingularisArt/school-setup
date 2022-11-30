@@ -58,6 +58,9 @@ case $key in
   # Open my notes.md file for everything.
   N ) cd "$school_notes_root" || exit;
     xfce4-terminal -e "nvim notes.md" ;;
+  # Open the master.tex file.
+  m ) cd "$current_course" || exit;
+    xfce4-terminal -e "nvim master.tex" ;;
 
   # Custom made scripts.
   a ) ~/Documents/school-setup/main.py --rofi-assignments ;;
