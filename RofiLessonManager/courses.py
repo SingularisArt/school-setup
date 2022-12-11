@@ -17,8 +17,14 @@ class Course:
         if not os.path.exists(root):
             self.create_course()
 
+        if not os.path.exists(self.root / "info.yaml"):
+            self.exists = False
+            return
+
         info = open(self.root / "info.yaml")
         self.info = yaml.load(info, Loader=yaml.FullLoader)
+        self.exists = True
+
         self._lectures = None
 
     @property
@@ -43,7 +49,13 @@ class Courses(list):
 
     def read_files(self):
         course_directories = [x for x in root.iterdir() if x.is_dir()]
-        _courses = [Course(root) for root in course_directories]
+        _courses = []
+
+        for course in course_directories:
+            course = Course(course)
+            if course.exists:
+                _courses.append(course)
+
         return sorted(_courses, key=lambda c: c.name)
 
     @property
