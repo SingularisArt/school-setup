@@ -84,7 +84,7 @@ class Lectures(list):
 
     def read_files(self):
         files = self.root.glob("lectures/lec-*.tex")
-        return sorted((Lecture(f) for f in files), key=lambda l: l.number)
+        return sorted((Lecture(f) for f in files), key=lambda lec: lec.number)
 
     def parse_lecture_spec(self, string):
         all_numbers = [int(lecture.number) for lecture in self]

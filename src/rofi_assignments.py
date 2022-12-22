@@ -12,7 +12,7 @@ from config import (
 
 
 def main():
-    assignments = sorted(Assignments(), key=lambda l: -int(l.number))
+    assignments = sorted(Assignments(), key=lambda lec: -int(lec.number))
 
     if not assignments:
         utils.rofi.msg("You don't have any assignments.", err=True)
@@ -22,14 +22,15 @@ def main():
 
     fill = len(max(due_dates, key=len))
     if fill == 12:
-        fill += 35
+        fill += 30
     else:
         fill += 35 - fill
 
     options = [
         f"{a.number: >2}. "
         + f"<b>{utils.generate_short_title(a.title, fill-2): <{fill}}</b>"
-        + f"<i><span size='smaller'>{a.due_date}</span></i>"
+        + f"<i><span size='smaller'>{a.due_date}"
+        + f"{'(' + str(a.score) + '%)' if a.submit != 'No' else ''}</span></i>"
         for a in assignments
     ]
 
