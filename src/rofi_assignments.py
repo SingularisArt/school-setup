@@ -3,12 +3,9 @@
 import os
 import sys
 
+import utils
+from config import my_assignments_folder, rofi_options
 from RofiLessonManager.assignments import Assignments
-import RofiLessonManager.utils as utils
-from config import (
-    my_assignments_folder,
-    rofi_options,
-)
 
 
 def main():

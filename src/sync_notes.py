@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from RofiLessonManager import utils as utils
+import utils
 from RofiLessonManager.courses import Courses as Courses
 
 

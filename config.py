@@ -2,8 +2,7 @@
 
 from pathlib import Path
 
-import RofiLessonManager.utils as utils
-
+import utils
 
 # Load the data from the config file
 data = utils.load_data("~/.config/lesson-manager/config.yaml", "yaml")

@@ -1,35 +1,77 @@
 #!/usr/bin/env python3
 
+"""
+This script provides a Rofi menu for selecting/editing lectures in a course.
+
+The courses and lectures are defined in the `RofiLessonManager` module. The
+configuration for the Rofi menu is read from the `config` module.
+"""
+
 import os
+from typing import List
 
-from RofiLessonManager import utils as utils
+import config
+import utils
 from RofiLessonManager.courses import Courses as Courses
-from config import current_course, date_format, rofi_options
 
 
-def main():
-    lectures = Courses().current.lectures
+def generate_options(lectures: List, date_format: str) -> List[str]:
+    """
+    Generate the options for the Rofi menu.
+
+    Args:
+        lectures (List): The list of lectures.
+        date_format (str): The format to use for the date strings.
+
+    Returns:
+        List[str]: The options for the Rofi menu.
+    """
+
+    options = []
+    for lec in lectures:
+        option = (
+            f"{utils.display_number(str(lec.number)): >2}. "
+            + f"<b>{utils.generate_short_title(lec.title, 26): <{26}} </b> "
+            + f"<span size='smaller'>{lec.date.strftime(date_format): <{15}} "
+            + f"(Week: {lec.week})</span>"
+        )
+        options.append(option)
+    return options
+
+
+def main() -> None:
+    """
+    The main function of the program.
+    """
+
+    courses: Courses = Courses()
+    current_course: str = courses.current
+    lectures: List = current_course.lectures
 
     if not lectures:
         utils.rofi.msg("No lectures found!", err=True)
         exit(1)
 
-    sorted_lectures = sorted(lectures, key=lambda l: -int(l.number))
+    # Sort the lectures in descending order by their number
+    sorted_lectures = sorted(lectures, key=lambda lec: -int(lec.number))
 
-    options = [
-        f"{utils.display_number(str(lec.number)): >2}. "
-        + f"<b>{utils.generate_short_title(lec.title, 26): <{26}} </b> "
-        + f"<span size='smaller'>{lec.date.strftime(date_format): <{15}} "
-        + f"(Week: {lec.week})</span>"
-        for lec in sorted_lectures
-    ]
+    # Generate the options for the Rofi menu
+    options = generate_options(sorted_lectures, config.date_format)
 
-    _, index, _ = utils.rofi.select("Select Lecture", options, rofi_options)
+    # Display the Rofi menu and get the user's selection
+    _, index, _ = utils.rofi.select(
+        "Select Lecture",
+        options,
+        config.rofi_options,
+    )
 
     if index < 0:
         exit(1)
 
-    os.chdir("{}/lectures".format(current_course))
+    # Change to the "lectures" directory for the current course
+    os.chdir(f"{config.current_course}/lectures")
+
+    # Edit the selected lecture
     sorted_lectures[index].edit()
 
 

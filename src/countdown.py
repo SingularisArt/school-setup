@@ -9,12 +9,12 @@ import sys
 import time
 import urllib.request
 
-from dateutil.parser import parse
 import pytz
+from dateutil.parser import parse
 
-from RofiLessonManager.courses import Courses as Courses
-import RofiLessonManager.utils as utils
 import config
+import utils
+from RofiLessonManager.courses import Courses as Courses
 
 courses = Courses()
 
@@ -89,11 +89,7 @@ def text(events, now):
 
 def activate_course(event):
     course = next(
-        (
-            course
-            for course in courses
-            if course.info["short"] in event["summary"]
-        ),
+        (course for course in courses if course.info["short"] in event["summary"]),
         None,
     )
 

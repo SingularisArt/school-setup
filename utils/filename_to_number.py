@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from RofiLessonManager import utils as utils
+import utils
 
 
 def filename_to_number(s: str) -> str:

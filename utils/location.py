@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import RofiLessonManager.utils as utils
+import utils
 
 
 def location(text: str) -> str:

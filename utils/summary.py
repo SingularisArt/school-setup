@@ -2,7 +2,7 @@
 
 import re
 
-import RofiLessonManager.utils as utils
+import utils
 
 
 def summary(text: str) -> str:

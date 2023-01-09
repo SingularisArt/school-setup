@@ -1,7 +1,7 @@
 from googleapiclient.errors import HttpError
 from googleapiclient.http import MediaFileUpload
 
-from RofiLessonManager import utils as utils
+import utils
 
 
 def sync_file(

@@ -1,4 +1,4 @@
-from RofiLessonManager.utils import rofi
+from utils import rofi
 
 
 def msg(msg: str, bold=True, italic=False, underline=False, err=False) -> None:
