@@ -15,7 +15,6 @@ calendar_id = data["calendar_id"]
 code_dir = Path(data["code_dir"]).expanduser()
 editor = data["editor"]
 terminal = data["terminal"]
-terminal_commands = data["terminal_commands"]
 pdf_viewer = data["pdf_viewer"]
 
 notes_dir = Path(data["notes_dir"]).expanduser()

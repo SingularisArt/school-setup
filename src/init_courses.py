@@ -1,56 +1,77 @@
 #!/usr/bin/env python3
 
-from datetime import datetime
-from os import symlink
-from shutil import copy2
+import datetime
+import os
+import re
+import shutil
+from typing import Dict
 
-from RofiLessonManager.courses import Courses as Courses
-from config import files, folders, templates_dir
+import config
+from RofiLessonManager.courses import Courses
 
 
-def symlink_file(src, dst):
+def copy_or_symlink(src: str, dst: str, action: str) -> None:
     try:
-        symlink(src, dst)
+        if action == "symlink":
+            os.symlink(src, dst)
+        elif action == "copy":
+            shutil.copy2(src, dst)
     except FileExistsError:
         return
     except FileNotFoundError:
         return
 
 
-def copy_file(src, dst):
-    try:
-        copy2(src, dst)
-    except FileExistsError:
-        return
-    except FileNotFoundError:
-        return
-
-
-def main():
+def main() -> None:
     for course in Courses():
-        lectures = course.lectures
+        notes = course.notes
+        folders = config.folders
+        files = config.files
+        templates_dir = config.templates_dir
 
-        # Create all the folders.
+        title = course.info["title"]
+        author = course.info["author"]
+        professor_info = course.info["professor"]
+        professor_short = professor_info["name"].split()[0]
+        date = datetime.datetime.today().strftime("%B %d, %Y")
+        term = course.info["term"]
+        year = course.info["year"]
+        faculty = course.info["faculty"]
+        intro_type = course.info["notes_type"]
+        college = course.info["college"]
+
         for folder in folders:
-            (lectures.root / folder).mkdir(exist_ok=True)
+            (notes.root / folder).mkdir(exist_ok=True)
 
-        # Grab all the files.
+        (notes.root / course.info["notes_type"]).mkdir(exist_ok=True)
+
         for file in files:
             key = files[file]
-            if key == "symlink":
-                symlink_file(templates_dir / file, course.root / file)
-            elif key == "copy":
-                copy_file(templates_dir / file, course.root / file)
-            if file == "master.tex":
-                new_content = (
-                    (course.root / file)
-                    .open()
-                    .read()
-                    .replace("TITLE", course.info["title"])
-                    .replace("AUTHOR", course.info["author"])
-                    .replace("DATE", datetime.today().strftime("%B %d, %Y"))
-                    .replace("TERM", course.info["term"])
-                    .replace("YEAR", f"${course.info['year']}$")
-                    .replace("FACULTY", course.info["faculty"])
-                )
-                (course.root / file).open("w").write(new_content)
+            file_src = templates_dir / file
+            file_dst = course.root / file
+            copy_or_symlink(file_src, file_dst, key)
+
+            search = re.search(
+                r"([a-zA-Z0-9/\-\.]+)?(master.tex|intro.tex)",
+                file,
+            )
+            if search:
+                placeholders: Dict[str, str] = {
+                    "CLASS": title,
+                    "AUTHOR": author,
+                    "DATE": date,
+                    "TERM": term,
+                    "YEAR": f"${year}$",
+                    "FACULTY": faculty,
+                    "INTRO_TYPE": intro_type.title(),
+                    "TYPE": course.info["notes_type"].lower(),
+                    "COLLEGE": college,
+                    "PROFESSOR_SHORT": professor_short,
+                    "PROFESSOR": professor_info["name"],
+                }
+
+                with file_dst.open() as f:
+                    content = f.read()
+                    for placeholder, value in placeholders.items():
+                        content = content.replace(placeholder, value)
+                    file_dst.write_text(content)

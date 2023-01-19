@@ -24,11 +24,11 @@ def sync_notes(course):
         if note["name"] == "Notes":
             service.files().delete(fileId=note["id"]).execute()
 
-    lectures = course.lectures
+    notes = course.notes
 
-    r = lectures.parse_range_string("all")
-    lectures.update_lectures_in_master(r)
-    lectures.compile_master()
+    r = notes.parse_range_string("all")
+    notes.update_notes_in_master(r)
+    notes.compile_master()
 
     path = f"{course.root}/master.pdf"
     utils.sync_file(service, path, "Notes", course.name, notes_folder)

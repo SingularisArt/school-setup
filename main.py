@@ -27,19 +27,19 @@ def main():
         action="store_true",
     )
     parser.add_argument(
-        "-rl",
-        "--rofi-lectures",
-        help="View lectures",
-        action="store_true",
-    )
-    parser.add_argument(
-        "-sl",
-        "--source-lectures",
-        help="Source lectures",
+        "-rn",
+        "--rofi-notes",
+        help="View notes",
         action="store_true",
     )
     parser.add_argument(
         "-sn",
+        "--source-notes",
+        help="Source notes",
+        action="store_true",
+    )
+    parser.add_argument(
+        "-sy",
         "--sync-notes",
         help="Sync notes to google drive",
         action="store_true",
@@ -69,18 +69,18 @@ def main():
         import src.rofi_courses as rc
 
         rc.main()
-    elif args.rofi_lectures:
-        import src.rofi_lectures as rl
+    elif args.rofi_notes:
+        import src.rofi_notes as rn
 
-        rl.main()
-    elif args.source_lectures:
-        import src.source_lectures as sl
-
-        sl.main()
-    elif args.sync_notes:
-        import src.sync_notes as sn
+        rn.main()
+    elif args.source_notes:
+        import src.source_notes as sn
 
         sn.main()
+    elif args.sync_notes:
+        import src.sync_notes as sy
+
+        sy.main()
     elif args.init_courses:
         import src.init_courses as ic
 

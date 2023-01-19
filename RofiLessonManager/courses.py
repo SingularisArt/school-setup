@@ -4,7 +4,7 @@ import os
 
 import yaml
 
-from RofiLessonManager.lectures import Lectures as Lectures
+from RofiLessonManager.notes import Notes as Notes
 from config import current_course
 from config import current_course_watch_file, root
 
@@ -25,13 +25,13 @@ class Course:
         self.info = yaml.load(info, Loader=yaml.FullLoader)
         self.exists = True
 
-        self._lectures = None
+        self._notes = None
 
     @property
-    def lectures(self):
-        if not self._lectures:
-            self._lectures = Lectures(self)
-        return self._lectures
+    def notes(self):
+        if not self._notes:
+            self._notes = Notes(self)
+        return self._notes
 
     def __repr__(self):
         return f"<Course: {self.name}>"

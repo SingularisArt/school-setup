@@ -7,7 +7,7 @@ def filename_to_number(s: str) -> str:
     n = utils.replace_str(
         s,
         ["lec-", ""],
-        ["week-", ""],
+        ["chap-", ""],
         [".yaml", ""],
         [".tex", ""],
         [".pdf", ""],

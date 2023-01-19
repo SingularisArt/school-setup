@@ -18,7 +18,7 @@ open_browser () {
 
 open_research_paper() {
   cd "$papers" || exit
-  pdf_file="$(find . -maxdepth 1 -type f | rofi -i -dmenu -window-title 'Select paper')"
+  pdf_file="$(find . -maxdepth 1 -type f | rofi -i -dmenu -window-title "Select paper")"
   [ "$pdf_file" = "" ] && exit 0
   ([ -f "$pdf_file" ] && zathura "$(realpath "$pdf_file")") || google-chrome-stable --profile-directory="Profile 2" --app="https://google.com/search?q=$pdf_file"
 }
@@ -30,6 +30,29 @@ create_figure() {
   else
     exit;
   fi
+}
+
+launch_kitty() {
+    local path cmd
+
+    while [[ ${1} ]]; do
+      case "${1}" in
+        --path)
+          path=${2}; shift ;;
+        --cmd)
+          cmd=${2}; shift ;;
+        *)
+          echo "Unknown parameter: ${1}" >&2
+          return 1
+      esac
+
+      if ! shift; then
+        echo "Missing parameter argument." >&2
+        return 1
+      fi
+    done
+
+    kitty --directory="$path" $cmd
 }
 
 case $key in
@@ -46,21 +69,17 @@ case $key in
   # Open my current course in the browser.
   w ) open_browser ;;
   # Open my info.yaml file.
-  y ) cd "$current_course" || exit;
-    xfce4-terminal -e "nvim info.yaml" ;;
+  y ) launch_kitty --path "$current_course" --cmd "nvim info.yaml" ;;
   # Get an instant reference to the current open pdf.
   f ) "$node" "$instant_reference" ;;
   # Search through my research papers.
   p ) open_research_paper ;;
-  # Open my notes.md file for the current course.
-  n ) cd "$current_course" || exit;
-    xfce4-terminal -e "nvim notes.md" ;;
-  # Open my notes.md file for everything.
-  N ) cd "$school_notes_root" || exit;
-    xfce4-terminal -e "nvim notes.md" ;;
+  # Open my notes.norg file for the current course.
+  n ) launch_kitty --path "$current_course" --cmd "nvim notes.norg" ;;
+  # Open my notes.norg file for everything.
+  N ) launch_kitty --path "$school_notes_root" --cmd "nvim notes.norg" ;;
   # Open the master.tex file.
-  m ) cd "$current_course" || exit;
-    xfce4-terminal -e "nvim master.tex" ;;
+  m ) launch_kitty --path "$current_course" --cmd "nvim master.tex" ;;
 
   # Custom made scripts.
   a ) ~/Documents/school-setup/main.py --rofi-assignments ;;

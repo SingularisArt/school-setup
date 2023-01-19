@@ -1,3 +1,5 @@
+from typing import Optional
+
 from googleapiclient.errors import HttpError
 from googleapiclient.http import MediaFileUpload
 
@@ -6,12 +8,12 @@ import utils
 
 def sync_file(
     service,
-    file,
-    name,
-    course_name,
-    id,
-    mimetype="application/pdf",
-):
+    file: str,
+    name: str,
+    course_name: str,
+    id: str,
+    mimetype: Optional[str] = "application/pdf",
+) -> Optional[bool]:
     try:
         file_metadata = {
             "name": name,
