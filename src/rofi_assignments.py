@@ -3,9 +3,24 @@
 import os
 import sys
 
-import utils
-from config import my_assignments_folder, rofi_options
 from RofiLessonManager.assignments import Assignments
+from config import my_assignments_folder, rofi_options
+import utils
+
+
+def format_option(assignment):
+    number = assignment.number
+    title = utils.generate_short_title(assignment.title, 20)
+    due_date = utils.generate_short_title(assignment.due_date, 15)
+    days_left = utils.generate_short_title(assignment.days_left, 16)
+    grade = f"({assignment.grade}%)" if isinstance(assignment.grade, int) else "(NA)"
+
+    column_1 = f"<b>{number: >2}. {title: <25}</b>"
+    column_2 = f"<i><span size='smaller'>{due_date: <15}</span></i>"
+    column_3 = f"<i><span size='smaller'>{days_left: <16}</span></i>"
+    column_4 = f"<i><span size='smaller'>{grade: >6}</span></i>"
+
+    return f"{column_1} {column_2} {column_3} {column_4}"
 
 
 def main():
@@ -16,26 +31,8 @@ def main():
         exit(1)
 
     options = []
-
-    fill = 50
-
-    for a in assignments:
-        number = a.number
-        title = utils.generate_short_title(a.title, fill)
-        due_date = a.due_date
-        days_left = a.days_left
-        grade = f"({a.grade}%)" if isinstance(a.grade, int) else "(NA)"
-
-        fill_for_due_date = abs(len(due_date) + len(days_left) + len(grade))
-        # fill = len(due_date) + len(days_left) + len(grade) - MAX_ROFI_LENGTH
-        # fill = abs(fill)
-
-        a_string = f"{number: >2}. <b>{title: <{fill_for_due_date}}</b>"
-        # a_string += f"<i><span size='smaller'>{due_date} {days_left} {grade}"
-        a_string += f"<i><span size='smaller'>{due_date}"
-        a_string += "</span></i>"
-
-        options.append(a_string)
+    for assignment in assignments:
+        options.append(format_option(assignment))
 
     _, index, _ = utils.rofi.select(
         "Select Assignment",

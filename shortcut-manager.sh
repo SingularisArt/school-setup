@@ -84,7 +84,7 @@ case $key in
   # Custom made scripts.
   a ) ~/Documents/school-setup/main.py --rofi-assignments ;;
   c ) ~/Documents/school-setup/main.py --rofi-courses ;;
-  l ) ~/Documents/school-setup/main.py --rofi-lectures ;;
-  s ) ~/Documents/school-setup/main.py --source-lectures ;;
+  l ) ~/Documents/school-setup/main.py --rofi-notes ;;
+  s ) ~/Documents/school-setup/main.py --source-notes ;;
   S ) ~/Documents/school-setup/main.py --sync-notes ;;
 esac

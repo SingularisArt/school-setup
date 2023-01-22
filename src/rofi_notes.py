@@ -2,23 +2,21 @@
 
 import os
 
+from RofiLessonManager.courses import Courses as Courses
 import config
 import utils
-from RofiLessonManager.courses import Courses as Courses
 
 
-def generate_options(notes, date_format):
-    options = []
-    for note in notes:
-        option = (
-            f"{utils.display_number(str(note.number)): >2}. "
-            + f"<b>{utils.generate_short_title(note.title, 26): <{26}} </b> "
-            + f"<span size='smaller'>{note.date.strftime(date_format): <{15}} "
-            + f"(Week: {note.week})</span>"
-        )
-        options.append(option)
+def format_option(note, date_format):
+    number = utils.display_number(str(note.number))
+    title = utils.generate_short_title(note.title, 24)
+    date = note.date.strftime(date_format)
+    week = note.week
 
-    return options
+    column_1 = f"{number: >2}. <b>{title: <26}</b>"
+    column_2 = f"<span size='smaller'>{date: <{15}} (Week: {week})</span>"
+
+    return f"{column_1} {column_2}"
 
 
 def main():
@@ -32,7 +30,9 @@ def main():
 
     sorted_notes = sorted(notes, key=lambda note: -int(note.number))
 
-    options = generate_options(sorted_notes, config.date_format)
+    options = []
+    for note in sorted_notes:
+        options.append(format_option(note, config.date_format))
 
     _, index, _ = utils.rofi.select(
         "Select Note",

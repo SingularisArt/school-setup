@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
-import utils
 from RofiLessonManager.courses import Courses as Courses
+import utils
 
 
 def get_files(id):

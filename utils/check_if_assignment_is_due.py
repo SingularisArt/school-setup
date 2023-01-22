@@ -1,15 +1,23 @@
-#!/usr/bin/env python3
-
-
 import datetime
+from typing import Tuple
 
 
 def check_if_assignment_is_due(
     assignment_due_date: str, assignment_submitted: bool
-) -> tuple:
+) -> Tuple[str, str]:
+    """
+    This function takes in two variables:
+    assignment_due_date: The date the assignment is due in the format "MM-DD-YY"
+    assignment_submitted: A boolean value indicating if the assignment has been submitted
+
+    It returns a tuple with two elements:
+    1. A string indicating the status of the assignment (e.g. "TODAY", "TOMORROW", "YESTERDAY", "X DAYS LATE", "X DAYS LEFT")
+    2. A string representing the due date in the format "MMM DD (Day)"
+    """
+
     now = datetime.datetime.now()
-    assignment_date = datetime.datetime.strptime(
-        assignment_due_date, "%m-%d-%y")
+    assignment_date = datetime.datetime.strptime(assignment_due_date, "%m-%d-%y")
+    assignment_due_date_formatted = assignment_date.strftime("%b %d (%a)")
     logo = ""
 
     if now.date() == assignment_date.date():
@@ -22,16 +30,11 @@ def check_if_assignment_is_due(
         if days == 1:
             logo = "(YESTERDAY)"
         else:
-            logo = "({} DAYS LATE)".format(days)
+            logo = f"({abs(days)} DAYS LATE)"
+    elif assignment_submitted:
+        return "(Submitted)", assignment_due_date_formatted
     else:
         days = int((assignment_date - now).days) + 1
-        logo = "({} DAYS LEFT)".format(days)
+        logo = f"({days} DAYS LEFT)"
 
-    assignment_due_date_formatted = "{} {} ({})".format(
-        assignment_date.strftime("%b"),
-        assignment_date.strftime("%d"),
-        assignment_date.strftime("%a"),
-    )
-
-    print(logo, assignment_due_date_formatted)
     return logo, assignment_due_date_formatted

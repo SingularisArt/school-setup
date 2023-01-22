@@ -4,10 +4,9 @@ import datetime
 import os
 import re
 import shutil
-from typing import Dict
 
-import config
 from RofiLessonManager.courses import Courses
+import config
 
 
 def copy_or_symlink(src: str, dst: str, action: str) -> None:
@@ -56,7 +55,7 @@ def main() -> None:
                 file,
             )
             if search:
-                placeholders: Dict[str, str] = {
+                placeholders = {
                     "CLASS": title,
                     "AUTHOR": author,
                     "DATE": date,

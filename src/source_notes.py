@@ -1,5 +1,5 @@
-import utils
 from RofiLessonManager.courses import Courses as Courses
+import utils
 
 
 def main():

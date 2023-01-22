@@ -9,15 +9,7 @@ def main():
         utils.rofi.msg("No courses found!", err=True)
         exit(1)
 
-    options = [
-        "<b>{title: <{fill}}</b> <i>({topic}: <b>{crn_number})</b></i>".format(
-            title=utils.generate_short_title(c.info["title"]),
-            topic=c.info["topic"],
-            fill=34,
-            crn_number=c.info["class_number"],
-        )
-        for c in courses
-    ]
+    options = [f"<b>{course.info['title']}</b>" for course in courses]
 
     _, index, _ = utils.rofi.select(
         "Select course",
