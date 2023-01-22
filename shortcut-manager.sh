@@ -75,16 +75,21 @@ case $key in
   # Search through my research papers.
   p ) open_research_paper ;;
   # Open my notes.norg file for the current course.
-  n ) launch_kitty --path "$current_course" --cmd "nvim notes.norg" ;;
+  j ) launch_kitty --path "$current_course" --cmd "nvim notes.md" ;;
   # Open my notes.norg file for everything.
-  N ) launch_kitty --path "$school_notes_root" --cmd "nvim notes.norg" ;;
+  k ) launch_kitty --path "$school_notes_root" --cmd "nvim notes.md" ;;
   # Open the master.tex file.
   m ) launch_kitty --path "$current_course" --cmd "nvim master.tex" ;;
 
   # Custom made scripts.
   a ) ~/Documents/school-setup/main.py --rofi-assignments ;;
   c ) ~/Documents/school-setup/main.py --rofi-courses ;;
-  l ) ~/Documents/school-setup/main.py --rofi-notes ;;
+  n ) ~/Documents/school-setup/main.py --rofi-notes ;;
+
+  A ) ~/Documents/school-setup/main.py --create-assignment ;;
+  C ) ~/Documents/school-setup/main.py --rofi-courses-all ;;
+  N ) ~/Documents/school-setup/main.py --create-note ;;
+
   s ) ~/Documents/school-setup/main.py --source-notes ;;
   S ) ~/Documents/school-setup/main.py --sync-notes ;;
 esac
