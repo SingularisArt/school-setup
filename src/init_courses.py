@@ -30,14 +30,16 @@ def main() -> None:
 
         title = course.info["title"]
         author = course.info["author"]
-        professor_info = course.info["professor"]
-        professor_short = professor_info["name"].split()[0]
         date = datetime.datetime.today().strftime("%B %d, %Y")
         term = course.info["term"]
         year = course.info["year"]
         faculty = course.info["faculty"]
         intro_type = course.info["notes_type"]
+        note_type_abbr = "lec" if course.info["notes_type"].lower() == "lectures" else "chap"
+        note_type = course.info["notes_type"].lower()
         college = course.info["college"]
+        professor_info = course.info["professor"]
+        professor_short = professor_info["name"].split()[0]
 
         for folder in folders:
             (notes.root / folder).mkdir(exist_ok=True)
@@ -63,7 +65,8 @@ def main() -> None:
                     "YEAR": f"${year}$",
                     "FACULTY": faculty,
                     "INTRO_TYPE": intro_type.title(),
-                    "TYPE": course.info["notes_type"].lower(),
+                    "TYPE_ABBR": note_type_abbr,
+                    "TYPE": note_type.title()[:-1],
                     "COLLEGE": college,
                     "PROFESSOR_SHORT": professor_short,
                     "PROFESSOR": professor_info["name"],
