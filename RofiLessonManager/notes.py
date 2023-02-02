@@ -19,7 +19,7 @@ class Note:
         with open(file_path) as f:
             for line in f:
                 match = re.search(
-                    r"(lecture|chapter)\{(.*?)\}\{(.*)\}",
+                    r"(nte)\{(.*?)\}\{(.*)\}",
                     line,
                 )
                 if match:

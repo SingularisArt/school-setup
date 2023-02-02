@@ -48,16 +48,14 @@ class Assignment:
             "done",
         ]
 
-        self.info = utils.load_data(
-            self.yaml_file, "yaml"
-        )
+        self.info = utils.load_data(self.yaml_file, "yaml")
         if not self.info:
             self.info = False
 
         try:
             self.title = self.info["title"]
             self.grade = self.info["grade"]
-            self.status = self.info["status"]
+            self.submitted = self.info["submitted"]
             self.number = self.info["number"]
             self.due_date, self.days_left = self.get_due_date()
         except Exception:
@@ -65,12 +63,10 @@ class Assignment:
 
     def get_due_date(self):
         due_date = self.info["due_date"]
-        status = self.info["status"]
-        submit = True if status == "done" else False
 
         days_left, due_date = utils.check_if_assignment_is_due(
             due_date,
-            submit,
+            self.submitted,
         )
 
         due_date = utils.generate_short_title(due_date, 28)
