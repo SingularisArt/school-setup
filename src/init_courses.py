@@ -9,7 +9,7 @@ from RofiLessonManager.courses import Courses
 import config
 
 
-def copy_or_symlink(src: str, dst: str, action: str) -> None:
+def copy_or_symlink(src, dst, action):
     try:
         if action == "symlink":
             os.symlink(src, dst)
@@ -21,6 +21,10 @@ def copy_or_symlink(src: str, dst: str, action: str) -> None:
         return
 
 
+def get_start_date(start_date):
+    return datetime.datetime.strptime(start_date, "%b %d %Y %a (%H:%M:%S)").strftime("%B %d, %Y")
+
+
 def main() -> None:
     for course in Courses():
         notes = course.notes
@@ -30,6 +34,7 @@ def main() -> None:
 
         title = course.info["title"]
         author = course.info["author"]
+        start_date = get_start_date(course.info["start_date"])
         date = datetime.datetime.today().strftime("%B %d, %Y")
         term = course.info["term"]
         year = course.info["year"]
@@ -40,6 +45,7 @@ def main() -> None:
         college = course.info["college"]
         professor_info = course.info["professor"]
         professor_short = professor_info["name"].split()[0]
+        note_location = f"{course.info['notes_type']}/{note_type_abbr}"
 
         for folder in folders:
             (notes.root / folder).mkdir(exist_ok=True)
@@ -60,6 +66,7 @@ def main() -> None:
                 placeholders = {
                     "CLASS": title,
                     "AUTHOR": author,
+                    "START_DATE": start_date,
                     "DATE": date,
                     "TERM": term,
                     "YEAR": f"${year}$",
@@ -70,6 +77,7 @@ def main() -> None:
                     "COLLEGE": college,
                     "PROFESSOR_SHORT": professor_short,
                     "PROFESSOR": professor_info["name"],
+                    "NOTE_LOCATION": note_location,
                 }
 
                 with file_dst.open() as f:
