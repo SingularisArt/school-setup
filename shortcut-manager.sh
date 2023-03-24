@@ -33,26 +33,26 @@ create_figure() {
 }
 
 launch_kitty() {
-    local path cmd
+  local path cmd
 
-    while [[ ${1} ]]; do
-      case "${1}" in
-        --path)
-          path=${2}; shift ;;
-        --cmd)
-          cmd=${2}; shift ;;
-        *)
-          echo "Unknown parameter: ${1}" >&2
-          return 1
-      esac
-
-      if ! shift; then
-        echo "Missing parameter argument." >&2
+  while [[ ${1} ]]; do
+    case "${1}" in
+      --path)
+        path=${2}; shift ;;
+      --cmd)
+        cmd=${2}; shift ;;
+      *)
+        echo "Unknown parameter: ${1}" >&2
         return 1
-      fi
-    done
+    esac
 
-    kitty --directory="$path" $cmd
+    if ! shift; then
+      echo "Missing parameter argument." >&2
+      return 1
+    fi
+  done
+
+  kitty --directory="$path" $cmd
 }
 
 case $key in
