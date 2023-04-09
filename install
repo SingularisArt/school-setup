@@ -42,6 +42,8 @@ editor: \"nvim\"
 terminal: \"kitty\"
 pdf_viewer: \"zathura\"
 
+create_readme_file: true
+
 notes_dir: \"$DOCUMENTS/school-notes\"
 root: \"$NOTES_DIR/College/Year-1/winter\"
 templates_dir: \"$NOTES_DIR/College/Year-1/winter/_files\"

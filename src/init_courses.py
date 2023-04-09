@@ -22,7 +22,10 @@ def copy_or_symlink(src, dst, action):
 
 
 def get_start_date(start_date):
-    return datetime.datetime.strptime(start_date, "%b %d %Y %a (%H:%M:%S)").strftime("%B %d, %Y")
+    return datetime.datetime.strptime(
+        start_date,
+        "%b %d %Y %a (%H:%M:%S)",
+    ).strftime("%B %d, %Y")
 
 
 def main() -> None:
@@ -40,7 +43,11 @@ def main() -> None:
         year = course.info["year"]
         faculty = course.info["faculty"]
         intro_type = course.info["notes_type"]
-        note_type_abbr = "lec" if course.info["notes_type"].lower() == "lectures" else "chap"
+        note_type_abbr = ""
+        if course.info["notes_type"].lower() == "lectures":
+            note_type_abbr = "lec"
+        else:
+            note_type_abbr = "chap"
         note_type = course.info["notes_type"].lower()
         college = course.info["college"]
         professor_info = course.info["professor"]
@@ -49,6 +56,8 @@ def main() -> None:
 
         for folder in folders:
             (notes.root / folder).mkdir(exist_ok=True)
+            if config.create_readme_file:
+                (notes.root / folder / "README.md").touch(exist_ok=True)
 
         (notes.root / course.info["notes_type"]).mkdir(exist_ok=True)
 
