@@ -15,6 +15,7 @@ LEC_OR_CHAP = "lec" if NOTES_TYPE == "lectures" else "chap"
 class Note:
     def __init__(self, file_path):
         match = None
+        self.note_number = False
 
         with open(file_path) as f:
             for line in f:
@@ -23,9 +24,11 @@ class Note:
                     line,
                 )
                 if match:
+                    self.note_number = True
                     break
 
             if not match:
+                self.note_number = False
                 return
 
         class_start_date_str = info["start_date"]
@@ -74,8 +77,17 @@ class Notes(list):
 
     def read_files(self):
         files = self.root.glob(f"{NOTES_TYPE}/{LEC_OR_CHAP}-*.tex")
+        return_files = []
 
-        return sorted((Note(f) for f in files), key=lambda note: note.number)
+        for f in files:
+            note = Note(f)
+            try:
+                if note.number:
+                    return_files.append(note)
+            except AttributeError:
+                pass
+
+        return sorted(return_files, key=lambda note: note.number)
 
     def parse_note_spec(self, string):
         all_numbers = [int(note.number) for note in self]
