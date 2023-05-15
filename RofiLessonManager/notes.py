@@ -20,7 +20,7 @@ class Note:
         with open(file_path) as f:
             for line in f:
                 match = re.search(
-                    r"(nte)\{(.*?)\}\{(.*)\}",
+                    r"(nte)(\[.*\])?\{(.*?)\}\{(.*)\}",
                     line,
                 )
                 if match:
@@ -32,14 +32,14 @@ class Note:
                 return
 
         class_start_date_str = info["start_date"]
-        date_str = match.group(2)
+        date_str = match.group(3)
         date = datetime.strptime(date_str, config.date_format)
         class_start_date = datetime.strptime(
             class_start_date_str,
             config.date_format,
         )
         week = utils.get_week(date) - utils.get_week(class_start_date) + 1
-        title = match.group(3)
+        title = match.group(4)
 
         self.file_path = file_path
         self.date = date
