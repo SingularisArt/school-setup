@@ -14,6 +14,7 @@ user = data["user"]
 create_readme_file = data["create_readme_file"]
 
 calendar_id = data["calendar_id"]
+drive_folder_id = data["drive_folder_id"]
 code_dir = Path(data["code_dir"]).expanduser()
 editor = data["editor"]
 terminal = data["terminal"]

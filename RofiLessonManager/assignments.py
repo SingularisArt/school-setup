@@ -12,43 +12,50 @@ class Assignment:
 
         self.name = self.root.stem
 
-        self.tex_file = (
+        self.tex_file_path = (
             config.my_assignments_latex_folder / f"{self.name}.tex"
         )
-        self.yaml_file = (
+        self.yaml_file_path = (
             config.my_assignments_yaml_folder / f"{self.name}.yaml"
         )
-        self.pdf_file = (
+        self.pdf_file_path = (
             config.my_assignments_pdf_folder / f"{self.name}.pdf"
         )
-        self.online_pdf_file = (
+        self.online_pdf_file_path = (
             config.online_assignments_folder / f"{self.name}.pdf"
         )
-        self.graded_pdf_file = (
+        self.graded_pdf_file_path = (
             config.graded_assignments_folder / f"{self.name}.pdf"
         )
 
-        options = {}
+        self.options = {}
 
-        if self.tex_file.exists():
-            options["View LaTeX File"] = "open_latex"
-        if self.yaml_file.exists():
-            options["View YAML File"] = "open_yaml"
-        if self.pdf_file.exists():
-            options["View PDF File"] = "open_my_pdf"
-        if self.online_pdf_file.exists():
-            options["View Online PDF File"] = "open_online_pdf"
-        if self.graded_pdf_file.exists():
-            options["View Graded PDF File"] = "open_graded_pdf"
+        if self.tex_file_path.exists():
+            self.options["View LaTeX File"] = "open_latex"
+        if self.yaml_file_path.exists():
+            self.options["View YAML File"] = "open_yaml"
+        if self.pdf_file_path.exists():
+            self.options["View PDF File"] = "open_my_pdf"
+        if self.online_pdf_file_path.exists():
+            self.options["View Online PDF File"] = "open_online_pdf"
+        if self.graded_pdf_file_path.exists():
+            self.options["View Graded PDF File"] = "open_graded_pdf"
 
-        self.options = options
         self.progress_options = [
             "not started",
             "pending",
             "done",
         ]
 
-        self.info = utils.load_data(self.yaml_file, "yaml")
+        self.commands = {
+            "latex": "open_latex",
+            "yaml": "open_yaml",
+            "pdf": "open_my_pdf",
+            "online": "open_online_pdf",
+            "graded": "open_graded_pdf",
+        }
+
+        self.info = utils.load_data(self.yaml_file_path, "yaml")
         if not self.info:
             self.info = False
 
@@ -74,20 +81,16 @@ class Assignment:
         return due_date, days_left
 
     def parse_command(self, cmd):
-        root = ""
-
-        if cmd == "open_latex":
-            root = self.tex_file
-        elif cmd == "open_yaml":
-            root = self.yaml_file
-        elif cmd == "open_my_pdf":
-            root = self.pdf_file
-        elif cmd == "open_online_pdf":
-            root = self.online_pdf_file
-        elif cmd == "open_graded_pdf":
-            root = self.graded_pdf_file
-
-        self.edit(cmd, root)
+        if cmd == self.commands["latex"]:
+            return self.edit(cmd, self.tex_file_path)
+        elif cmd == self.commands["yaml"]:
+            return self.edit(cmd, self.yaml_file_path)
+        elif cmd == self.commands["pdf"]:
+            return self.edit(cmd, self.pdf_file_path)
+        elif cmd == self.commands["online"]:
+            return self.edit(cmd, self.online_pdf_file_path)
+        elif cmd == self.commands["graded"]:
+            return self.edit(cmd, self.graded_pdf_file_path)
 
     def edit(self, cmd, root):
         if "pdf" in cmd:
@@ -96,17 +99,17 @@ class Assignment:
             return
 
         listen_location = "/tmp/nvim.pipe"
-        args = []
+        arguments = []
 
         if os.path.exists(listen_location):
-            args = ["--server", "/tmp/nvim.pipe", "--remote"]
+            arguments = ["--server", "/tmp/nvim.pipe", "--remote"]
         elif not os.path.exists(listen_location):
-            args = ["--listen", "/tmp/nvim.pipe"]
+            arguments = ["--listen", "/tmp/nvim.pipe"]
 
-        args = " ".join(str(e) for e in args if e)
+        arguments = " ".join(str(e) for e in arguments if e)
 
         os.system(
-            f"{config.terminal} {config.editor} {args} {root}"
+            f"{config.terminal} {config.editor} {arguments} {root}"
         )
 
     def __repr__(self):
@@ -117,14 +120,14 @@ class Assignments(list):
     def __init__(self):
         super().__init__(self.read_files())
 
-        self.titles = [a.name for a in self]
+        self.titles = [assignment.name for assignment in self]
 
     def read_files(self):
         latex_assignments = []
-        for x in config.my_assignments_yaml_folder.glob("*.yaml"):
-            x = Assignment(x)
+        for yaml_file in config.my_assignments_yaml_folder.glob("*.yaml"):
+            yaml_file = Assignment(yaml_file)
 
-            if x.info:
-                latex_assignments.append(x)
+            if yaml_file.info:
+                latex_assignments.append(yaml_file)
 
-        return sorted(latex_assignments, key=lambda a: a.number)
+        return sorted(latex_assignments, key=lambda assignment: assignment.number)

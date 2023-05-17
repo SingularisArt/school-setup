@@ -100,7 +100,7 @@ class Notes(list):
         elif string == "last":
             return [all_numbers[-1]]
         elif string == "prev_last":
-            return [all_numbers[-1] - 1, all_numbers[-1]]
+            return [all_numbers[-2], all_numbers[-1]]
         elif string == "all":
             return all_numbers
         elif string == "prev":
@@ -143,7 +143,9 @@ class Notes(list):
             file = utils.number_to_filename(number, LEC_OR_CHAP)
             if os.path.exists(f"{self.path}/{file}"):
                 tab = " " * 2
-                body += rf"{tab}\{LEC_OR_CHAP}{{{number}}}\n"
+                body += \
+rf"""{tab}\includenote{{{number}}}
+"""
 
         self.master_file.write_text(header + body + footer)
 

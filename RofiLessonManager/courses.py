@@ -5,8 +5,7 @@ import os
 import yaml
 
 from RofiLessonManager.notes import Notes as Notes
-from config import current_course
-from config import current_course_watch_file, root
+import config
 
 
 class Course:
@@ -36,9 +35,6 @@ class Course:
     def __repr__(self):
         return f"<Course: {self.name}>"
 
-    def __eq__(self, other):
-        return self.root == other.root
-
 
 class Courses(list):
     def __init__(self):
@@ -48,25 +44,25 @@ class Courses(list):
         self.root = [c.root for c in self]
 
     def read_files(self):
-        course_directories = [x for x in root.iterdir() if x.is_dir()]
-        _courses = []
+        course_directories = [course for course in config.root.iterdir() if course.is_dir()]
+        courses = []
 
         for course in course_directories:
             course = Course(course)
             if course.exists:
-                _courses.append(course)
+                courses.append(course)
 
-        return sorted(_courses, key=lambda c: c.name)
+        return sorted(courses, key=lambda c: c.name)
 
     @property
     def current(self):
-        return Course(current_course.resolve())
+        return Course(config.current_course.resolve())
 
     @current.setter
     def current(self, course):
-        current_course.unlink()
-        current_course.symlink_to(course.root)
-        current_course.lstat
-        current_course_watch_file.write_text(
+        config.current_course.unlink()
+        config.current_course.symlink_to(course.root)
+        config.current_course.lstat
+        config.current_course_watch_file.write_text(
             f"{course.info['short']}\n",
         )
