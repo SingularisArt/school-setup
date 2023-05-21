@@ -13,12 +13,15 @@ def format_option(assignment):
     title = utils.generate_short_title(assignment.title, 20)
     due_date = utils.generate_short_title(assignment.due_date, 15)
     days_left = utils.generate_short_title(assignment.days_left, 16)
-    grade = f"({assignment.grade}%)" if isinstance(assignment.grade, int) else "(NA)"
+    grade = f"({assignment.grade}%)" \
+        if isinstance(assignment.grade, int) \
+            or isinstance(assignment.grade, float) \
+        else "(NA)"
 
     column_1 = f"<b>{number: >2}. {title: <25}</b>"
     column_2 = f"<i><span size='smaller'>{due_date: <15}</span></i>"
-    column_3 = f"<i><span size='smaller'>{days_left: <16}</span></i>"
-    column_4 = f"<i><span size='smaller'>{grade: >6}</span></i>"
+    column_3 = f"<i><span size='smaller'>{days_left: <15}</span></i>"
+    column_4 = f"<i><span size='smaller'>{grade: >7}</span></i>"
 
     return f"{column_1} {column_2} {column_3} {column_4}"
 
