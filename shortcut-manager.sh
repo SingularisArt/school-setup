@@ -4,12 +4,33 @@ key="$1"
 node="/usr/bin/node"
 
 root="$HOME/Documents"
+journal_dir="$root/journal"
+today_journal_dir="$journal_dir/$(date +%Y/%m/%d)"
 
 school_notes_root="$root/school-notes"
 current_course="$school_notes_root/current-course"
 papers="${current_course}/papers"
 instant_reference="$HOME/.local/share/Singularis/third-party-tools/instant-reference/copy-reference.js"
 master_pdf="$current_course/master.pdf"
+
+book_notes_root="$root/book-notes"
+
+basic_template="\time_of_day
+
+\begin{env}
+\end{env}
+"
+
+log_time="\\time{$(date '+%I:%M:%S %p')}"
+morning_template=$(echo "$basic_template" | sed "s/time_of_day/morning/" | sed "s/env/goals/")
+afternoon_template=$(echo "$basic_template" | sed "s/time_of_day/afternoon/" | sed "s/env/status/")
+evening_template=$(echo "$basic_template" | sed "s/time_of_day/evening/" | sed "s/env/status/")
+night_template=$(echo "$basic_template" | sed "s/time_of_day/night/" | sed "s/env/results/")
+night_template+="
+
+$log_time
+
+\contentment{}"
 
 open_browser () {
   url=$(shyaml get-value url < "$current_course/info.yaml" || exit)
@@ -30,6 +51,50 @@ create_figure() {
   else
     exit;
   fi
+}
+
+open_note_for_today() {
+  mkdir -p "$today_journal_dir";
+
+  # Check the current time to see if it's the morning
+  h=$(date +%k)
+
+  # Times of day:
+  #   Morning: 6 am - 12 pm
+  #   Afternoon: 12 pm - 5 pm
+  #   Evening: 5 pm - 10 pm
+  #   Night: 10 pm - 6 am
+
+  if [[ "$h" -ge 6 && "$h" -lt 12 ]]; then
+    if [[ ! $(cat "$today_journal_dir/note.tex" | grep '\\morning') ]]; then
+      echo "$morning_template" >> "$today_journal_dir/note.tex"
+    fi
+  elif [[ "$h" -ge 12 && "$h" -lt 17 ]]; then
+    if [[ ! $(cat "$today_journal_dir/note.tex" | grep '\\afternoon') ]]; then
+      echo "$afternoon_template" >> "$today_journal_dir/note.tex"
+    fi
+  elif [[ "$h" -ge 17 && "$h" -lt 22 ]]; then
+    if [[ ! $(cat "$today_journal_dir/note.tex" | grep '\\evening') ]]; then
+      echo "$evening_template" >> "$today_journal_dir/note.tex"
+    fi
+  elif [[ "$h" -ge 22 || "$h" -lt 6 ]]; then
+    if [[ ! $(cat "$today_journal_dir/note.tex" | grep '\\night') ]]; then
+      echo "$night_template" >> "$today_journal_dir/note.tex"
+      xfce4-terminal -e "nvim $today_journal_dir/note.tex"
+      return
+    fi
+  fi
+
+  echo "" >> "$today_journal_dir/note.tex"
+  echo "$log_time" >> "$today_journal_dir/note.tex"
+
+  launch_kitty --path "$today_journal_dir" --cmd "nvim note.tex"
+}
+
+open_xournal () {
+  cd "$today_journal_dir" || exit
+
+  xournalpp note.xopp
 }
 
 launch_kitty() {
@@ -75,7 +140,7 @@ case $key in
   # Search through my research papers.
   p ) open_research_paper ;;
   # Open my notes.norg file for the current course.
-  j ) launch_kitty --path "$current_course" --cmd "nvim notes.md" ;;
+  N ) launch_kitty --path "$current_course" --cmd "nvim notes.md" ;;
   # Open my notes.norg file for everything.
   k ) launch_kitty --path "$school_notes_root" --cmd "nvim notes.md" ;;
   # Open the master.tex file.
@@ -92,4 +157,13 @@ case $key in
 
   s ) ~/Documents/school-setup/main.py --source-notes ;;
   S ) ~/Documents/school-setup/main.py --sync-notes ;;
+
+  ###################
+  #  Journal Notes  #
+  ###################
+
+  x ) open_xournal ;;
+  r) launch_kitty --path "$today_journal_dir" --cmd "$HOME/.local/bin/lfub" ;;
+  j ) open_note_for_today ;;
+  O ) zathura "$journal_dir/master.pdf" ;;
 esac
