@@ -1,6 +1,7 @@
 import utils
 from RofiLessonManager.courses import Courses as Courses
 
+import config
 
 def main():
     courses = Courses()
@@ -14,15 +15,7 @@ def main():
     _, index, _ = utils.rofi.select(
         "Select course",
         options,
-        [
-            "-lines",
-            len(courses),
-            "-markup-rows",
-            "-kb-row-down",
-            "Down",
-            "-kb-custom-1",
-            "Ctrl+n",
-        ],
+        config.rofi_options,
     )
 
     if index >= 0:
