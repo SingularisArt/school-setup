@@ -21,6 +21,12 @@ def main():
         action="store_true",
     )
     parser.add_argument(
+        "-rb",
+        "--rofi-books",
+        help="View books",
+        action="store_true",
+    )
+    parser.add_argument(
         "-rc",
         "--rofi-courses",
         help="View courses",
@@ -65,6 +71,10 @@ def main():
         import src.rofi_assignments as ra
 
         ra.main()
+    elif args.rofi_books:
+        import src.rofi_books as rb
+
+        rb.main()
     elif args.rofi_courses:
         import src.rofi_courses as rc
 

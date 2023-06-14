@@ -13,8 +13,6 @@ papers="${current_course}/papers"
 instant_reference="$HOME/.local/share/Singularis/third-party-tools/instant-reference/copy-reference.js"
 master_pdf="$current_course/master.pdf"
 
-book_notes_root="$root/book-notes"
-
 basic_template="\time_of_day
 
 \begin{env}
@@ -64,23 +62,22 @@ open_note_for_today() {
   #   Afternoon: 12 pm - 5 pm
   #   Evening: 5 pm - 10 pm
   #   Night: 10 pm - 6 am
-
   if [[ "$h" -ge 6 && "$h" -lt 12 ]]; then
-    if [[ ! $(cat "$today_journal_dir/note.tex" | grep '\\morning') ]]; then
+    if ! grep -q '\\morning' "$today_journal_dir/note.tex"; then
       echo "$morning_template" >> "$today_journal_dir/note.tex"
     fi
   elif [[ "$h" -ge 12 && "$h" -lt 17 ]]; then
-    if [[ ! $(cat "$today_journal_dir/note.tex" | grep '\\afternoon') ]]; then
+    if ! grep -q '\\afternoon' "$today_journal_dir/note.tex"; then
       echo "$afternoon_template" >> "$today_journal_dir/note.tex"
     fi
   elif [[ "$h" -ge 17 && "$h" -lt 22 ]]; then
-    if [[ ! $(cat "$today_journal_dir/note.tex" | grep '\\evening') ]]; then
+    if ! grep -q '\\evening' "$today_journal_dir/note.tex"; then
       echo "$evening_template" >> "$today_journal_dir/note.tex"
     fi
   elif [[ "$h" -ge 22 || "$h" -lt 6 ]]; then
-    if [[ ! $(cat "$today_journal_dir/note.tex" | grep '\\night') ]]; then
+    if ! grep -q '\\night' "$today_journal_dir/note.tex"; then
       echo "$night_template" >> "$today_journal_dir/note.tex"
-      xfce4-terminal -e "nvim $today_journal_dir/note.tex"
+      launch_kitty --path "$today_journal_dir" --cmd "nvim note.tex"
       return
     fi
   fi
@@ -117,7 +114,7 @@ launch_kitty() {
     fi
   done
 
-  kitty --directory="$path" $cmd
+  kitty --directory="$path" "$cmd"
 }
 
 case $key in
@@ -139,15 +136,16 @@ case $key in
   f ) "$node" "$instant_reference" ;;
   # Search through my research papers.
   p ) open_research_paper ;;
-  # Open my notes.norg file for the current course.
-  N ) launch_kitty --path "$current_course" --cmd "nvim notes.md" ;;
-  # Open my notes.norg file for everything.
-  k ) launch_kitty --path "$school_notes_root" --cmd "nvim notes.md" ;;
+  # Open my notes.md file for the current course.
+  k ) launch_kitty --path "$current_course" --cmd "nvim notes.md" ;;
+  # Open my notes.md file for everything.
+  K ) launch_kitty --path "$school_notes_root" --cmd "nvim notes.md" ;;
   # Open the master.tex file.
   m ) launch_kitty --path "$current_course" --cmd "nvim master.tex" ;;
 
   # Custom made scripts.
   a ) ~/Documents/school-setup/main.py --rofi-assignments ;;
+  b ) ~/Documents/school-setup/main.py --rofi-books ;;
   c ) ~/Documents/school-setup/main.py --rofi-courses ;;
   n ) ~/Documents/school-setup/main.py --rofi-notes ;;
 
@@ -163,7 +161,7 @@ case $key in
   ###################
 
   x ) open_xournal ;;
-  r) launch_kitty --path "$today_journal_dir" --cmd "$HOME/.local/bin/lfub" ;;
+  r ) launch_kitty --path "$today_journal_dir" --cmd "$HOME/.local/bin/lfub" ;;
   j ) open_note_for_today ;;
   O ) zathura "$journal_dir/master.pdf" ;;
 esac

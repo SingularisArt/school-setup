@@ -26,6 +26,10 @@ templates_dir = Path(data["templates_dir"]).expanduser()
 current_course = Path(data["current_course"]).expanduser()
 current_course_watch_file = Path("~/.local/share/current_course").expanduser()
 
+books_dir = Path(data["books_dir"]).expanduser()
+
+figures_dir = Path(data["figures_dir"]).expanduser()
+
 assignments_dir = Path(data["assignments_dir"]).expanduser()
 graded_assignments_folder = Path(
     data["graded_assignments_folder"],
