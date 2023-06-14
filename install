@@ -50,7 +50,7 @@ templates_dir: \"$NOTES_DIR/College/Year-1/winter/_files\"
 current_course: \"$NOTES_DIR/current-course\"
 
 books_dir: \"$CURRENT_COURSE/books\"
-figures_dir: \"$CURRENT_COURSE/books\"
+figures_dir: \"$CURRENT_COURSE/figures\"
 
 assignments_dir: \"$CURRENT_COURSE/assignments\"
 graded_assignments_folder: \"$ASSIGNMENTS_DIR/graded-assignments\"
