@@ -114,7 +114,7 @@ launch_kitty() {
     fi
   done
 
-  kitty --directory="$path" "$cmd"
+  kitty --directory="$path" $cmd
 }
 
 case $key in
