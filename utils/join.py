@@ -1,5 +1,2 @@
-#!/usr/bin/env python3
-
-
-def join(*args, separator=" ") -> str:
+def join(*args, separator=" "):
     return separator.join(str(e) for e in args if e)

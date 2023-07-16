@@ -1,5 +1,2 @@
-#!/usr/bin/env python3
-
-
-def folder_to_name(name: str) -> str:
+def folder_to_name(name):
     return name.replace("-", " ").replace("_", " ").title()

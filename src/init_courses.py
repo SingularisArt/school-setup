@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 import datetime
 import os
 import re
@@ -7,6 +5,7 @@ import shutil
 
 from RofiLessonManager.courses import Courses
 import config
+import utils
 
 
 def copy_or_symlink(src, dst, action):
@@ -28,7 +27,7 @@ def get_start_date(start_date):
     ).strftime("%B %d, %Y")
 
 
-def main() -> None:
+def main():
     for course in Courses():
         notes = course.notes
         folders = config.folders
@@ -94,3 +93,5 @@ def main() -> None:
                     for placeholder, value in placeholders.items():
                         content = content.replace(placeholder, value)
                     file_dst.write_text(content)
+
+        utils.create_course_event(course.info)

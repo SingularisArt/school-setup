@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 import os
 import re
 from datetime import datetime
@@ -143,9 +141,7 @@ class Notes(list):
             file = utils.number_to_filename(number, LEC_OR_CHAP)
             if os.path.exists(f"{self.path}/{file}"):
                 tab = " " * 2
-                body += \
-rf"""{tab}\includenote{{{number}}}
-"""
+                body += rf"{tab}\includenote{{{number}}}\n"
 
         self.master_file.write_text(header + body + footer)
 

@@ -1,18 +1,12 @@
-#!/usr/bin/env python3
-
-import utils
-
-
-def filename_to_number(s: str) -> str:
-    n = utils.replace_str(
-        s,
-        ["lec-", ""],
-        ["chap-", ""],
-        [".yaml", ""],
-        [".tex", ""],
-        [".pdf", ""],
-        [".bib", ""],
-        [".png", ""],
+def filename_to_number(s):
+    n = (
+        s.replace("lec-", "")
+        .replace("chap-", "")
+        .replace(".yaml", "")
+        .replace(".tex", "")
+        .replace(".pdf", "")
+        .replace(".bib", "")
+        .replace(".png", "")
     )
 
     if int(n) < 10 and len(str(n)) == 1:

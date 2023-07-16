@@ -1,9 +1,7 @@
-#!/usr/bin/env python3
-
 import utils
 
 
-def location(text: str) -> str:
+def location(text):
     if not text:
         return ""
 

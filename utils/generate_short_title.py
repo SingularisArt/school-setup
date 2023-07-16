@@ -1,7 +1,4 @@
-#!/usr/bin/env python3
-
-
-def generate_short_title(title: str, MAX_LENGTH=34) -> str:
+def generate_short_title(title, MAX_LENGTH=34):
     ellipsis = " ..."
     if len(title) < MAX_LENGTH:
         return title

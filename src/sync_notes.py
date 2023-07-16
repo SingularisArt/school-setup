@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 from RofiLessonManager.courses import Courses as Courses
 import utils
 import config

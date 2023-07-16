@@ -1,13 +1,7 @@
-#!/usr/bin/env python3
-
-import datetime
 import math
 
 
-def format_date_and_time(
-    begin: datetime.datetime,
-    end: datetime.datetime,
-) -> str:
+def format_date_and_time(begin, end):
     minutes = math.ceil((end - begin).seconds / 60)
 
     if minutes == 1:

@@ -1,12 +1,10 @@
-#!/usr/bin/env python3
-
 import json
 from pathlib import Path
 
 import yaml
 
 
-def load_data(data_file: str, type: str) -> dict:
+def load_data(data_file, type):
     config_file = Path(data_file).expanduser()
     if not config_file.exists():
         return False

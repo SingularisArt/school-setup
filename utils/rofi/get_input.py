@@ -1,9 +1,7 @@
-#!/usr/bin/env python3
-
 import subprocess
 
 
-def get_input(prompt: str, rofi_args=[]) -> tuple:
+def get_input(prompt: str, rofi_args=[]):
     args = [
         "rofi",
         "-lines",

@@ -1,7 +1,7 @@
 from utils import rofi
 
 
-def msg(msg: str, bold=True, italic=False, underline=False, err=False) -> None:
+def msg(msg, bold=True, italic=False, underline=False, err=False):
     beginning = (
         f"{'<b>' if bold else ''}"
         + f"{'<i>' if italic else ''}"

@@ -1,7 +1,6 @@
 import os
 import pickle
 import sys
-from typing import Tuple
 
 from google.auth.exceptions import RefreshError
 from google.auth.transport.requests import Request
@@ -10,10 +9,10 @@ from googleapiclient.discovery import build
 
 
 def authenticate(
-    type: str,
-    scopes: Tuple[str],
-    credentials_location: str,
-) -> "build":
+    type,
+    scopes,
+    credentials_location,
+):
     print("Authenticating")
     SCOPES = scopes
     pickle_location = credentials_location.replace("json", "pickle")

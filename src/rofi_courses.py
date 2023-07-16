@@ -3,6 +3,7 @@ from RofiLessonManager.courses import Courses as Courses
 
 import config
 
+
 def main():
     courses = Courses()
 

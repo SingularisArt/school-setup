@@ -1,9 +1,7 @@
-#!/usr/bin/env python3
-
 import subprocess
 
 
-def select(prompt: str, options: list, rofi_args=[], fuzzy=True) -> tuple:
+def select(prompt, options, rofi_args=[], fuzzy=True):
     optionstr = "\n".join(option.replace("\n", " ") for option in options)
 
     args = ["rofi", "-markup"]

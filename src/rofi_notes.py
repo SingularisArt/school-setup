@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 import os
 
 from RofiLessonManager.courses import Courses as Courses

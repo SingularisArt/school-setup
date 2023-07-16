@@ -1,5 +1,2 @@
-#!/usr/bin/env python3.10
-
-
-def colored_text(text: str, color="#999999") -> str:
+def colored_text(text, color="#999999"):
     return "%{F" + color + "}" + text + "%{F-}"

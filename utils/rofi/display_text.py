@@ -1,9 +1,7 @@
-#!/usr/bin/env python3
-
 import subprocess
 
 
-def display_text(prompt: str, rofi_args=[]) -> tuple:
+def display_text(prompt, rofi_args=[]):
     args = ["rofi", "-markup"]
 
     args += ["-e", prompt]

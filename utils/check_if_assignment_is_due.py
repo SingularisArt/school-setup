@@ -3,20 +3,14 @@ from typing import Tuple
 
 
 def check_if_assignment_is_due(
-    assignment_due_date: str, assignment_submitted: bool
-) -> Tuple[str, str]:
-    """
-    This function takes in two variables:
-    assignment_due_date: The date the assignment is due in the format "MM-DD-YY"
-    assignment_submitted: A boolean value indicating if the assignment has been submitted
-
-    It returns a tuple with two elements:
-    1. A string indicating the status of the assignment (e.g. "TODAY", "TOMORROW", "YESTERDAY", "X DAYS LATE", "X DAYS LEFT")
-    2. A string representing the due date in the format "MMM DD (Day)"
-    """
-
+    assignment_due_date,
+    assignment_submitted,
+):
     now = datetime.datetime.now()
-    assignment_date = datetime.datetime.strptime(assignment_due_date, "%m-%d-%y")
+    assignment_date = datetime.datetime.strptime(
+        assignment_due_date,
+        "%m-%d-%y",
+    )
     assignment_due_date_formatted = assignment_date.strftime("%b %d (%a)")
     logo = ""
 
