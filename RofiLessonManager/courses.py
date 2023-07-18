@@ -30,6 +30,11 @@ class Course:
             self._notes = Notes(self)
         return self._notes
 
+    def __eq__(self, other):
+        if other is None:
+            return False
+        return self.root == other.root
+
     def __repr__(self):
         return f"<Course: {self.name}>"
 
@@ -42,7 +47,9 @@ class Courses(list):
         self.root = [c.root for c in self]
 
     def read_files(self):
-        course_directories = [course for course in config.root.iterdir() if course.is_dir()]
+        course_directories = [
+            course for course in config.root.iterdir() if course.is_dir()
+        ]
         courses = []
 
         for course in course_directories:

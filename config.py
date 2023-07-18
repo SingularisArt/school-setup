@@ -10,6 +10,7 @@ home = Path(data["home"]).expanduser()
 user = data["user"]
 
 create_readme_file = data["create_readme_file"]
+highlight_current_course = data["highlight_current_course"]
 
 calendar_id = data["calendar_id"]
 drive_folder_id = data["drive_folder_id"]

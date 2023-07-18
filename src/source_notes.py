@@ -1,4 +1,5 @@
 from RofiLessonManager.courses import Courses as Courses
+import config
 import utils
 
 
@@ -19,7 +20,7 @@ def main():
     _, index, selected = utils.rofi.select(
         "Select one",
         commands,
-        ["-lines", 4, "-auto-select"],
+        config.rofi_options,
     )
 
     if not selected:

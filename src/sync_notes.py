@@ -44,23 +44,17 @@ service = utils.authenticate(
 
 def main():
     courses = Courses()
-    current_tmp_course_file = "/tmp/tmp-current-course.txt"
-    current_course = courses.current
-
     course_names = [course.name for course in courses]
     courses_to_display = [course.upper() for course in course_names]
-    # courses_to_display.append("All")
 
     _, index, _ = utils.rofi.select(
         "Select course to sync notes",
         courses_to_display,
+        config.rofi_options,
     )
 
     if index < 0:
         return
-
-    with open(current_tmp_course_file, "w") as f:
-        f.write(str(course_names.index(current_course.name)))
 
     msg = "Successfully synced your notes to the cloud for "
     selected_course = courses[index]
@@ -69,14 +63,6 @@ def main():
     sync_notes(courses.current)
     course_display_name = utils.folder_to_name(courses[index].name)
     utils.rofi.msg(msg + course_display_name)
-
-    # for course in courses:
-    #     sync_notes(course)
-    #     course_display_name = utils.folder_to_name(course.name)
-    #     utils.rofi.msg(msg + course_display_name)
-
-    previous_current_course_index = int(open(current_tmp_course_file, "r").read())
-    courses.current = courses[previous_current_course_index]
 
 
 if __name__ == "__main__":
