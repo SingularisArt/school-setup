@@ -23,7 +23,10 @@ Managing LaTeX Lecture Notes
   * [The `info.yaml` file](#the-infoyaml-file)
   * [The `master.tex` file](#the-mastertex-file)
   * [Getting everything ready](#getting-everything-ready)
+* [Shortcuts](#shortcuts)
+  * [SXHKD](#sxhkd)
 * [Setup](#setup)
+  * [Install](#install)
   * [Example Setup](#example-setup)
   * [Configuration](#configuration)
 
@@ -31,7 +34,12 @@ Managing LaTeX Lecture Notes
 
 ## Demos
 
-GO HERE
+![assignments-display-1](https://github.com/SingularisArt/media/blob/master/school-setup/assignments-01.png?raw=true)
+![assignments-display-2](https://github.com/SingularisArt/media/blob/master/school-setup/assignments-02.png?raw=true)
+![courses](https://github.com/SingularisArt/media/blob/master/school-setup/courses.png?raw=true)
+![notes](https://github.com/SingularisArt/media/blob/master/school-setup/notes.png?raw=true)
+![source](https://github.com/SingularisArt/media/blob/master/school-setup/source.png?raw=true)
+![sync](https://github.com/SingularisArt/media/blob/master/school-setup/sync.png?raw=true)
 
 ## Features
 
@@ -424,11 +432,48 @@ the `info.yaml` file, then run the `./main.py -ic` or `./main.py
 **NOTE:** You must first read the [setup](#setup) section to make sure you've
 got the links to everything working.
 
+## Shortcuts
+
+I've already got a bunch of shortcuts setup with the [shortcut
+manager](./shortcut-manager.sh) file. They are as follows:
+
+- `o`: Opens the current course's `master.pdf` file.
+- `i`: Lists all the figures in the current course.
+- `I`: Creates a new figure.
+- `w`: Opens the current course in the browser.
+- `y`: Opens the current course's `info.yaml` file.
+- `p`: Lists all the research papers in the current course.
+- `k`: Opens the current course's `notes.md` file.
+- `K`: Opens the `notes.md` file found in the root directory.
+- `m`: Opens the current course's `master.tex` file.
+- `a`: Lists all the current course's assignments.
+- `b`: Lists all the current course's books.
+- `c`: Lists all the courses.
+- `n`: Lists all the current course's notes.
+- `A`: Prompts you to create a new assignment.
+- `C`: Prompts you to create a new course.
+- `N`: Prompts you to create a new note.
+- `s`: Lets you source specific notes.
+- `S`: Syncs your notes to the drive.
+
+### SXHKD
+
+Instead of manually running `./shortcut-manager.sh a` every time, I use `sxhkd`
+to manage my shortcuts. Here's how I do it:
+```conf
+alt + {a-z}
+  bash ~/school-setup/shortcut-manager.sh {a-z}
+alt + {A-Z}
+  bash ~/school-setup/shortcut-manager.sh {A-Z}
+```
+
 ## Setup
 
-Run the following install commands:
+### Install
+
+Run the following commands:
 ```bash
-git https://github.com/SingularisArt/school-setup/
+git clone https://github.com/SingularisArt/school-setup/
 cd school-setup
 ./install
 ```
@@ -436,44 +481,59 @@ cd school-setup
 ### Example Setup
 
 I've already created an example setup [here](./example-setup) you can use to
-understand what's going on.
+understand what's going on. If you want to use the provided example, run the
+following commands:
+```bash
+cd ~/
+git clone https://github.com/SingularisArt/school-setup/
+cd school-setup
+mkdir -p ~/.config/lesson-manager
+cp -r ./example-setup/config.yaml ~/.config/lesson-manager/config.yaml
+```
 
 ### Configuration
-
-TODO
 
 The configuration file's located at `$HOME/.config/lesson-manager/config.yaml`.
 Here are all the variable meanings:
 
-- `calendar_id`: The id of the calendar. By default, it's `primary`.
-- `drive_folder_id`: The id of the google drive folder that you want to use to
-  sync your notes to.
-- `editor`: The text editor you want to use.
-- `terminal`: The terminal you want to use.
-- `pdf_viewer`: The pdf viewer you want to use.
+- `calendar_id`: The calendar id. By default, it's `primary`.
+- `drive_folder_id`: The google drive folder id that you want to use to sync
+  your notes to.
+- `editor`: The text editor.
+- `terminal`: The terminal.
+- `pdf_viewer`: The pdf viewer.
 - `create_readme_file`: If you want README.md files created when initializing
   the courses.
 - `highlight_current_course`: If you want the currently selected course to be
   highlighted.
 - `notes_dir`: The root directory of your notes.
-- `root`: The root directory of your current course notes.
-- `templates_dir`: The location to the templates folder.
-- `current_course`: The directory you want to use to store the current course.
-- `books_dir`: Where you store your books in regards to the current course.
-- `figures_dir`: Where you store your figures in regards to the current course.
-- `assignments_dir`: The root directory where you store all your assignments in
-  regards to the current course.
-- `graded_assignments_folder`:
-- `my_assignments_folder`: 
-- `online_assignments_folder`:
-- `my_assignments_image_folder`:
-- `my_assignments_bibtex_folder`:
-- `my_assignments_latex_folder`:
-- `my_assignments_yaml_folder`:
-- `my_assignments_pdf_folder`:
-- `date_format`:
-- `home`:
-- `user`:
-- `rofi_options`:
-- `folders`:
-- `files`:
+- `root`: The root directory where you store all your `course folders`.
+- `templates_dir`: The path to the `templates folder`.
+- `current_course`: Path to the `current course`.
+- `books_dir`: Path to your `books` folder within your current course.
+- `figures_dir`: Path to your `figures` folder within your current course.
+- `assignments_dir`: Path to your root `assignments` folder within your current
+  course.
+- `graded_assignments_folder`: Path to your `graded assignments` folder within
+  your current course.
+- `my_assignments_folder`: Path to your `my assignments` folder within your
+  current course.
+- `online_assignments_folder`: Path to your `online assignments` folder within
+  your current course.
+- `my_assignments_image_folder`: Path to your `image assignments` folder within
+  your current course.
+- `my_assignments_bibtex_folder`: Path to your `bibtex assignments` folder
+  within your current course.
+- `my_assignments_latex_folder`: Path to your `latex assignments` folder within
+  your current course.
+- `my_assignments_yaml_folder`: Path to your `yaml assignments` folder within
+  your current course.
+- `my_assignments_pdf_folder`: Path to your `pdf assignments` folder within your
+  current course.
+- `date_format`: The date format you use when you create a new note.
+- `home`: Path to your home directory.
+- `user`: Your user name.
+- `rofi_options`: Options to pass to rofi.
+- `folders`: List of folders you want created when you initialize the courses.
+- `files`: How should the template files be moved when initializing the courses,
+  either a symlink or copy.
