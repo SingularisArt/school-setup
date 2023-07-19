@@ -37,7 +37,6 @@ msg "Adding configuration template"
 
 echo "calendar_id: \"primary\"
 
-code_dir: \"$DOCUMENTS/school-setup\"
 editor: \"nvim\"
 terminal: \"kitty\"
 pdf_viewer: \"zathura\"

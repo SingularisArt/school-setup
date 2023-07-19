@@ -1,7 +1,6 @@
 calendar_id: "primary"
 drive_folder_id: "drive_folder_id"
 
-code_dir: "~/school-setup"
 editor: "nvim"
 terminal: "kitty"
 pdf_viewer: "zathura"
@@ -11,23 +10,23 @@ highlight_current_course: true
 
 notes_dir: "~/school-setup/example-setup"
 root: "~/school-setup/example-setup/courses"
-templates_dir: "~/school-setup/template_files"
-current_course: "~/school-setup/current-course"
+templates_dir: "~/school-setup/example-setup/template_files"
+current_course: "~/school-setup/example-setup/current-course"
 
-books_dir: "~/school-setup/current-course/books"
+books_dir: "~/school-setup/example-setup/current-course/books"
 
-figures_dir: "~/school-setup/current-course/figures"
+figures_dir: "~/school-setup/example-setup/current-course/figures"
 
-assignments_dir: "~/school-setup/current-course/assignments"
-graded_assignments_folder: "~/school-setup/current-course/assignments/graded-assignments"
-my_assignments_folder: "~/school-setup/current-course/assignments/my-assignments"
-online_assignments_folder: "~/school-setup/current-course/assignments/online-assignments"
+assignments_dir: "~/school-setup/example-setup/current-course/assignments"
+graded_assignments_folder: "~/school-setup/example-setup/current-course/assignments/graded-assignments"
+my_assignments_folder: "~/school-setup/example-setup/current-course/assignments/my-assignments"
+online_assignments_folder: "~/school-setup/example-setup/current-course/assignments/online-assignments"
 
-my_assignments_image_folder: "~/school-setup/current-course/assignments/my-assignments/latex-files"
-my_assignments_bibtex_folder: "~/school-setup/current-course/assignments/my-assignments/bibtex-files"
-my_assignments_latex_folder: "~/school-setup/current-course/assignments/my-assignments/latex-files"
-my_assignments_yaml_folder: "~/school-setup/current-course/assignments/my-assignments/yaml-files"
-my_assignments_pdf_folder: "~/school-setup/current-course/assignments/my-assignments/pdf-files"
+my_assignments_image_folder: "~/school-setup/example-setup/current-course/assignments/my-assignments/latex-files"
+my_assignments_bibtex_folder: "~/school-setup/example-setup/current-course/assignments/my-assignments/bibtex-files"
+my_assignments_latex_folder: "~/school-setup/example-setup/current-course/assignments/my-assignments/latex-files"
+my_assignments_yaml_folder: "~/school-setup/example-setup/current-course/assignments/my-assignments/yaml-files"
+my_assignments_pdf_folder: "~/school-setup/example-setup/current-course/assignments/my-assignments/pdf-files"
 
 date_format: "%b %d %Y %a (%H:%M:%S)"
 home: "/home/user"

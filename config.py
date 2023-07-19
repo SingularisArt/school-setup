@@ -14,7 +14,6 @@ highlight_current_course = data["highlight_current_course"]
 
 calendar_id = data["calendar_id"]
 drive_folder_id = data["drive_folder_id"]
-code_dir = Path(data["code_dir"]).expanduser()
 editor = data["editor"]
 terminal = data["terminal"]
 pdf_viewer = data["pdf_viewer"]

@@ -448,7 +448,6 @@ Here are all the variable meanings:
 - `calendar_id`: The id of the calendar. By default, it's `primary`.
 - `drive_folder_id`: The id of the google drive folder that you want to use to
   sync your notes to.
-- `code_dir`: Where you cloned the code to.
 - `editor`: The text editor you want to use.
 - `terminal`: The terminal you want to use.
 - `pdf_viewer`: The pdf viewer you want to use.
