@@ -23,7 +23,6 @@ Managing LaTeX Lecture Notes
   * [The `info.yaml` file](#the-infoyaml-file)
   * [The `master.tex` file](#the-mastertex-file)
   * [Getting everything ready](#getting-everything-ready)
-* [Shortcuts](#shortcuts)
 * [Setup](#setup)
   * [Example Setup](#example-setup)
   * [Configuration](#configuration)
@@ -424,10 +423,6 @@ the `info.yaml` file, then run the `./main.py -ic` or `./main.py
 
 **NOTE:** You must first read the [setup](#setup) section to make sure you've
 got the links to everything working.
-
-## Shortcuts
-
-
 
 ## Setup
 
