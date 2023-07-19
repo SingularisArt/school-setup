@@ -1,4 +1,5 @@
 from datetime import datetime
+from selenium.webdriver.chrome.options import Options
 import os
 import time
 
@@ -208,7 +209,9 @@ def get_course_info_from_html(url):
 def main(crns):
     crn_list = crns.split(",")
 
-    driver = webdriver.Chrome()
+    options = Options()
+    options.add_argument("--headless")
+    driver = webdriver.Chrome(options=options)
 
     for crn in crn_list:
         driver.get("https://www.pcc.edu/schedule/")

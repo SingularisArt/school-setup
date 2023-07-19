@@ -1,0 +1,237 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                                                              %
+%                                Basic Settings                                %
+%                                                                              %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\input{../../preamble.tex}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+%  Helpful New Commands  %
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand\point[1]{\hfill[\textbf{\textit{#1}}]{\parfillskip0pt\par}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+%  Change Size of PDF  %
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+\topmargin=-0.45in
+\evensidemargin=0in
+\oddsidemargin=0in
+\textwidth=6.5in
+\textheight=9.0in
+\headsep=0.25in
+
+%%%%%%%%%%%%%%%%
+% Fancy Header %
+%%%%%%%%%%%%%%%%
+
+\linespread{1.1}
+
+\renewcommand\headrulewidth{0.4pt}
+\renewcommand\footrulewidth{0.4pt}
+
+\pagestyle{fancy}
+
+\fancyhead[L]{\hmwkAuthorName}
+\fancyhead[C]{\hmwkClass: \hmwkTitle: \hmwkClassInstructorShortName}
+\fancyhead[R]{\firstxmark}
+\fancyfoot[L]{\lastxmark}
+\fancyfoot[C]{\thepage}
+\fancyfoot[R]{}
+
+\fancypagestyle{boxfooter}{
+  \fancyfoot[R]{\setlength\unitlength{1cm}
+    \begin{picture}(0,0)
+      \put(-1,-0.7){\framebox(1,1)}
+  \end{picture}}
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                                                              %
+%                                  Title Page                                  %
+%                                                                              %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\title{
+  \vspace{2in}
+  \textmd{\textmd{\textbf{\hmwkClass:\ \hmwkTitle}}}\\
+  \normalsize\vspace{0.1in}\small{Due\ on\ \hmwkDueDate\ at \hmwkDueTime}\\
+  \vspace{0.1in}\large{\textit{\hmwkClassInstructor\ \hmwkClassTime}}
+  \vspace{3in}
+}
+
+\author{\hmwkAuthorName}
+\date{}
+
+\renewcommand{\part}[1]{\textbf{\large Part \Alph{partCounter}}\stepcounter{partCounter}\\}
+
+\newcounter{countitems}
+\newcounter{nextitemizecount}
+\newcommand{\setupcountitems}{%
+  \stepcounter{nextitemizecount}%
+  \setcounter{countitems}{0}%
+  \preto\item{\stepcounter{countitems}}%
+}
+
+\makeatletter
+\newcommand{\computecountitems}{%
+  \edef\@currentlabel{\number\c@countitems}%
+}
+\newcommand{\nextitemizecount}{%
+  \getrefnumber{countitems@\number\c@nextitemizecount}%
+}
+\newcommand{\previtemizecount}{%
+  \getrefnumber{countitems@\number\numexpr\value{nextitemizecount}-1\relax}%
+}
+\makeatother
+
+\newenvironment{AutoMultiColItemize}{%
+  \ifnumcomp{\nextitemizecount}{>}{3}{\begin{multicols}{2}}{}%
+    \setupcountitems\begin{itemize}}%
+    {\end{itemize}%
+  \unskip\computecountitems\ifnumcomp{\previtemizecount}{>}{3}{\end{multicols}}{}}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                                                              %
+%                                 Environments                                 %
+%                                                                              %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%
+% Create Counters %
+%%%%%%%%%%%%%%%%%%%
+
+\setcounter{secnumdepth}{0}
+\newcounter{partCounter}
+\newcounter{homeworkProblemCounter}
+\setcounter{homeworkProblemCounter}{1}
+\newcounter{homeworkSolutionCounter}
+\setcounter{homeworkSolutionCounter}{1}
+\nobreak\extramarks{Problem \arabic{homeworkProblemCounter}}{}\nobreak{}
+
+%%%%%%%%%%%%%%%%%%
+% Create Headers %
+%%%%%%%%%%%%%%%%%%
+
+\newcommand{\enterProblemHeader}[1]{
+  \nobreak\extramarks{}{
+    Problem \arabic{#1} continued on next page \ldots
+  }\nobreak{}
+  \nobreak\extramarks{
+    Problem \arabic{#1} (continued)
+  }{
+    Problem \arabic{#1} continued on next page \ldots
+  }\nobreak{}
+}
+
+\newcommand{\exitProblemHeader}[1]{
+  \nobreak\extramarks{
+    Problem \arabic{#1} (continued)
+  }{
+    Problem \arabic{#1} continued on next page\ldots
+  }\nobreak{}
+  \stepcounter{#1}
+  \nobreak\extramarks{
+    Problem \arabic{#1}
+  }{}\nobreak{}
+}
+
+%%%%%%%%%%%%%%%%
+% Environments %
+%%%%%%%%%%%%%%%%
+
+\newenvironment{probsolution}[1][-1]{
+  \ifnum#1>0
+    \setcounter{homeworkSolutionCounter}{#1}
+  \fi
+  \section{Solution \arabic{homeworkSolutionCounter}}
+  \setcounter{partCounter}{1}
+  \enterProblemHeader{homeworkSolutionCounter}
+}{
+  \exitProblemHeader{homeworkSolutionCounter}
+  \thispagestyle{boxfooter}
+}
+
+\renewenvironment{problem}[1][-1]{
+  \ifnum#1>0
+    \setcounter{homeworkProblemCounter}{#1}
+  \fi
+  \section{Problem \arabic{homeworkProblemCounter}}
+  \setcounter{partCounter}{1}
+  \enterProblemHeader{homeworkProblemCounter}
+}{
+  \exitProblemHeader{homeworkProblemCounter}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%  Edit equation number display  %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\makeatletter
+\renewcommand\tagform@[1]{(#1)}
+\def\@eqnnum{{\normalfont \normalcolor \theequation}}
+\makeatother
+
+%%%%%%%%%%%%%%%
+%  PGF Plots  %
+%%%%%%%%%%%%%%%
+
+\usepackage{pgfplots, pgfplotstable}
+
+\pgfplotsset{width=7cm,compat=1.8}
+\pgfplotsset{compat=newest}
+
+\usepgfplotslibrary{patchplots}
+\usepgfplotslibrary{fillbetween}
+\usetikzlibrary{intersections}
+
+\pgfplotsset{pccplot/.style={color=red,mark=none,line width=1pt,<->,solid}}
+\pgfplotsset{asymptote/.style={color=gray,mark=none,line width=1pt,<->,dashed}}
+\pgfplotsset{soldot/.style={color=red,only marks,mark=*}}
+\pgfplotsset{holdot/.style={color=red,fill=white,only marks,mark=*}}
+\pgfplotsset{blankgraph/.style={xmin=-10,xmax=10,ymin=-10,ymax=10,axis line style= {-, draw opacity=0 },axis lines=box,major tick length=0mm,xtick={-10,-9,...,10},ytick={-10,-9,...,10},grid=major,yticklabels={,,},xticklabels={,,},minor xtick=,minor ytick=,xlabel={},ylabel={},width=0.75\textwidth,grid style={solid,gray!40}}}
+
+\pgfplotscreateplotcyclelist{pccstylelist}{
+  pccplot \\
+  % color=blue,mark=none,line width=1pt,<->,dashdotted \\
+  % color=gray,mark=none,line width=1pt,<->,dashdotdotted \\
+}
+
+\def\axisdefaultwidth{175pt}
+\def\axisdefaultheight{\axisdefaultwidth}
+
+\pgfplotsset{every axis/.append style={
+    axis x line=middle,
+    axis y line=middle,
+    axis line style={<->},
+    xlabel={$x$},
+    ylabel={$y$},
+    xmin=-7,xmax=7,
+    ymin=-7,ymax=7,
+    yticklabel style={inner sep=0.333ex},
+    minor xtick={-7,-6,...,7},
+    minor ytick={-7,-6,...,7},
+    scale only axis,
+    cycle list name=pccstylelist,
+    tick label style={font=\footnotesize},
+    legend cell align=left,
+    grid=minor,
+    grid style={solid,gray!40},
+    try min ticks=6,
+  },
+  framed/.style={axis background/.style={draw=gray}}
+}
+
+% framing the graphs
+\pgfplotsset{axis background/.style={draw=gray}}
+
+\hypersetup{
+  colorlinks,
+  linkcolor=blue,
+  citecolor=black,
+  urlcolor={blue!80!black}
+}

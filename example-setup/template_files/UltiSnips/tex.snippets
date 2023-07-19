@@ -1,0 +1,119 @@
+################################################################################
+#                                                                              #
+#                                    Global                                    #
+#                                                                              #
+################################################################################
+
+global !p
+
+from latex_.scopes import text, math, display_math
+environments = {
+  "def": "definition",
+  "thm": "theorem",
+  "exm": "example",
+  "qst": "question",
+  "sol": "solution",
+  "rmk": "remark",
+  "wrng": "wrong",
+  "prpl": "purpleframe",
+  "nte": "note",
+  "nnte": "noten",
+  "prb": "problem",
+  "psol": "probsolution",
+  "lma": "lemma",
+  "crl": "corollary",
+  "prps": "proposition",
+  "cnj": "conjecture",
+  "exp": "explanation",
+  "clm": "claim",
+  "cse": "case",
+  "ack": "acknowledgment",
+  "con": "conclusion",
+}
+endglobal
+
+
+################################################################################
+#                                                                              #
+#                                 Environments                                 #
+#                                                                              #
+################################################################################
+
+context "match[0] in environments"
+snippet "\b[a-z]+\b" "Custom Environments" rAbm
+\begin{`!p snip.rv = environments[match[0]]`}[$1]
+	\label{`!p snip.rv = match[0]`:${2:${1/\\\w+\{(.*?)\}|\\(.)|(\w+)|([^\w\\]+)/(?4:_:\L$1$2$3\E)/ga}}}
+
+	$3
+\end{`!p snip.rv = environments[match[0]]`}
+endsnippet
+
+context "text()"
+snippet ps "Problem/Solution" bm
+\begin{problem}
+	$1
+\end{problem}
+
+\begin{probsolution}
+	$2
+\end{probsolution}
+endsnippet
+
+context "text()"
+snippet "wadm" "With Arrows Display Mode" rAbm
+\[\begin{WithArrows}%
+	$1
+\end{WithArrows}${2:.}\]%
+endsnippet
+
+context "text()"
+snippet "wailm" "With Arrows Inline Mode" rAbm
+$\begin{WithArrows}
+	$1
+\end{WithArrows}$
+endsnippet
+
+context "text()"
+snippet imp "Important" bw
+\imp{${1:${VISUAL}}}$0
+endsnippet
+
+################################################################################
+#                                                                              #
+#                                    Other                                     #
+#                                                                              #
+################################################################################
+
+context "text()"
+snippet newnote "New Note"
+\nte{`date "+%b %d %Y %a (%H:%M:%S)"`}{${1:NAME}}
+\label{note_$2:${3:${1/\\\w+\{(.*?)\}|\\(.)|(\w+)|([^\w\\]+)/(?4:_:\L$1$2$3\E)/ga}}}
+
+$0
+
+\newpage
+endsnippet
+
+context "math()"
+snippet aaa "Arrow" w
+\Arrow{$1}
+endsnippet
+
+priority 10000
+context "math()"
+snippet "([0-9]+)?(p)?d([a-zA-Z])?([0-9]+)?d([a-zA-Z])" "Derivatives" r
+`!p
+derivative_type = "\\odv" if not match.group(2) else "\\pdv"
+derivative_number = "" if not match.group(1) else "[order={" + match.group(1) + "," + match.group(1) + "}]"
+derivative_function = "" if not match.group(3) else match.group(3)
+
+snip.rv = derivative_type + derivative_number + "{" + derivative_function + "}" + "{" + match.group(5) + "}"
+`
+endsnippet
+
+context "display_math()"
+snippet &= "New equation line"
+&= ${1:${VISUAL}} \\\
+endsnippet
+
+# vim:ft=snippets:
