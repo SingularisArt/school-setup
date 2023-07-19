@@ -314,7 +314,7 @@ notes. If I'm taking an in-person or remote course, I'll use the `lectures`
 folder to store my notes. What ever you use, make sure to provide that
 information in the [`info.yaml`](#the-info.yaml-file) file. Here's the basic
 template I use for my notes ([link]()):
-```
+```latex
 \nte[Side Notes]{Apr 04 2023 Mon (11:00:53)}{Title Goes Here}
 \label{note_01:title_goes_here}
 
