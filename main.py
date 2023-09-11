@@ -51,6 +51,18 @@ def main():
         action="store_true",
     )
     parser.add_argument(
+        "-rsn",
+        "--rofi-strip-notes",
+        help="Strip Notes.",
+        action="store_true",
+    )
+    parser.add_argument(
+        "-rsno",
+        "--rofi-strip-notes-output",
+        help="Stripped notes output.",
+        default="output.tex",
+    )
+    parser.add_argument(
         "-sn",
         "--source-notes",
         help="Source notes.",
@@ -97,6 +109,10 @@ def main():
         import src.rofi_notes as rn
 
         rn.main()
+    if args.rofi_strip_notes:
+        import src.rofi_strip_notes as rsn
+
+        rsn.main(args.rofi_strip_notes_output)
     if args.source_notes:
         import src.source_notes as sn
 
