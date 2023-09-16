@@ -19,10 +19,16 @@ open_research_paper() {
   ([ -f "$pdf_file" ] && zathura "$(realpath "$pdf_file")") || google-chrome-stable --profile-directory="Profile 2" --app="https://google.com/search?q=$pdf_file"
 }
 
+inkscape_figures() {
+  week=$(find "$current_course/figures/" -mindepth 1 -maxdepth 1 -type d -exec basename {} \; | sort | rofi -dmenu -window-title "Select Week")
+  inkscape-figures edit "$current_course/figures/$week"
+}
+
 create_figure() {
+  week=$(find "$current_course/figures/" -mindepth 1 -maxdepth 1 -type d -exec basename {} \; | sort | rofi -dmenu -window-title "Select Week")
   figure_name=$(rofi -dmenu -window-title "Inkscape figure name");
   if [ "$figure_name" != "" ]; then
-    inkscape-figures create "$figure_name" "$current_course/figures" | xclip -selection clipboard;
+    inkscape-figures create "$figure_name" "$current_course/figures/$week" | xclip -selection clipboard;
   else
     exit;
   fi
@@ -45,7 +51,7 @@ launch_kitty() {
       *)
         echo "Unknown parameter: ${1}" >&2
         return 1
-    esac
+    ;; esac
 
     if ! shift; then
       echo "Missing parameter argument." >&2
@@ -53,7 +59,7 @@ launch_kitty() {
     fi
   done
 
-  kitty --directory="$path" $cmd
+  kitty --directory="$path" "$cmd"
 }
 
 case $key in
@@ -64,7 +70,7 @@ case $key in
   # Open my class notes.
   o ) zathura "$master_pdf" ;;
   # List all my inkscape figures.
-  i ) inkscape-figures edit "$current_course/figures" ;;
+  i ) inkscape_figures ;;
   # Create inkscape figure.
   I ) create_figure ;;
   # Open my current course in the browser.
