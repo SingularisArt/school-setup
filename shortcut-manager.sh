@@ -19,13 +19,34 @@ open_research_paper() {
   ([ -f "$pdf_file" ] && zathura "$(realpath "$pdf_file")") || google-chrome-stable --profile-directory="Profile 2" --app="https://google.com/search?q=$pdf_file"
 }
 
+get_figure_folders() {
+  declare -A figure_folders
+  for file in $(find "$current_course/figures/" -mindepth 1 -maxdepth 1 -type d -exec basename {} \; | sort); do
+    new_string=$(echo "$file" | sed -e "s/lec-/Lecture /" -e "s/chap-/Chapter /" -e "s/\b0\+\([1-9][0-9]*\)/\1/")
+    figure_folders["$new_string"]="$file"
+  done
+
+  declare -p figure_folders
+}
+
 inkscape_figures() {
-  week=$(find "$current_course/figures/" -mindepth 1 -maxdepth 1 -type d -exec basename {} \; | sort | rofi -dmenu -window-title "Select Week")
-  inkscape-figures edit "$current_course/figures/$week"
+  eval "$(get_figure_folders)";
+
+  figure_folder=$(printf "%s\n" "${!figure_folders[@]}" | sort -t " " -k2,2n -k1,1 -r | rofi -dmenu -window-title "Select Week");
+  [ "$figure_folder" = "" ] && exit 0;
+
+  week="${figure_folders[$figure_folder]}";
+  inkscape-figures edit "$current_course/figures/$week";
 }
 
 create_figure() {
-  week=$(find "$current_course/figures/" -mindepth 1 -maxdepth 1 -type d -exec basename {} \; | sort | rofi -dmenu -window-title "Select Week")
+  eval "$(get_figure_folders)";
+
+  figure_folder=$(printf "%s\n" "${!figure_folders[@]}" | sort -t " " -k2,2n -k1,1 -r | rofi -dmenu -window-title "Select Week");
+  [ "$figure_folder" = "" ] && exit 0;
+
+  week="${figure_folders[$figure_folder]}";
+
   figure_name=$(rofi -dmenu -window-title "Inkscape figure name");
   if [ "$figure_name" != "" ]; then
     inkscape-figures create "$figure_name" "$current_course/figures/$week" | xclip -selection clipboard;
