@@ -29,6 +29,53 @@ get_figure_folders() {
   declare -p figure_folders
 }
 
+list_online_notes() {
+  declare -A note_files
+  declare -A annotated_files
+  declare -A blank_files
+
+  for file in $(find "$current_course/online-lecture-notes/" -mindepth 1 -maxdepth 1 -type f -exec basename {} \; | sort); do
+    if [[ "$file" != *.pdf ]]; then
+      continue
+    fi
+
+    note_num=$(echo "$file" | sed -s "s/[^0-9]//g")
+    new_string=$(echo "$file" | sed -e "s/lec-/Lecture /" -e "s/chap-/Chapter /" -e "s/.pdf//" -e "s/\b0\+\([1-9][0-9]*\)/\1/" -e 's/-/ /g' -e 's/\b\(.\)/\u\1/g')
+
+    file="$current_course/online-lecture-notes/$file"
+
+    if [[ "$file" == *annotated* ]]; then
+      annotated_files["$note_num"]="$file"
+    elif [[ "$file" == *blank* ]]; then
+      blank_files["$note_num"]="$file"
+    fi
+
+    new_string=$(echo "$new_string" | sed -e "s/Annotated//" -e "s/Blank//")
+    note_files["$new_string"]="$note_num"
+  done
+
+  declare -p note_files
+  declare -p annotated_files
+  declare -p blank_files
+
+  note_file=$(printf "%s\n" "${!note_files[@]}" | sort -t " " -k2,2n -k1,1 -r | rofi -dmenu -window-title "Select Online Note");
+  selected_note_num="${note_files["$note_file"]}"
+
+  annotated_file="${annotated_files["$selected_note_num"]}"
+  blank_file="${blank_files["$selected_note_num"]}"
+
+  if [[ "$annotated_file" && "$blank_file" ]]; then
+    selected_note_type=$(echo -e "Annotated\nBlank" | rofi -dmenu -window-title "Select Note Type")
+
+    [ "$selected_note_type" == "Annotated" ] && zathura "$annotated_file"
+    [ "$selected_note_type" == "Blank" ] && zathura "$blank_file"
+  elif [[ "$annotated_file" ]]; then
+    zathura "${annotated_file}"
+  elif [[ "$blank_file" ]]; then
+    zathura "${blank_file}"
+  fi
+}
+
 inkscape_figures() {
   eval "$(get_figure_folders)";
 
@@ -80,7 +127,7 @@ launch_kitty() {
     fi
   done
 
-  kitty --directory="$path" "$cmd"
+  kitty --directory="$path" $cmd
 }
 
 case $key in
@@ -90,6 +137,8 @@ case $key in
 
   # Open my class notes.
   o ) zathura "$master_pdf" ;;
+  # List all online notes.
+  O ) list_online_notes ;;
   # List all my inkscape figures.
   i ) inkscape_figures ;;
   # Create inkscape figure.

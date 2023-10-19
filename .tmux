@@ -22,6 +22,6 @@ tmux send-keys -t "$SESSION_NAME" "nvim" Enter
 tmux new-session -d -s "$SESSION_NAME"
 
 tmux rename-window -t "$SESSION_NAME" "Git"
-tmux send-keys -t "$SESSION_NAME" "clear; watch git status" Enter
+tmux send-keys -t "$SESSION_NAME" "clear; wgs" Enter
 
 eval "$tmuxAttachCommand"
