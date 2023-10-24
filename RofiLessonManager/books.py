@@ -16,7 +16,9 @@ class Book:
             ) = self.get_solutions()
 
         self.name = root.name
-        self.display_name = self.name.replace("-", " ").replace("_", " ")
+        self.display_name = (
+            self.name.replace("-", " ").replace("_", " ").replace(".pdf", "")
+        )
         self.display_name = self.display_name.title()
 
     def get_master_file(self):
@@ -44,9 +46,9 @@ class Book:
             return solutions_path
         else:
             if os.path.exists(solutions_path):
-                solutions_as_files = sorted([
-                    solution.name for solution in solutions_path.iterdir()
-                ])
+                solutions_as_files = sorted(
+                    [solution.name for solution in solutions_path.iterdir()]
+                )
                 solutions_for_display = [
                     solution.replace("chap", "Chapter")
                     .replace("-", " ")
