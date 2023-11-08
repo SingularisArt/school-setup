@@ -25,32 +25,25 @@ current_course = Path(data["current_course"]).expanduser()
 current_course_watch_file = Path("~/.local/share/current_course").expanduser()
 
 books_dir = Path(data["books_dir"]).expanduser()
-
 figures_dir = Path(data["figures_dir"]).expanduser()
 
 assignments_dir = Path(data["assignments_dir"]).expanduser()
-graded_assignments_folder = Path(
-    data["graded_assignments_folder"],
-).expanduser()
-my_assignments_folder = Path(
-    data["my_assignments_folder"],
-).expanduser()
-online_assignments_folder = Path(
-    data["online_assignments_folder"],
-).expanduser()
 
-my_assignments_image_folder = Path(
-    data["my_assignments_image_folder"],
-).expanduser()
-my_assignments_latex_folder = Path(
-    data["my_assignments_latex_folder"],
-).expanduser()
-my_assignments_yaml_folder = Path(
-    data["my_assignments_yaml_folder"],
-).expanduser()
-my_assignments_pdf_folder = Path(
-    data["my_assignments_pdf_folder"],
-).expanduser()
+my_assignment_folders = data["my_assignment_folders"]
+root_my_assignment_folders = Path(my_assignment_folders["root"])
+for key, value in my_assignment_folders.items():
+    string = assignments_dir
+
+    if key != "root":
+        path = string / root_my_assignment_folders
+    else:
+        path = string
+
+    my_assignment_folders[key] = Path(path / value).expanduser()
+
+assignment_folders = data["assignment_folders"]
+for key, value in assignment_folders.items():
+    assignment_folders[key] = Path(assignments_dir / value).expanduser()
 
 rofi_options = data["rofi_options"]
 files = data["files"]

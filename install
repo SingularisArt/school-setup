@@ -51,20 +51,23 @@ current_course: \"$NOTES_DIR/current-course\"
 books_dir: \"$CURRENT_COURSE/books\"
 figures_dir: \"$CURRENT_COURSE/figures\"
 
-assignments_dir: \"$CURRENT_COURSE/assignments\"
-graded_assignments_folder: \"$ASSIGNMENTS_DIR/graded-assignments\"
-my_assignments_folder: \"$ASSIGNMENTS_DIR/my-assignments\"
-online_assignments_folder: \"$ASSIGNMENTS_DIR/online-assignments\"
-
-my_assignments_image_folder: \"$MY_ASSIGNMENTS_DIR/latex-files\"
-my_assignments_bibtex_folder: \"$MY_ASSIGNMENTS_DIR/bibtex-files\"
-my_assignments_latex_folder: \"$MY_ASSIGNMENTS_DIR/latex-files\"
-my_assignments_yaml_folder: \"$MY_ASSIGNMENTS_DIR/yaml-files\"
-my_assignments_pdf_folder: \"$MY_ASSIGNMENTS_DIR/pdf-files\"
-
 date_format: \"%b %d %Y %a (%H:%M:%S)\"
 home: \"$HOME\"
 user: \"$USER\"
+
+assignments_dir: \"$CURRENT_COURSE/assignments\"
+
+my_assignment_folders:
+  root: \"my-assignments\"
+  bib_folder: \"bibtex-files\"
+  tex_folder: \"latex-files\"
+  yaml_folder: \"yaml-files\"
+  pdf_folder: \"pdf-files\"
+
+assignment_folders:
+  \"Graded Assignment\": \"graded-assignments\"
+  \"Online Assignment\": \"online-assignments\"
+  \"Solution Key\": \"solution-keys/pdf-files\"
 
 rofi_options:
   - \"-lines\"
@@ -96,12 +99,15 @@ folders:
 files:
   \"assignments/my-assignments/preamble.tex\": \"symlink\"
   \"assignments/my-assignments/Makefile\": \"symlink\"
+  \"assignments/solution-keys/Makefile\": \"symlink\"
+  \"assignments/solution-keys/preamble.tex\": \"symlink\"
   \"Makefile\": \"symlink\"
   \"preamble.tex\": \"symlink\"
+  \"UltiSnips/tex.snippets\": \"symlink\"
   \"assignments/my-assignments/master.tex\": \"copy\"
+  \"assignments/solution-keys/master.tex\": \"copy\"
   \"intro.tex\": \"copy\"
   \"master.tex\": \"copy\"
-  \"notes.norg\": \"copy\"
-  \"UltiSnips/tex.snippets\": \"copy\"" >> "$SRC"
+  \"notes.md\": \"copy\"" >> "$SRC"
 
 msg "Successfuly got everything ready"

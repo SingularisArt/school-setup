@@ -1,8 +1,7 @@
 import os
 import sys
-
 from RofiLessonManager.assignments import Assignments
-from config import my_assignments_folder, rofi_options
+from config import assignments_dir, rofi_options
 import utils
 
 
@@ -11,10 +10,9 @@ def format_option(assignment):
     title = utils.generate_short_title(assignment.title, 20)
     due_date = utils.generate_short_title(assignment.due_date, 15)
     days_left = utils.generate_short_title(assignment.days_left, 16)
-    grade = f"({assignment.grade}%)" \
-        if isinstance(assignment.grade, int) \
-            or isinstance(assignment.grade, float) \
-        else "(NA)"
+    grade = f"({assignment.grade}%)"
+    if not isinstance(assignment.grade, (int, float)):
+        grade = "(NA)"
 
     column_1 = f"<b>{number: >2}. {title: <25}</b>"
     column_2 = f"<i><span size='smaller'>{due_date: <15}</span></i>"
@@ -31,9 +29,7 @@ def main():
         utils.rofi.msg("You don't have any assignments.", err=True)
         exit(1)
 
-    options = []
-    for assignment in assignments:
-        options.append(format_option(assignment))
+    options = [format_option(assignment) for assignment in assignments]
 
     _, index, _ = utils.rofi.select(
         "Select Assignment",
@@ -54,7 +50,7 @@ def main():
     if second_index < 0:
         sys.exit(0)
 
-    os.chdir(my_assignments_folder)
+    os.chdir(assignments_dir)
     assignments[index].parse_command(commands[selection])
 
 
