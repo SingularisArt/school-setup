@@ -35,17 +35,20 @@ fi
 
 msg "Adding configuration template"
 
-echo "calendar_id: \"primary\"
+echo "---
+calendar_id: \"primary\"
+drive_folder_id: \"\"
 
 editor: \"nvim\"
 terminal: \"kitty\"
 pdf_viewer: \"zathura\"
 
 create_readme_file: true
+highlight_current_course: true
 
 notes_dir: \"$DOCUMENTS/school-notes\"
-root: \"$NOTES_DIR/College/Year-1/winter\"
-templates_dir: \"$NOTES_DIR/College/Year-1/winter/_files\"
+root: \"$NOTES_DIR/College/Year-2/fall\"
+templates_dir: \"$NOTES_DIR/College/Year-2/fall/_files\"
 current_course: \"$NOTES_DIR/current-course\"
 
 books_dir: \"$CURRENT_COURSE/books\"
@@ -54,34 +57,41 @@ figures_dir: \"$CURRENT_COURSE/figures\"
 date_format: \"%b %d %Y %a (%H:%M:%S)\"
 home: \"$HOME\"
 user: \"$USER\"
+trash_dir: \"$XDG_DATA_HOME/lesson-manager/Year-2/fall\"
 
 assignments_dir: \"$CURRENT_COURSE/assignments\"
-
-my_assignment_folders:
-  root: \"my-assignments\"
-  bib_folder: \"bibtex-files\"
-  tex_folder: \"latex-files\"
-  yaml_folder: \"yaml-files\"
-  pdf_folder: \"pdf-files\"
-
 assignment_folders:
-  \"Graded Assignment\": \"graded-assignments\"
-  \"Online Assignment\": \"online-assignments\"
-  \"Solution Key\": \"solution-keys/pdf-files\"
+  bib_folder: \"my-assignments/bibtex-files\"
+  tex_folder: \"my-assignments/latex-files\"
+  yaml_folder: \"my-assignments/yaml-files\"
+  pdf_folder: \"my-assignments/pdf-files\"
+  graded_assignment: \"graded-assignments\"
+  online_assignment: \"online-assignments\"
+  solution_key: \"solution-keys/pdf-files\"
+
+exams_dir: \"$CURRENT_COURSE/exams\"
+exam_solution_keys:
+  pdf_folder: \"solution-keys/pdf-files\"
+  tex_folder: \"solution-keys/latex-files\"
+exam_review:
+  practice: \"review/practice\"
+  answers: \"review/answers\"
 
 rofi_options:
-  - \"-lines\"
-  - \"5\"
   - \"-markup-rows\"
   - \"-kb-row-down\"
   - \"Down\"
   - \"-kb-custom-1\"
   - \"Ctrl+n\"
+  - \"-no-fixed-num-lines\"
 
 folders:
   - \"assignments\"
   - \"assignments/graded-assignments\"
   - \"assignments/online-assignments\"
+  - \"assignments/solution-keys\"
+  - \"assignments/solution-keys/pdf-files\"
+  - \"assignments/solution-keys/latex-files\"
   - \"assignments/my-assignments\"
   - \"assignments/my-assignments/bibtex-files\"
   - \"assignments/my-assignments/image-files\"
@@ -90,9 +100,16 @@ folders:
   - \"assignments/my-assignments/sympy-scripts\"
   - \"assignments/my-assignments/yaml-files\"
   - \"books\"
+  - \"exams\"
+  - \"exams/review\"
+  - \"exams/review/answers\"
+  - \"exams/review/practice\"
+  - \"exams/solution-keys\"
+  - \"exams/solution-keys/pdf-files\"
+  - \"exams/solution-keys/latex-files\"
   - \"figures\"
+  - \"note-guide\"
   - \"papers\"
-  - \"online-lecture-notes\"
   - \"sympy-scripts\"
   - \"UltiSnips\"
 
@@ -101,11 +118,14 @@ files:
   \"assignments/my-assignments/Makefile\": \"symlink\"
   \"assignments/solution-keys/Makefile\": \"symlink\"
   \"assignments/solution-keys/preamble.tex\": \"symlink\"
+  \"exams/solution-keys/preamble.tex\": \"symlink\"
+  \"exams/solution-keys/Makefile\": \"symlink\"
   \"Makefile\": \"symlink\"
   \"preamble.tex\": \"symlink\"
   \"UltiSnips/tex.snippets\": \"symlink\"
   \"assignments/my-assignments/master.tex\": \"copy\"
   \"assignments/solution-keys/master.tex\": \"copy\"
+  \"exams/solution-keys/master.tex\": \"copy\"
   \"intro.tex\": \"copy\"
   \"master.tex\": \"copy\"
   \"notes.md\": \"copy\"" >> "$SRC"

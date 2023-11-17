@@ -2,6 +2,7 @@ import os
 from pathlib import Path
 import config
 import utils
+import glob
 
 
 class Assignment:
@@ -11,39 +12,41 @@ class Assignment:
         self.file_paths = {}
 
         # Initialize file paths for different extensions
-        for key in config.my_assignment_folders:
-            if key == "root":
-                continue
-            newKey = key.replace("_folder", "_file")
-            ext = key.split("_")[0]
-            path = config.my_assignment_folders[key] / f"{self.name}.{ext}"
-            newPath = Path(path)
-            self.file_paths[newKey] = {
-                "path": newPath,
-                "exists": newPath.exists(),
-            }
-
-        # Initialize file paths for PDFs
         for key in config.assignment_folders:
-            path = config.assignment_folders[key] / f"{self.name}.pdf"
-            newPath = Path(path)
-            self.file_paths[key] = {
-                "path": path,
-                "exists": newPath.exists(),
+            newKey = key.replace("_folder", "")
+            path = config.assignment_folders[key] / self.name
+            pathPosix = Path(path)
+            resolvedPath = pathPosix.resolve()
+
+            finalPath = ""
+            exists = False
+            extensionedPath = glob.glob(f"{resolvedPath}.*")
+
+            if extensionedPath:
+                finalPath = Path(extensionedPath[0])
+                exists = True
+            else:
+                finalPath = None
+                exists = False
+
+            self.file_paths[newKey] = {
+                "path": finalPath,
+                "exists": exists,
             }
 
         # Create options for available files
-        self.options = {
-            f"View {key.split('_')[0]} File": f"{key}"
-            for key in self.file_paths
-            if self.file_paths[key]["exists"]
-        }
+        self.options = {}
+        for key in self.file_paths:
+            if self.file_paths[key]["exists"]:
+                display = key.replace("_", " ").title()
+                self.options[f"View {display} File"] = f"{key}"
 
         self.progress_options = ["not started", "pending", "done"]
 
-        # Load assignment info from YAML file
+        self.info = {}
+
         self.info = utils.load_data(
-            self.file_paths["yaml_file"]["path"],
+            self.file_paths["yaml"]["path"],
             "yaml",
         )
         if not self.info:
@@ -101,7 +104,8 @@ class Assignments(list):
 
     def read_files(self):
         latex_assignments = []
-        for yaml_file in config.my_assignment_folders["yaml_folder"].glob("*.yaml"):
+        yaml_folder = config.assignment_folders["yaml_folder"]
+        for yaml_file in yaml_folder.glob("*.yaml"):
             yaml_file = Assignment(yaml_file)
             if yaml_file.info:
                 latex_assignments.append(yaml_file)

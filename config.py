@@ -28,22 +28,18 @@ books_dir = Path(data["books_dir"]).expanduser()
 figures_dir = Path(data["figures_dir"]).expanduser()
 
 assignments_dir = Path(data["assignments_dir"]).expanduser()
+assignment_folders = {
+    folder: assignments_dir / Path(data["assignment_folders"][folder])
+    for folder in data["assignment_folders"]
+}
 
-my_assignment_folders = data["my_assignment_folders"]
-root_my_assignment_folders = Path(my_assignment_folders["root"])
-for key, value in my_assignment_folders.items():
-    string = assignments_dir
-
-    if key != "root":
-        path = string / root_my_assignment_folders
-    else:
-        path = string
-
-    my_assignment_folders[key] = Path(path / value).expanduser()
-
-assignment_folders = data["assignment_folders"]
-for key, value in assignment_folders.items():
-    assignment_folders[key] = Path(assignments_dir / value).expanduser()
+exams_dir = Path(data["exams_dir"]).expanduser()
+exam_solution_keys = [
+    exams_dir / Path(folder) for folder in data["exam_solution_keys"]
+]
+exam_review = [
+    exams_dir / Path(folder) for folder in data["exam_review"]
+]
 
 rofi_options = data["rofi_options"]
 files = data["files"]

@@ -162,10 +162,6 @@ case $key in
   c ) ~/Documents/school-setup/main.py --rofi-courses ;;
   n ) ~/Documents/school-setup/main.py --rofi-notes ;;
 
-  A ) ~/Documents/school-setup/main.py --create-assignment ;;
-  C ) ~/Documents/school-setup/main.py --rofi-courses-all ;;
-  N ) ~/Documents/school-setup/main.py --create-note ;;
-
   s ) ~/Documents/school-setup/main.py --source-notes ;;
   S ) ~/Documents/school-setup/main.py --sync-notes ;;
 esac

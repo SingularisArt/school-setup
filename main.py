@@ -3,7 +3,6 @@
 import argparse
 import os
 import sys
-import config
 
 
 def main():

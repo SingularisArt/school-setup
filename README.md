@@ -7,14 +7,6 @@ Managing LaTeX Lecture Notes
 * [Features](#features)
 * [Directory Structure Explained](#directory-structure-explained)
   * [The `assignments` folder](#the-assignments-folder)
-    * [The `graded-assignments` folder](#the-graded-assignments-folder)
-    * [The `my-assignments` folder](#the-my-assignments-folder)
-      * [The `bibtex-files` folder](#the-bibtex-files-folder)
-      * [The `image-files` folder](#the-image-files-folder)
-      * [The `latex-files` folder](#the-latex-files-folder)
-      * [The `pdf-files` folder](#the-pdf-files-folder)
-      * [The `yaml-files` folder](#the-yaml-files-folder)
-    * [The `online-assignments` folder](#the-online-assignments-folder)
   * [The `books` folder](#the-books-folder)
   * [The `figures` folder](#the-figures-folder)
   * [The `chapters` and `lectures` folder](#the-chapters-and-lectures-folder)
@@ -23,6 +15,7 @@ Managing LaTeX Lecture Notes
   * [The `info.yaml` file](#the-infoyaml-file)
   * [The `master.tex` file](#the-mastertex-file)
   * [Getting everything ready](#getting-everything-ready)
+* [How to use](#how-to-use)
 * [Shortcuts](#shortcuts)
   * [SXHKD](#sxhkd)
 * [Setup](#setup)
@@ -63,10 +56,7 @@ I take two types of notes.
 1. Lecture notes
 2. Chapter notes
 
-When I'm taking notes during a lecture or over zoom, I use the first option, but
-when I'm taking notes from a book, I use the second option. In my `master.tex`,
-I always have the following at the very top (before including the preamble
-file):
+When I'm taking notes during a lecture or over zoom, I use the first option, but when I'm taking notes from a book, I use the second option. In my `master.tex`, I always have the following at the very top (before including the preamble file):
 ```latex
 % If I'm taking chapter notes
 \def\lecorchap{Chapter}
@@ -82,32 +72,44 @@ Here's a quick overview of how the directory structure of a course looks like:
 ```
 .
 ├── assignments
-│   ├── graded-assignments
-│   │   ├── assignment-01.pdf
-│   │   └── ...
-│   ├── my-assignments
-│   │   ├── bibtex-files
-│   │   │   ├── assignment-01.bib
-│   │   │   └── ...
-│   │   ├── image-files
-│   │   │   ├── assignment-01.png
-│   │   │   └── ...
-│   │   ├── latex-files
-│   │   │   ├── assignment-01.tex
-│   │   │   └── ...
-│   │   ├── Makefile
-│   │   ├── master.pdf
-│   │   ├── master.tex
-│   │   ├── pdf-files
-│   │   │   ├── assignment-01.pdf
-│   │   │   └── ...
-│   │   ├── preamble.tex
-│   │   └── yaml-files
-│   │       ├── assignment-01.yaml
-│   │       └── ...
-│   └── online-assignments
-│       ├── assignment-01.pdf
-│       └── ...
+│   ├── graded-assignments
+│   │   ├── written-homework-02.pdf
+│   │   └── ...
+│   ├── my-assignments
+│   │   ├── bibtex-files
+│   │   │   ├── written-homework-01.bib
+│   │   │   └── ...
+│   │   ├── image-files
+│   │   │   ├── written-homework-01.png
+│   │   │   └── ...
+│   │   ├── latex-files
+│   │   │   ├── written-homework-01.tex
+│   │   │   └── ...
+│   │   ├── Makefile
+│   │   ├── master.tex
+│   │   ├── pdf-files
+│   │   │   ├── written-homework-01.pdf
+│   │   │   └── ...
+│   │   ├── preamble.tex
+│   │   ├── sympy-scripts
+│   │   │   ├── written-homework-01.py
+│   │   │   └── ...
+│   │   └── yaml-files
+│   │       ├── written-homework-01.yaml
+│   │       └── ...
+│   ├── online-assignments
+│   │   ├── written-homework-01.pdf
+│   │   └── ...
+│   └── solution-keys
+│       ├── latex-files
+│       │   ├── written-homework-01.tex
+│       │   └── ...
+│       ├── Makefile
+│       ├── master.tex
+│       ├── pdf-files
+│       │   ├── written-homework-01.pdf
+│       │   └── ...
+│       └── preamble.tex
 ├── books
 │   ├── book-01.pdf
 │   ├── book-02
@@ -120,8 +122,24 @@ Here's a quick overview of how the directory structure of a course looks like:
 │   │       └── ...
 │   └── ...
 ├── chapters
-│   ├── chap-01.pdf
-│   └── ...
+│   ├── chap-01.tex
+│   └── ...
+├── exams
+│   ├── info.yaml
+│   ├── review
+│   │   ├── answers
+│   │   │   ├── answer-sheet-01.pdf
+│   │   │   └── ...
+│   │   └── practice
+│   │       ├── practice-sheet-01.pdf
+│   │       └── ...
+│   └── solution-keys
+│       ├── latex-files
+│       │   ├── exam-01.tex
+│       │   └── ...
+│       └── pdf-files
+│           ├── exam-01.pdf
+│           └── ...
 ├── figures
 │   ├── lec-01
 │   │   ├── figure-01.pdf
@@ -137,174 +155,94 @@ Here's a quick overview of how the directory structure of a course looks like:
 ├── info.yaml
 ├── intro.tex
 ├── lectures
-│   ├── lec-01.tex
-│   └── ...
-├── Makefile
+│   ├── lec-01.tex
+│   └── ...
+├── Makefile -> /home/singularis/Documents/school-notes/College/Year-2/fall/_files/Makefile
+├── master.aux
 ├── master.pdf
 ├── master.tex
 ├── notes.md
+├── online-lecture-notes
+│   ├── lec-01-annotated.pdf
+│   ├── lec-01-blank.pdf
+│   └── ...
 ├── papers
-│   ├── paper-01.pdf
-│   └── ...
+│   ├── paper-01.pdf
+│   └── ...
 ├── preamble.tex
+├── sympy-scripts
+│   ├── script-01.py
+│   └── ...
 └── UltiSnips
     └── tex.snippets
 ```
 
 ### The `assignments` folder
 
-The `assignments` folder is broken up into 3 folders for organization.
-
-#### The `graded-assignments` folder
-
-Place all your graded assignments in this folder.
-
-#### The `my-assignments` folder
-
-This folder's broken up into multiple folders for organization purposes.
-
-##### The `bibtex-files` folder
-
-Place all your bibliography files in this folder.
-
-##### The `image-files` folder
-
-Place all your images in this folder. If you have multiple images for one
-assignment, you can create a folder with the same name as your assignments and
-place them all in there as such:
+This folder contains all the assignments for the course. You can break it up however you want. Just make sure you keep all the filetypes away from each other. For example, you can't do something like this:
 ```
 .
-└── my-assignments
-    └── image-files
-        ├── image-01.png
-        ├── image-02.png
-        └── ...
+└── assignments
+    ├── graded-assignments
+    │   ├── assignment-01.pdf
+    │   └── ...
+    └── my-assignments
+        ├── files
+        │   ├── assignment-01.bib
+        │   ├── assignment-01.tex
+        │   ├── assignment-01.yaml
+        │   ├── assignment-01.pdf
+        │   ├── assignment-01.py
+        │   └── ...
+        ├── Makefile
+        ├── master.pdf
+        └── master.tex
 ```
+It might work, but it's not recommended. For an idea of how I break up my assignments, take a look at the [example setup](./example-setup/current-course/assignments/). Once you break up your files, you then pass the location of those folders to the `config.yaml` file. Take a look [here](#configuration) for more information.
 
-##### The `latex-files` folder
-
-Place all your latex files in this folder. Here's an example latex assignment
-file ([link]()):
-```latex
-\begin{problem}
-  ...
-\end{problem}
-
-\begin{probsolution}
-  ...
-\end{probsolution}
-
-\newpage
-
-\begin{problem}
-  ...
-\end{problem}
-
-\begin{probsolution}
-  ...
-\end{probsolution}
-```
-
-##### The `pdf-files` folder
-
-Place your final pdf files in this folder.
-
-##### The `yaml-files` folder
-
-Place all your yaml files in this folder. Here's the yaml template you need
-to use:
+**NOTE:** You don't need to have all of these stuff exactly. If some of your notes are even in `html`, you can create a folder for that and pass it to the `config.yaml` file. An example of that would be:
 ```yaml
-title: Any Title you want
-due_date: 12-31-10
-url: URL
-submitted: true/false
-grade: 100.0
-number: 1
+html_folder: "my-assigments/html-files"
 ```
-
-**NOTE:** Make sure to keep all your file names consistent. Here's an example:
-```
-.
-├── graded-assignments
-│   └── assignment-01.pdf
-├── my-assignments
-│   ├── bibtex-files
-│   │   └── assignment-01.bib
-│   ├── image-files
-│   │   └── assignment-01.png
-│   ├── latex-files
-│   │   └── assignment-01.tex
-│   ├── Makefile
-│   ├── master.tex
-│   ├── pdf-files
-│   │   └── assignment-01.pdf
-│   ├── preamble.tex
-│   └── yaml-files
-│       └── assignment-01.yaml
-└── online-assignments
-    └── assignment-01.pdf
-```
-
-And here's what the `assignment-01.yaml` might look like:
-```yaml
-title: Graded Assignment 1
-due_date: 10-15-23
-url: https://google.com
-submitted: true
-grade: 97.5
-number: 1
-```
-
-#### The `online-assignments` folder
-
-Place all your assignment files given to you by your instructor in this folder.
 
 ### The `books` folder
 
-If you have a pdf version of your book and you don't have any solutions, then
-place the book in the `books` folder by itself, as such:
+If you have a pdf version of your book and you don't have any solutions, then place the book in the `books` folder by itself, as such:
 ```
 .
-└── book-title.pdf
+└── book-01.pdf
 ```
 
-If you have the solutions to the book as one single pdf, create a folder inside
-the `books` folder and place both the pdf of the book and the solutions inside
-as such:
+If you have the solutions to the book as one single pdf, create a folder inside the `books` folder and place both the pdf of the book and the solutions inside as such:
 ```
 .
-└── book-title
+└── book-02
     ├── master.pdf
     └── solutions.pdf
 ```
 
-If your solutions are broken up into multiple pdf files, create a sub-folder
-titled `solutions` and place them in there as such:
+If your solutions are broken up into multiple pdf files, create a sub-folder titled `solutions` and place them in there as such:
 ```
 .
-└── book-title
+└── book-03
     ├── master.pdf
     └── solutions
         ├── chap-01.pdf
-        ├── chap-02.pdf
         └── ...
 ```
 You can give the solution files any name you want.
 
 ### The `figures` folder
 
-I use inkscape to create my figures. When you want to save your figure, save it
-as a `pdf`, `pdf_tex`, and `svg`. I store the figure in folders based on the
-lecture/chapter number. Here's an example
+I use inkscape to create my figures. When you want to save your figure, save it as a `pdf`, `pdf_tex`, and `svg`. I store the figure in folders based on the lecture/chapter number. Here's an example
 ```
 .
-└──figures
+└── figures
     ├── lec-01
     │   ├── figure-01.pdf
     │   ├── figure-01.pdf_tex
     │   ├── figure-01.svg
     │   └── ...
-    ├── ...
     ├── chap-01
     │   ├── figure-01.pdf
     │   ├── figure-01.pdf_tex
@@ -316,14 +254,9 @@ I then use the `\incfig` command I defined to include the figure ([link]()).
 
 ### The `chapters` and `lectures` folder
 
-If I'm taking an online course, I use the `chapters` folder to store all my
-notes. If I'm taking an in-person or remote course, I'll use the `lectures`
-folder to store my notes. What ever you use, make sure to provide that
-information in the [`info.yaml`](#the-info.yaml-file) file. Here's the basic
-template I use for my notes ([link]()):
+If I'm taking an online course, I use the `chapters` folder to store all my notes. If I'm taking an in-person or remote course, I'll use the `lectures` folder to store my notes. What ever you use, make sure to provide that information in the [`info.yaml`](#the-info.yaml-file) file. Here's the basic template I use for my notes ([link]()):
 ```latex
 \nte[Side Notes]{Apr 04 2023 Mon (11:00:53)}{Title Goes Here}
-\label{note_01:title_goes_here}
 
 
 
@@ -334,40 +267,40 @@ Which produces the following:
 
 ### The `papers` folder
 
-A lot of times, my courses require me to read research papers. So, I download
-them and store them in this folder.
+A lot of times, my courses require me to read research papers. So, I download them and store them in this folder.
 
 ### The `UltiSnips` folder
 
-TODO
+I use neovim to take notes along with the UltiSnips plugin. I store my custom course specific snippets in this folder.
 
 ### The `info.yaml` file
 
 Here's an example `info.yaml` file:
 ```yaml
-title: "Calculus 3"
+---
+title: "Applied Linear Algebra I"
 topic: "Mathematics"
-class_number: 12345
-short: "MTH-253"
-author: "YOUR NAME"
-term: "NAME Term"
-faculty: "Faculty of NAME"
-college: "COLLEGE NAME"
-location: "LOCATION Campus, BUILDING ROOM"
+class_number: 1234
+short: "MTH-261"
+author: "Hashem A. Damrah"
+term: "Fall 2023"
+faculty: "Mathematics"
+college: "Portland Community College"
+location: "Sylvania Campus, SS 114"
 year: 2023
-start_date: "Apr 04 2023 Tue (12:00:00)"
-end_date: "Jun 15 2023 Thu (12:00:00)"
-start_time: "11:00:00" # 24 hour
-end_time: "13:20:00" # 24 hour
-days: "MO,TU,WE,TH,FR,SA,SUN"
+start_date: "Sep 26 2023 Tue (12:00:00)"
+end_date: "Dec 14 2023 Thu (12:00:00)"
+start_time: "14:00:00"
+end_time: "16:20:00"
+days: "TU,TH"
 url: "URL"
-type: "In Person" # or Remote/Online
+type: "In-person" # or Online/Remote
 notes_type: "lectures" # or chapters
 professor:
-  name: "Name"
-  email: "Email"
-  phone-number: "Phone Number"
-  office: "Office"
+  name: "NAME"
+  email: "EMAIL"
+  phone-number: "PHONE NUMBER"
+  office: "OFFICE"
 ```
 
 ### The `master.tex` file
@@ -409,57 +342,62 @@ Here's an example `master.tex` file:
   \includenote{2}
   \includenote{3}
   ...
+  \includenote{n}
+  % or \includenotes{1}{n}
   % end notes
 
   \listnotes
 \end{document}
 ```
-The `working` parameter passed to the document class is important. If you're
-still working on taking notes, keep that there so you can use the note commands
-I've defined ([link]()). I then use the `\includenote` command to load the note
-file in addition to setting up a few settings ([link]()).
+I use the `\includenote` command to load the note file in addition to setting up a few settings ([link]()). If I'm loading notes between a range, like 2 to 6, I use the `\includenotes` command ([link]()).
 
 ### Getting everything ready
 
-Before you start manually setting up all the files and folders yourself, I've
-already done that for you. You need something called `the templates folder`. You
-can find an example [here](./example-setup/template_files). This folder contains
-all the files and folders required, which you can then use distribute to all
-your future courses. I created a script for that. All you need to do is setup
-the `info.yaml` file, then run the `./main.py -ic` or `./main.py
---init-courses`. It will then generate and fill in everything missing.
+Before you start manually setting up all the files and folders yourself, I've already done that for you. You need something called `the templates folder`. You can find an example [here](./example-setup/template_files). This folder contains all the files and folders required, which you can then use distribute to all your future courses. I created a script for that. All you need to do is setup the `info.yaml` file for all courses, then run the `./main.py -ic` or `./main.py --init-courses`. It will then generate and fill in everything missing.
 
 **NOTE:** You must first read the [setup](#setup) section to make sure you've
 got the links to everything working.
 
+## How to use
+
+Once you have everything setup, here are the following commands you can use:
+
+- **`./main.py -h`**: Shows the help menu.
+- **`./main.py -ca`**: Parses your google calendar and shows you the next class.
+- **`./main.py -gc "12345,6789"`**: Gets the courses' info from the CRN number (only works for PCC courses so far).
+- **`./main.py -ic`**: Initializes all the courses. Only run this once you've completed the `info.yaml` file for each course.
+- **`./main.py -ra`**: Shows you all the assignments for the current course via rofi.
+- **`./main.py -rb`**: Shows you all the books for the current course via rofi.
+- **`./main.py -rc`**: Shows you all the courses via rofi.
+- **`./main.py -rn`**: Shows you all the notes for the current course via rofi.
+- **`./main.py -rsn`**: Strips all the notes for the current course via rofi.
+- **`./main.py -sn`**: Sources all the notes for the current course via rofi.
+- **`./main.py -yn`**: Syncs all the notes for the current course to google drive.
+
 ## Shortcuts
 
-I've already got a bunch of shortcuts setup with the [shortcut
-manager](./shortcut-manager.sh) file. They are as follows:
+Instead of typing out the full command every time, I've created [shortcuts](./shortcut-manager.sh) for you. They come with all the commands you can run directly from the `./main.py` file, along with a bunch of other nice ones. They are as follows (run like `./shortcut-manager.sh LETTER`)`):
 
-- `o`: Opens the current course's `master.pdf` file.
-- `i`: Lists all the figures in the current course.
-- `I`: Creates a new figure.
-- `w`: Opens the current course in the browser.
-- `y`: Opens the current course's `info.yaml` file.
-- `p`: Lists all the research papers in the current course.
-- `k`: Opens the current course's `notes.md` file.
-- `K`: Opens the `notes.md` file found in the root directory.
-- `m`: Opens the current course's `master.tex` file.
-- `a`: Lists all the current course's assignments.
-- `b`: Lists all the current course's books.
-- `c`: Lists all the courses.
-- `n`: Lists all the current course's notes.
-- `A`: Prompts you to create a new assignment.
-- `C`: Prompts you to create a new course.
-- `N`: Prompts you to create a new note.
-- `s`: Lets you source specific notes.
-- `S`: Syncs your notes to the drive.
+- **`o`**: Open my class notes.
+- **`O`**: List all online notes from professor.
+- **`i`**: List all inkscape figures.
+- **`I`**: Create inkscape figure with template.
+- **`w`**: Open current course in browser.
+- **`y`**: Open the current course's yaml file.
+- **`p`**: Search through all the papers.
+- **`k`**: Open the `notes.md` file for the current course.
+- **`K`**: Open the `notes.md` file from the root directory.
+- **`m`**: Open the `master.tex` file.
+- **`a`**: Lists all the current course's assignments.
+- **`b`**: Lists all the current course's books.
+- **`c`**: Lists all the courses.
+- **`n`**: Lists all the current course's notes.
+- **`s`**: Lets you source specific notes.
+- **`S`**: Syncs your notes to the drive.
 
 ### SXHKD
 
-Instead of manually running `./shortcut-manager.sh a` every time, I use `sxhkd`
-to manage my shortcuts. Here's how I do it:
+Instead of manually running `./shortcut-manager.sh a` every time, I use `sxhkd` to manage my shortcuts. Here's how I do it:
 ```conf
 alt + {a-z}
   bash ~/school-setup/shortcut-manager.sh {a-z}
@@ -480,60 +418,51 @@ cd school-setup
 
 ### Example Setup
 
-I've already created an example setup [here](./example-setup) you can use to
-understand what's going on. If you want to use the provided example, run the
-following commands:
+I've already created an example setup [here](./example-setup) you can use to understand what's going on. If you want to use the provided example, run the following commands:
 ```bash
 cd ~/
 git clone https://github.com/SingularisArt/school-setup/
 cd school-setup
-mkdir -p ~/.config/lesson-manager
-cp -r ./example-setup/config.yaml ~/.config/lesson-manager/config.yaml
+./install
 ```
 
 ### Configuration
 
-The configuration file's located at `$HOME/.config/lesson-manager/config.yaml`.
-Here are all the variable meanings:
+The configuration file's located at `$HOME/.config/lesson-manager/config.yaml`. Here are all the variable meanings:
 
-- `calendar_id`: The calendar id. By default, it's `primary`.
-- `drive_folder_id`: The google drive folder id that you want to use to sync
-  your notes to.
-- `editor`: The text editor.
-- `terminal`: The terminal.
-- `pdf_viewer`: The pdf viewer.
-- `create_readme_file`: If you want README.md files created when initializing
-  the courses.
-- `highlight_current_course`: If you want the currently selected course to be
-  highlighted.
-- `notes_dir`: The root directory of your notes.
-- `root`: The root directory where you store all your `course folders`.
-- `templates_dir`: The path to the `templates folder`.
-- `current_course`: Path to the `current course`.
-- `books_dir`: Path to your `books` folder within your current course.
-- `figures_dir`: Path to your `figures` folder within your current course.
-- `assignments_dir`: Path to your root `assignments` folder within your current
-  course.
-- `graded_assignments_folder`: Path to your `graded assignments` folder within
-  your current course.
-- `my_assignments_folder`: Path to your `my assignments` folder within your
-  current course.
-- `online_assignments_folder`: Path to your `online assignments` folder within
-  your current course.
-- `my_assignments_image_folder`: Path to your `image assignments` folder within
-  your current course.
-- `my_assignments_bibtex_folder`: Path to your `bibtex assignments` folder
-  within your current course.
-- `my_assignments_latex_folder`: Path to your `latex assignments` folder within
-  your current course.
-- `my_assignments_yaml_folder`: Path to your `yaml assignments` folder within
-  your current course.
-- `my_assignments_pdf_folder`: Path to your `pdf assignments` folder within your
-  current course.
-- `date_format`: The date format you use when you create a new note.
-- `home`: Path to your home directory.
-- `user`: Your user name.
-- `rofi_options`: Options to pass to rofi.
-- `folders`: List of folders you want created when you initialize the courses.
-- `files`: How should the template files be moved when initializing the courses,
-  either a symlink or copy.
+- **`calendar_id`**: The Google Calendar ID for syncing events. Replace "primary" with your actual Google Calendar ID.
+- **`drive_folder_id`**: The Google Drive folder ID for syncing notes. Replace "ID" with the appropriate folder ID in your Google Drive.
+
+- **`editor`**: Your preferred text editor, such as "nvim" or "vim". Modify this field based on your editor of choice.
+- **`terminal`**: Your preferred terminal emulator, like "kitty" or "gnome-terminal". Adjust this parameter to your terminal preference.
+- **`pdf_viewer`**: Your preferred PDF viewer, such as "zathura" or "evince". Change this based on your preferred PDF application.
+
+- **`create_readme_file`**: Set to `true` to automatically create README files for each course.
+- **`highlight_current_course`**: Set to `true` to highlight the current course in the Rofi menu.
+
+- **`notes_dir`**: Root directory for storing notes. Modify this path to your preferred notes directory.
+- **`root`**: Root directory for courses. Adjust this path to your preferred courses directory.
+- **`templates_dir`**: Directory containing template files. Modify this path if your templates are stored elsewhere.
+- **`current_course`**: Path to the file tracking the current course.
+
+- **`books_dir`**: Directory for storing books related to the current course.
+- **`figures_dir`**: Directory for storing figures related to the current course.
+
+- **`date_format`**: Set the format for displaying dates. Adjust according to your preferred date format.
+
+- **`home`**: Your home directory. Usually detected automatically but can be set manually if needed.
+- **`user`**: Your username. Similar to `home`, this is often automatically detected.
+
+- **`trash_dir`**: Directory for the trash bin. Deleted files will be moved here.
+
+- **`assignments_dir`**: Directory for storing assignments.
+- **`assignment_folders`**: Subfolders for different types of assignments (e.g., Bibtex files, LaTeX files).
+
+- **`exams_dir`**: Directory for storing exams.
+- **`exam_solution_keys`**: Subfolders for exam solution keys.
+- **`exam_review`**: Subfolders for exam review materials.
+
+- **`rofi_options`**: Customize Rofi options for a better interactive experience. Modify this list as needed.
+
+- **`folders`**: List all the folders you want to be created when you initiate your courses.
+- **`files`**: List all files you want to be either symlinked or copied from the templates folder when you initiate your courses.
