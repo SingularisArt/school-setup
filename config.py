@@ -24,16 +24,16 @@ templates_dir = Path(data["templates_dir"]).expanduser()
 current_course = Path(data["current_course"]).expanduser()
 current_course_watch_file = Path("~/.local/share/current_course").expanduser()
 
-books_dir = Path(data["books_dir"]).expanduser()
-figures_dir = Path(data["figures_dir"]).expanduser()
+books_dir = current_course / Path(data["books_dir"]).expanduser()
+figures_dir = current_course / Path(data["figures_dir"]).expanduser()
 
-assignments_dir = Path(data["assignments_dir"]).expanduser()
+assignments_dir = current_course / Path(data["assignments_dir"]).expanduser()
 assignment_folders = {
     folder: assignments_dir / Path(data["assignment_folders"][folder])
     for folder in data["assignment_folders"]
 }
 
-exams_dir = Path(data["exams_dir"]).expanduser()
+exams_dir = current_course / Path(data["exams_dir"]).expanduser()
 exam_solution_keys = [
     exams_dir / Path(folder) for folder in data["exam_solution_keys"]
 ]
