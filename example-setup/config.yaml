@@ -1,5 +1,6 @@
+---
 calendar_id: "primary"
-drive_folder_id: "drive_folder_id"
+drive_folder_id: "notes_folder_id"
 
 editor: "nvim"
 terminal: "kitty"
@@ -8,33 +9,31 @@ pdf_viewer: "zathura"
 create_readme_file: true
 highlight_current_course: true
 
-notes_dir: "~/school-setup/example-setup"
-root: "~/school-setup/example-setup/courses"
-templates_dir: "~/school-setup/example-setup/template_files"
-current_course: "~/school-setup/example-setup/current-course"
+notes_dir: "~/example-setup"
+root: "~/example-setup/courses"
+templates_dir: "~/example-setup/template_files"
+current_course: "~/example-setup/current-course"
 
-books_dir: "~/school-setup/example-setup/current-course/books"
-
-figures_dir: "~/school-setup/example-setup/current-course/figures"
-
-assignments_dir: "~/school-setup/example-setup/current-course/assignments"
-graded_assignments_folder: "~/school-setup/example-setup/current-course/assignments/graded-assignments"
-my_assignments_folder: "~/school-setup/example-setup/current-course/assignments/my-assignments"
-online_assignments_folder: "~/school-setup/example-setup/current-course/assignments/online-assignments"
-
-my_assignments_image_folder: "~/school-setup/example-setup/current-course/assignments/my-assignments/latex-files"
-my_assignments_bibtex_folder: "~/school-setup/example-setup/current-course/assignments/my-assignments/bibtex-files"
-my_assignments_latex_folder: "~/school-setup/example-setup/current-course/assignments/my-assignments/latex-files"
-my_assignments_yaml_folder: "~/school-setup/example-setup/current-course/assignments/my-assignments/yaml-files"
-my_assignments_pdf_folder: "~/school-setup/example-setup/current-course/assignments/my-assignments/pdf-files"
+# relative to current_course
+books_dir: "books"
+figures_dir: "figures"
 
 date_format: "%b %d %Y %a (%H:%M:%S)"
 home: "/home/user"
 user: "user"
 
+# relative to current_course
+assignments_dir: "assignments"
+assignment_folders:
+  bib_folder: "my-assignments/bibtex-files"
+  tex_folder: "my-assignments/latex-files"
+  yaml_folder: "my-assignments/yaml-files"
+  pdf_folder: "my-assignments/pdf-files"
+  graded_assignment: "graded-assignments"
+  online_assignment: "online-assignments"
+  solution_key: "solution-keys"
+
 rofi_options:
-  - "-lines"
-  - "5"
   - "-markup-rows"
   - "-kb-row-down"
   - "Down"
@@ -46,6 +45,7 @@ folders:
   - "assignments"
   - "assignments/graded-assignments"
   - "assignments/online-assignments"
+  - "assignments/solution-keys"
   - "assignments/my-assignments"
   - "assignments/my-assignments/bibtex-files"
   - "assignments/my-assignments/image-files"
@@ -54,10 +54,8 @@ folders:
   - "assignments/my-assignments/sympy-scripts"
   - "assignments/my-assignments/yaml-files"
   - "books"
-  - "exam-review"
   - "figures"
   - "papers"
-  - "online-lecture-notes"
   - "sympy-scripts"
   - "UltiSnips"
 
@@ -70,4 +68,3 @@ files:
   "assignments/my-assignments/master.tex": "copy"
   "intro.tex": "copy"
   "master.tex": "copy"
-  "notes.md": "copy"

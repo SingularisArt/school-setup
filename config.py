@@ -33,14 +33,6 @@ assignment_folders = {
     for folder in data["assignment_folders"]
 }
 
-exams_dir = current_course / Path(data["exams_dir"]).expanduser()
-exam_solution_keys = [
-    exams_dir / Path(folder) for folder in data["exam_solution_keys"]
-]
-exam_review = [
-    exams_dir / Path(folder) for folder in data["exam_review"]
-]
-
 rofi_options = data["rofi_options"]
 files = data["files"]
 folders = data["folders"]

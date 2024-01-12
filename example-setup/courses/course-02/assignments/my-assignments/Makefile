@@ -1,1 +1,0 @@
-/home/singularis/Documents/school-setup/example-setup/template_files/assignments/my-assignments/Makefile

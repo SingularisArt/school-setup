@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+
+export DIR="$HOME/.config/lesson-manager"
+export SRC="$HOME/.config/lesson-manager/config.yaml"
+
+function msg() {
+  local text="$1"
+  local div_width="80"
+
+  printf "%${div_width}s\n" ' ' | tr ' ' -
+  printf "%s\n" "$text"
+}
+
+if [[ ! -d "$DIR" ]]; then
+  msg "Creating folder to store config.yaml"
+
+  mkdir "$DIR"
+fi
+
+if [[ -e "$SRC" ]]; then
+  msg "Backing up config.yaml"
+
+  mv "$SRC" "$SRC.back"
+  rm -rf "$SRC"
+fi
+
+cp -r "./example-setup/" "$HOME"
+msg "Copied example setup to $HOME"
+
+cp -r "$HOME/example-setup/config.yaml" "$SRC"
+msg "Copied example config.yaml to $SRC"

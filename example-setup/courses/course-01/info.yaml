@@ -1,21 +1,25 @@
-title: "Vector Calculus 1"
+---
+title: "Vector Calculus I"
 topic: "Mathematics"
-class_number: 12345
+class-number: 12345
 short: "MTH-254"
 author: "Your Name"
 term: "Fall Term"
 faculty: "Faculty of Mathematics"
 college: "COLLEGE"
 location: "LOCATION"
-year: 2023
-start_date: "Apr 04 2023 Tue (12:00:00)"
-end_date: "Jun 15 2023 Thu (12:00:00)"
-start_time: "11:00:00"
-end_time: "13:20:00"
-days: "TU,TH" # MO,TU,WE,TH,FR,SA,SU
+year: 2024
+start-date: "Apr 04 2023 Tue (12:00:00)"
+end-date: "Jun 15 2023 Thu (12:00:00)"
+start-time: "11:00:00"  # 24-hour format
+end-time: "13:20:00"  # 24-hour format
+days: "TU,TH"  # MO,TU,WE,TH,FR,SA,SU
 url: "URL"
-type: "In Person"
-notes_type: "lectures"
+type: "In Person"  # Online, Remote
+# lectures: Use this format if you are taking notes from lectures.
+# chapters: Use this format if you are taking notes from a book.
+# week: Use this format if you are taking notes from other sources, like weekly website readings.
+notes-type: "lectures"
 professor:
   name: "NAME"
   email: "EMAIL"

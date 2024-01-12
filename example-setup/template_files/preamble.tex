@@ -4,52 +4,68 @@
 %                                                                              %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% Basic packages.
+% Required for creating documents
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
-% Gives us multiple colors.
-\usepackage[usenames,dvipsnames,pdftex]{xcolor}
-% Lets us style link colors.
-\usepackage{hyperref,theoremref}
-% Lets us import images and graphics.
-\usepackage{graphicx}
-% Let's us modify list stuff.
-\usepackage{enumitem}
-% Lets us use figures in floating environments.
-\usepackage{float}
-% Lets us create multiple columns.
-\usepackage{multicol}
-\usepackage{multirow}
-\usepackage{array}
-% Gives us better math syntax.
-\usepackage{amsmath,amsfonts,mathtools,amsthm,amssymb}
-% Lets us strike through text.
-\usepackage{cancel}
-% Lets us import pdf directly in our tex code.
-\usepackage{pdfpages}
-% Derivative stuff.
-\usepackage{derivative}
-% Table stuff.
-\usepackage{tablists}
-\usepackage{tabularx}
-\usepackage{wasysym}
-\usepackage{booktabs}
-\usepackage{subcaption}
-\usepackage{dcolumn}
-% Lets us get the title, author, and date.
-\usepackage{authoraftertitle}
-% Set the geometry.
-\usepackage[tmargin=2cm,rmargin=1in,lmargin=1in,margin=0.85in,bmargin=2cm,footskip=1cm]{geometry}
-% Useful for creating mini table of contents.
-\usepackage{minitoc}
-% Useful for referencing.
-\usepackage[noabbrev]{cleveref}
-% Other.
-\usepackage{nameref}
-\usepackage{anyfontsize}
-\usepackage{sectsty}
-\usepackage{soul}
-\usepackage{empheq}
+
+% Required math packages
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{mathtools}
+\usepackage{amsthm}
+\usepackage{amssymb}
+
+\usepackage{multicol} % for multiple columns
+\usepackage[usenames,dvipsnames,pdftex]{xcolor} % Required for nicer colors
+\usepackage{hyperref} % Required for hyperlinks
+\usepackage{xparse} % Required for \NewDocumentCommand
+\usepackage{graphicx} % Required for including images
+\usepackage{enumitem} % Required for customizing lists
+\usepackage{float} % Required for positioning figures and tables
+\usepackage{array} % Required for customizing tables
+\usepackage{systeme} % Required for \systeme
+\usepackage{cancel} % Required for \cancel
+\usepackage{derivative} % Required for \odv and \pdv
+\usepackage{authoraftertitle} % Required for \MyTitle
+\usepackage{geometry} % Required for adjusting page dimensions
+\usepackage{minitoc} % Required for creating a mini table of contents
+\usepackage[noabbrev]{cleveref} % Required for clever referencing
+\usepackage{emptypage} % Required for removing page numbers on empty pages
+\usepackage{empheq} % Required for boxing equations
+\usepackage{nicematrix} % Required for better matrices
+\usepackage{booktabs} % Required for better tables
+\usepackage{cellspace} % Required for better spacing in tables
+\usepackage{longtable} % Required for long tables
+\usepackage{xfrac} % Required for extra fraction options
+
+\usepackage{tasks} % Required for creating tasks
+\usepackage[font=bf]{caption} % Required for customizing captions
+\usepackage{siunitx} % Required for SI units
+\usepackage{titletoc} % Required for customizing table of contents
+\usepackage[framemethod=TikZ]{mdframed} % Required for creating boxes
+\usepackage{braket} % Required for creating braket notation
+
+% Required for drawing figures
+\usepackage{tikz}
+\usepackage{tkz-euclide}
+\usepackage{tikz-cd}
+
+% Required for creating plots
+\usepackage{pgfplots}
+\usepackage{pgfplotstable}
+
+\usepackage{titling} % Required for customizing title page
+\usepackage{ifthen} % Required for if-then-else statements
+\usepackage{xifthen} % Required for if-then-else statements
+\usepackage{fancyhdr} % Required for customizing headers and footers
+\usepackage{import} % Required for importing pdf_tex files
+\usepackage{titlesec} % Required for customizing sectioning commands
+
+% Required for creating boxes
+\usepackage{varwidth}
+\usepackage{thmtools}
+\usepackage{etoolbox}
+\usepackage[most,many,breakable]{tcolorbox}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -58,54 +74,76 @@
 %                                                                              %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%%%%%%%%%
-% Tasks %
-%%%%%%%%%
+% Define Colors
+\makeatletter
 
-\usepackage{tasks}
-\usepackage{extramarks}
+\newcommand\newcolor[3]{
+  \@ifclasswith\class{nocolor}{
+    \definecolor{#1}{HTML}{#3}
+  }{
+    \definecolor{#1}{HTML}{#2}
+  }
+}
 
+\makeatother
+
+\newcolor{linecolor1}{3DC6F3}{000000}
+\newcolor{linecolor2}{F034A3}{000000}
+\newcolor{linecolor3}{F57215}{000000}
+\newcolor{linecolor4}{733786}{000000}
+\newcolor{linecolor5}{80CF5C}{000000}
+\newcolor{correct}{00FF00}{00FF00}
+\newcolor{incorrect}{FF0000}{FF0000}
+\newcolor{tbl}{F035A3}{000000}
+\newcolor{main}{F035A3}{000000}
+\newcolor{solution}{00AEEF}{000000}
+\newcolor{qedsolution}{76B4CF}{000000}
+\newcolor{proof}{F035A3}{000000}
+\newcolor{subsubsection}{B00D15}{000000}
+\newcolor{example}{00A6E4}{000000}
+\newcolor{examplebg}{F2FBF8}{FFFFFF}
+
+\colorlet{definition}{main}
+\colorlet{theorem}{main}
+\colorlet{remark}{main}
+\colorlet{qedproof}{proof}
+\colorlet{question}{example}
+\colorlet{questionfg}{examplebg}
+
+% Geometry
+\geometry{
+  tmargin=2cm,
+  rmargin=1in,
+  lmargin=1in,
+  margin=0.85in,
+  bmargin=2cm,
+  footskip=1cm,
+}
+
+% Tasks
 \settasks{label=\bfseries\arabic*.),label-width=2em}
 
-%%%%%%%%%%%
-%  Table  %
-%%%%%%%%%%%
-
+% Tables
 \newcolumntype{C}{>{\Centering\arraybackslash}X}
 \setlength{\tabcolsep}{5pt}
 \renewcommand\arraystretch{1.5}
-
-% Caption setup.
-\usepackage[font=bf]{caption}
 \renewcommand\thetable{\Roman{table}}
 \captionsetup[figure]{font=small}
 \captionsetup{justification=centering}
+\setlength\cellspacetoplimit{6pt}
+\setlength\cellspacebottomlimit{6pt}
 
-%%%%%%%%%%%%%
-%  Symbols  %
-%%%%%%%%%%%%%
-
+% Symbols
 \allowdisplaybreaks
-\let\implies\Rightarrow
-\let\impliedby\Leftarrow
-\let\iff\Leftrightarrow
-\let\epsilon\varepsilon
 \let\svlim\lim\def\lim{\svlim\limits}
 \let\svsum\sum\def\sum{\svsum\limits}
 
-%%%%%%%%%%%
-%  Lists  %
-%%%%%%%%%%%
-
+% Lists
 \setlist[itemize,1]{label=--}
 \setlist[itemize,2]{label=\textbullet}
 \setlist[enumerate,1]{label=\protect\circled{\arabic*}}
 
-%%%%%%%%%%%%%%
-%  SI Unitx  %
-%%%%%%%%%%%%%%
-
-\usepackage{siunitx}
+% SI Unitx
 \sisetup{
   locale = US,
   per-mode = symbol,
@@ -117,7 +155,6 @@
   drop-zero-decimal,
 }
 
-% Distance
 \DeclareSIUnit{\millimeter}{mm}
 \DeclareSIUnit{\centimeter}{cm}
 \DeclareSIUnit{\decimeter}{dm}
@@ -129,12 +166,8 @@
 \DeclareSIUnit{\mile}{mi}
 \DeclareSIUnit{\astronomicalunit}{au}
 \DeclareSIUnit{\lightyear}{ly}
-
-% Temperature
 \DeclareSIUnit{\fahrenheit}{F}
 \DeclareSIUnit{\celsius}{C}
-
-% Time
 \DeclareSIUnit{\millisecond}{ms}
 \DeclareSIUnit{\second}{sec}
 \DeclareSIUnit{\minute}{min}
@@ -143,31 +176,32 @@
 \DeclareSIUnit{\week}{wk}
 \DeclareSIUnit{\month}{mos}
 \DeclareSIUnit{\year}{yr}
-
-% Weight
 \DeclareSIUnit{\milligram}{mg}
 \DeclareSIUnit{\gram}{g}
 \DeclareSIUnit{\ounce}{oz}
 \DeclareSIUnit{\pound}{lb}
 \DeclareSIUnit{\kilogram}{kg}
 \DeclareSIUnit{\ton}{t}
-
-% Liquid
 \DeclareSIUnit{\gallon}{gal}
 \DeclareSIUnit{\liter}{L}
 \DeclareSIUnit{\milliliter}{mL}
 
-%%%%%%%%%%
-%  TikZ  %
-%%%%%%%%%%
+% Center Title Page
+\renewcommand\maketitlehooka{\null\mbox{}\vfill}
+\renewcommand\maketitlehookd{\vfill\null}
 
-\usepackage[framemethod=TikZ]{mdframed}
-\usepackage{tikz}
-\usepackage{tkz-euclide}
-\usepackage{tikz-cd}
-\usepackage{animate}
-\usepackage{bm}
+% Footnote Line
+\renewcommand\footnoterule{\hrule\vspace{0.1cm}}
 
+% Modify Links Color
+\hypersetup{
+  colorlinks,
+  linkcolor=main!90,
+  citecolor=black,
+  urlcolor=black,
+}
+
+% TikZ
 \usetikzlibrary{
   intersections,
   angles,
@@ -181,14 +215,9 @@
 }
 
 \tikzset{>=stealth}
+\tikzset{->-/.style={decoration={markings,mark=at position .5 with {\arrow{>}}},postaction={decorate}}}
 
-%%%%%%%%%%%%%%%
-%  PGF Plots  %
-%%%%%%%%%%%%%%%
-
-\usepackage{pgfplots}
-\usepackage{pgfplotstable}
-
+% PGF Plots
 \pgfplotsset{compat=1.18}
 
 \usepgfplotslibrary{fillbetween}
@@ -196,12 +225,6 @@
 \usepgfplotslibrary{external}
 \usetikzlibrary{decorations.pathreplacing,calligraphy}
 \tikzexternalenable
-
-\definecolor{linecolor1}{HTML}{3DC6F3}
-\definecolor{linecolor2}{HTML}{F034A3}
-\definecolor{linecolor3}{HTML}{F57215}
-\definecolor{linecolor4}{HTML}{733786}
-\definecolor{linecolor5}{HTML}{80CF5C}
 
 \pgfplotsset{style1/.style={color=linecolor1,mark=none,line width=1pt,solid}}
 \pgfplotsset{style2/.style={color=linecolor2,mark=none,line width=1pt,solid}}
@@ -213,7 +236,7 @@
 \pgfplotsset{holdot/.style={color=linecolor2,fill=white,only marks,mark=*}}
 \pgfplotsset{integration/.style={name path=curve,color=linecolor1,mark=none,line width=0.5pt,solid}}
 
-\pgfplotscreateplotcyclelist{pccstylelist}{
+\pgfplotscreateplotcyclelist{stylelist}{
   style1,
   style2,
   style3,
@@ -232,94 +255,9 @@
     xlabel={$x$},
     ylabel={$y$},
     samples=1000,
-    cycle list name=pccstylelist
+    cycle list name=stylelist
   },
 }
-
-%%%%%%%%%%%%%%%%%%%%%%%
-%  Center Title Page  %
-%%%%%%%%%%%%%%%%%%%%%%%
-
-\usepackage{titling}
-\renewcommand\maketitlehooka{\null\mbox{}\vfill}
-\renewcommand\maketitlehookd{\vfill\null}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%  Create a grey background in the middle of the PDF  %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\usepackage{eso-pic}
-
-\newcommand\definegraybackground{
-  \definecolor{reallylightgray}{HTML}{FAFAFA}
-  \AddToShipoutPicture{
-    \ifthenelse{\isodd{\thepage}}{
-      \AtPageLowerLeft{
-        \put(\LenToUnit{\dimexpr\paperwidth-222pt},0){
-          \color{reallylightgray}\rule{222pt}{297mm}
-        }
-      }
-    }
-    {
-      \AtPageLowerLeft{
-        \color{reallylightgray}\rule{222pt}{297mm}
-      }
-    }
-  }
-}
-
-%%%%%%%%%%%%%%%%%%%
-%  Footnote Line  %
-%%%%%%%%%%%%%%%%%%%
-
-\renewcommand\footnoterule{\hrule\vspace{0.1cm}}
-
-%%%%%%%%%%%%%%%%%%%%%%%%
-%  Modify Links Color  %
-%%%%%%%%%%%%%%%%%%%%%%%%
-
-\hypersetup{
-  colorlinks,
-  linkcolor=main!90,
-  citecolor=black,
-  urlcolor=black,
-}
-
-%%%%%%%%%%%%%%%%%%
-% Fix WrapFigure %
-%%%%%%%%%%%%%%%%%%
-
-\newcommand{\wrapfill}{\par\ifnum\value{WF@wrappedlines}>0
-  \parskip=0pt
-  \addtocounter{WF@wrappedlines}{-1}%
-  \null\vspace{\arabic{WF@wrappedlines}\baselineskip}%
-  \WFclear
-\fi}
-
-%%%%%%%%%%%%%%%%%
-% Multi Columns %
-%%%%%%%%%%%%%%%%%
-
-\let\multicolmulticols\multicols
-\let\endmulticolmulticols\endmulticols
-
-\RenewDocumentEnvironment{multicols}{mO{}}
-{%
-  \ifnum#1=1
-    #2%
-  \else
-    \multicolmulticols{#1}[#2]
-  \fi
-}
-{%
-  \ifnum#1=1
-  \else
-    \endmulticolmulticols
-  \fi
-}
-
-\newlength{\thickarrayrulewidth}
-\setlength{\thickarrayrulewidth}{5\arrayrulewidth}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -342,12 +280,15 @@
   \setcounter{subparagraph}{0}
 }
 
+\newcommand*\cleartoleftpage{%
+  \clearpage
+  \thispagestyle{empty}
+  \ifodd\value{page}\else\hbox{}\newpage\fi
+}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %  Lecture/Chapter Command  %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\usepackage{ifthen}
-\usepackage{xifthen}
 
 \def\@notenum{}
 \newcommand\includenote[1]{
@@ -357,12 +298,15 @@
     \def\@notenum{#1}
   \fi
 
-  % Set the chapter counter to the number passed.
   \setcounter{chapter}{#1}
-  % Reset all counters.
   \resetcounters
-  % Include the note file if it exists.
   \IfFileExists{\noteloc-\@notenum.tex}{\input{\noteloc-\@notenum.tex}}{}
+}
+
+\newcommand\includenotes[2]{
+  \foreach \n in {#1,...,#2}{
+    \includenote{\n}
+  }
 }
 
 \newcommand{\localtoc}{
@@ -371,189 +315,191 @@
   \noindent{{\color{main}\rule{\textwidth}{0.4pt}\par}}
 }
 
+\newcommand{\removetocentry}[1]{%
+  \addtocontents{toc}{\protect\setcounter{tocdepth}{-1}}
+  #1
+  \addtocontents{toc}{\protect\setcounter{tocdepth}{\arabic{tocdepth}}}
+}
+
+\newcommand\customlabel[2]{%
+  \protected@write \@auxout {}{\string \newlabel {#1}{{#2}{\thepage}{#2}{#1}{}} }%
+  \hypertarget{#1}{}
+}
+
 \def\@note{}
-\def\@notetbl{}
+\newcounter{nte}
 \NewDocumentCommand\nte{O{} O{} m m}{%
+  \cleartoleftpage
+  \setcounter{nte}{\arabic{chapter}}
+  \resetcounters
   \ifthenelse{\isempty{#3}}{%
     \def\@note{\lecorchap~\arabic{chapter}}
   }{%
     \def\@note{\lecorchap~\arabic{chapter}: #4}
   }%
   \def\@notetbl{\lecorchap~\arabic{chapter}}
+  \phantomsection\addcontentsline{toc}{chapter}{\protect\numberline{\thechapter}#4}
+  \customlabel{note_\@notenum}{\@notenum}
   {\fontsize{10}{12}\selectfont\sffamily\ifstrequal{#1}{}{}{\noindent#1}\ifstrequal{#3}{}{}{\hfill#3}}
   \vspace*{0.03cm}
   \hrule
-  \vspace*{-0.3cm}
-  \phantomsection\addcontentsline{toc}{chapter}{\protect\numberline{\thechapter}#4}
-  \section*{{\fontsize{20}{30}\selectfont\@note}}
+  \vspace*{0.3cm}
+  \noindent{\bfseries\sffamily\fontsize{20}{30}\selectfont\@note}
+
   \ifstrequal{#2}{false}{}{\localtoc}
+  \setcounter{section}{0}
 }
 
-%%%%%%%%%%%%%%%%%
-% Fancy Headers %
-%%%%%%%%%%%%%%%%%
-
-\usepackage{fancyhdr}
-
+% Intro
 \newcommand\createintro{
-  % Create title page.
-  \mytitle
-  % Force newpage.
-  \clearpage\mbox{~}\clearpage\newpage
+  \maketitle
 
-  % Create the introduction header on the intro page.
   \pagenumbering{roman}
   \begin{center}
     \textbf{{\LARGE Introduction}}
   \end{center}
 
-  % Check if the intro.tex file exists.
-  % If it does, include it, otherwise, just ignore.
   \IfFileExists{./intro.tex}{\input{intro.tex}}{}
 
-  % Set the pagestyle to fancy.
   \pagestyle{fancy}
-  % Remove the header line.
   \renewcommand\headrulewidth{0pt}
 
-  % Reset fancyhead styles.
   \fancyhead{}
-  % Add a fancyfoot center style.
   \fancyfoot[C]{%
     \textit{For more notes like this, visit \href{\linktootherpages}{\shortlinkname}}.%
   }%
 
-  % Create a box with more information.
-  \vspace{0.5cm}
   \begin{tcolorbox}[enhanced,colback=white,center upper,size=fbox, drop shadow southwest,sharp corners]
     \term: \academicyear, \\
     Last Update: \today, \\
     \faculty, \location.
   \end{tcolorbox}
 
-  % Create a new page.
   \newpage
-  % Display table of contents.
   \tableofcontents
 
-  % Change the numbering style back to arabic from roman.
   \pagenumbering{arabic}
-  % Reset page numbers back to 1.
   \setcounter{page}{1}
 
-  % Add back the header line.
   \renewcommand\headrulewidth{0.4pt}
-  % Add the lecture/chapter name in the top right.
   \fancyhead[R]{\@note}
-  % Add the author name in the top left.
   \fancyhead[L]{\@author}
-  % Add the page number in the bottom center.
   \fancyfoot[C]{\thepage}
-  \@ifclasswith\class{grayfg}{%
-    % If user passed grayfg as a parameter to \documentclass, then set the rest
-    % of the page to two column.
-    \definegraybackground%
-  }{}
 }
 
-%%%%%%%%%%%%%%%%%%%%
-%  Import Figures  %
-%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%
+%  Random Commands  %
+%%%%%%%%%%%%%%%%%%%%%
 
-\usepackage{import}
-\pdfminorversion=7
+\makeatletter
+
+% Import Figures
 \newcommand\incfig[2][1]{
   \def\svgwidth{#1\columnwidth}
   \import{\figloc-\@notenum}{#2.pdf_tex}
 }
 
-%%%%%%%%%%%%
-%  Circle  %
-%%%%%%%%%%%%
+\makeatother
 
+% Circle
 \newcommand*\circled[1]{\tikz[baseline=(char.base)]{
   \node[shape=circle,draw,inner sep=1pt] (char) {#1};}
 }
 
-%%%%%%%%%%%%%
-%  Correct  %
-%%%%%%%%%%%%%
+% Correct
+\newcommand\correct[1]{\textcolor{correct}{#1}}
+\newcommand\incorrect[1]{{\color{incorrect}#1}}
+\newcommand\inctocor[2]{\incorrect{#1} \ensuremath{\to} \correct{#2}}
 
-\definecolor{correct}{HTML}{009900}
-\newcommand\correct[2]{{\color{red}{#1 }}\ensuremath{\to}{\color{correct}{ #2}}}
-
-%%%%%%%%%%%%%%%
-%  Important  %
-%%%%%%%%%%%%%%%
-
+% Important
 \newcommand\imp[1]{{\color{main}#1}}
 
-%%%%%%%%%
-%  QED  %
-%%%%%%%%%
+% For diagonal strikeout in blue
+\newcommand{\blu}[1]{\phantom{#1}}
 
-\usepackage{stmaryrd}
-\newcommand\contra{\phantom\hfill\scalebox{1.1}{$\lightning$}}
+% For diagonal strikeout in red
+\newcommand{\rcancel}[1]{\renewcommand\CancelColor{\color{red}}\cancel{#1}}
 
-%%%%%%%%%%%%%%%%%%%
-%  Todo Commands  %
-%%%%%%%%%%%%%%%%%%%
+% Helpful text in math
+\newcommand\echelon{\underrightarrow{\textrm{ echelon form }}}
+\newcommand\rref{\underrightarrow{\textrm{ rref }}}
+\newcommand\pick[1]{\xrightarrow[#1]{\textrm{ pick }}}
+\newcommand\generalsol{\xrightarrow[\textrm{solution}]{\textrm{ general }}}
+\newcommand\ngeneralsol{\parbox{4em}{general \\ solution}\textrm{:}}
+\renewcommand\and{\text{and}}
+\newcommand\aand{\quad\text{and}\quad}
+\newcommand\adj{\text{adj}}
+\newcommand\qtq[1]{\quad\textrm{#1}\quad}
+\newcommand\oor{\quad\text{or}\quad}
+\newcommand\Col{\textrm{Col}}
+\newcommand\Nul{\textrm{Null}}
+\newcommand\Row{\textrm{Row}}
+\newcommand\ran{\textrm{rank}}
+\newcommand\dist{\text{dist}}
+\newcommand\sz{\stackrel{\textrm{set}}{=}}
+\newcommand\ce{\overset{\checkmark}{=}}
+\newcommand\proj{\text{proj}}
 
-\usepackage[colorinlistoftodos]{todonotes}
+% Vectors
+\renewcommand\a{\vec{a}}
+\renewcommand\b{\vec{b}}
+\renewcommand\c{\vec{c}}
+\renewcommand\d{\vec{d}}
+\newcommand\e{\vec{e}}
+\newcommand\f{\vec{f}}
+\newcommand\p{\vec{p}}
+\renewcommand\r{\vec{r}}
+\renewcommand\u{\vec{u}}
+\renewcommand\v{\vec{v}}
+\newcommand\w{\vec{w}}
+\newcommand\x{\vec{x}}
+\newcommand\y{\vec{y}}
+\newcommand\z{\vec{z}}
+\newcommand\zero{\vec{0}}
+\newcommand\T{^{\top}}
+\newcommand\I{^{-1}}
 
+% Hat vectors
+\newcommand\ah{\hat{a}}
+\newcommand\bh{\hat{b}}
+\newcommand\ch{\hat{c}}
+\renewcommand\dh{\hat{d}}
+\newcommand\eh{\hat{e}}
+\newcommand\ph{\hat{p}}
+\newcommand\uh{\hat{u}}
+\newcommand\vh{\hat{v}}
+\newcommand\wh{\hat{w}}
+\newcommand\xh{\hat{x}}
+\newcommand\yh{\hat{y}}
+\newcommand\zh{\hat{z}}
+
+% Subspaces
+\newcommand\B{\mathcal{B}}
+\newcommand\CC{\mathbb{C}}
+\newcommand\C{\mathcal{C}}
+\newcommand\D{\mathcal{D}}
+\newcommand\E{\mathcal{E}}
+\newcommand\F{\mathcal{F}}
+\newcommand\R{\mathbb{R}}
+\newcommand\U{\mathcal{U}}
+\newcommand\X{\mathcal{X}}
+\newcommand\Y{\mathcal{Y}}
+\newcommand\W{\mathbf{w}}
+
+% Span
+\newcommand\Sspan{\text{Span}}
+
+% Edit Section/Subsection/Subsubsection
 \makeatletter
-
-\@ifclasswith\class{working}{
-  \newcommand\improvement[2][]{\todo[linecolor=Plum,backgroundcolor=Plum!25,bordercolor=Plum,#1]{#2}}
-  \newcommand\unsure[2][]{\todo[linecolor=red,backgroundcolor=red!25,bordercolor=red,#1]{#2}}
-  \newcommand\change[2][]{\todo[linecolor=yellow,backgroundcolor=yellow!25,bordercolor=yellow,#1]{#2}}
-  \newcommand\add[2][]{\todo[linecolor=blue,backgroundcolor=blue!25,bordercolor=blue,#1]{#2}}
-  \newcommand\info[2][]{\todo[linecolor=OliveGreen,backgroundcolor=OliveGreen!25,bordercolor=OliveGreen,#1]{#2}}
-
-  \newcommand\improvementinline[2][]{\todo[inline,linecolor=Plum,backgroundcolor=Plum!25,bordercolor=Plum,#1]{#2}}
-  \newcommand\unsureinline[2][]{\todo[inline,linecolor=red,backgroundcolor=red!25,bordercolor=red,#1]{#2}}
-  \newcommand\changeinline[2][]{\todo[inline,linecolor=yellow,backgroundcolor=yellow!25,bordercolor=yellow,#1]{#2}}
-  \newcommand\addinline[2][]{\todo[inline,linecolor=blue,backgroundcolor=blue!25,bordercolor=blue,#1]{#2}}
-  \newcommand\infoinline[2][]{\todo[inline,linecolor=OliveGreen,backgroundcolor=OliveGreen!25,bordercolor=OliveGreen,#1]{#2}}
-  \newcommand\listnotes{
-    \newpage
-    \listoftodos[Notes]
-  }
-}{
-  \newcommand\improvement[2][]{}
-  \newcommand\unsure[2][]{}
-  \newcommand\change[2][]{}
-  \newcommand\add[2][]{}
-  \newcommand\info[2][]{}
-
-  \newcommand\improvementinline[2][]{}
-  \newcommand\unsureinline[2][]{}
-  \newcommand\changeinline[2][]{}
-  \newcommand\addinline[2][]{}
-  \newcommand\infoinline[2][]{}
-  \newcommand\listnotes{}
-}
-
-\makeatother
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%  Edit Sections/Subsections/Subsubsections  %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\usepackage{titlesec}
-
-\makeatletter
-\titleformat*{\section}{\sffamily\fontsize{14}{16}\bfseries}
-\titleformat*{\subsection}{\sffamily\fontsize{12}{14}\bfseries}
-\titleformat{\subsubsection}{\color{subsubsection}\sffamily\fontsize{11}{14}\bfseries}{}{0em}{}
+\titleformat*{\section}{\sffamily\scshape\fontsize{14}{16}\bfseries}
+\titleformat*{\subsection}{\color{subsubsection}\scshape\sffamily\fontsize{13}{15}\bfseries}
 \def\@seccntformat#1{\llap{\csname the#1\endcsname\quad}}
+\renewcommand\thesection{\arabic{section}}
 \makeatother
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%  Edit equation number display  %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+% Edit equation number display
 \makeatletter
+\newcommand*\widefbox[1]{\color{main}\fbox{\hspace{2em}#1\hspace{2em}}}
 \renewcommand\theequation{\arabic{equation}}
 \renewcommand\tagform@[1]{%
   {\color{main}\boxed{\textbf{#1}}}
@@ -561,44 +507,17 @@
 \def\@eqnnum{{\normalfont \normalcolor \theequation}}
 \makeatother
 
-%%%%%%%%%%%%%%%%%%
-%  Equivalently  %
-%%%%%%%%%%%%%%%%%%
-
+% Equivalently
 \newcommand\equivalently[1]{[ \textbf{Equivalently:} #1 ]}
 
-%%%%%%%%%%%%%%%%%%%%%
-%  L'Hopital's Rule %
-%%%%%%%%%%%%%%%%%%%%%
-
+% L'Hopital's Rule
 \newcommand\lop{\stackrel{\textrm{H}}{=}}
 
-%%%%%%%%%%%%%%%%
-%  Check mark  %
-%%%%%%%%%%%%%%%%
-
+% Check mark
 \def\checkmark{\tikz\fill[scale=0.4](0,.35) -- (.25,0) -- (1,.7) -- (.25,.15) -- cycle;} 
 
-%%%%%%%%%%%%%%
-%  Vinculum  %
-%%%%%%%%%%%%%%
-
+% Vinculum
 \newcommand\vinculum[1]{\frac{\hspace{#1cm}}{}}
-
-%%%%%%%%%%%%%%%%%%%
-%  Wrong Concept  %
-%%%%%%%%%%%%%%%%%%%
-
-\newcommand{\wconc}{%
-  \begin{tikzpicture}[baseline=-0.5ex, scale=0.1]
-    \draw[main, thick] circle (5);
-    \draw[main, thick] (-3,0) -- (3,0);
-    \draw[main, thick] (-2.5,-0.5) -- (2.5,-0.5);
-    \draw[main, thick] (-2,-1) -- (2,-1);
-    \node[font=\sffamily\bfseries\large] at (0,0) {?};
-    \node[font=\sffamily\bfseries\small, anchor=north] at (0,-6) {WRONG};
-  \end{tikzpicture}%
-}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -607,67 +526,15 @@
 %                                                                              %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\usepackage{varwidth}
-\usepackage{thmtools}
-\usepackage{etoolbox}
-\usepackage[most,many,breakable]{tcolorbox}
-
 \mdfsetup{skipabove=1em,skipbelow=0em}
 \tcbuselibrary{theorems,skins,hooks}
 
-%%%%%%%%%%%%%%%%%%%
-%  Define Colors  %
-%%%%%%%%%%%%%%%%%%%
-
-\makeatletter
-
-\definecolor{main}{HTML}{F035A3}
-\definecolor{solution}{HTML}{00AEEF}
-\definecolor{qedsolution}{HTML}{76B4CF}
-\definecolor{proof}{HTML}{F035A3}
-\definecolor{subsubsection}{HTML}{B00D15}
-\definecolor{example}{HTML}{00A6E4}
-\definecolor{examplebg}{HTML}{F2FBF8}
-
-\definecolor{myg}{RGB}{56, 140, 70}
-\definecolor{myb}{RGB}{45, 111, 177}
-\definecolor{myr}{RGB}{199, 68, 64}
-\definecolor{mygr}{HTML}{2C3338}
-
-\colorlet{definition}{main}
-\colorlet{theorem}{main}
-\colorlet{remark}{main}
-\colorlet{qedproof}{proof}
-\colorlet{question}{example}
-\colorlet{questionfg}{examplebg}
-
-\definecolor{myr}{RGB}{199, 68, 64}
-\definecolor{OrangeRed}{HTML}{ED135A}
-\definecolor{Dandelion}{HTML}{FDBC42}
-\definecolor{Emerald}{HTML}{00A99D}
-\definecolor{RoyalBlue}{HTML}{0071BC}
-
-\newcommand\colframecolor{main}
-\newcommand\coluppercolor{main}
-\newcommand\colbackcolor{white}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%  Create Environments Styles Based on Given Parameter  %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 \newcommand\qedsolution{{\color{qedsolution}\rule{4mm}{1.5mm}}}
 \newcommand\qedproof{{\color{qedproof}\rule{4mm}{1.5mm}}}
-\newcommand\qedwrong{{\color{main}\contra}}
-
-\makeatother
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%  Create the Environment Styles  %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \declaretheoremstyle[
   headfont=\sffamily\bfseries\color{definition},
-  headformat=\fbox{\NUMBER}~\NAME\NOTE,
+  headformat=\fbox{\arabic{definition}}~\NAME\NOTE,
   bodyfont=\normalfont,
   headpunct=,
   mdframed={
@@ -678,7 +545,7 @@
 
 \declaretheoremstyle[
   headfont=\sffamily\bfseries\color{theorem},
-  headformat=\fbox{\NUMBER}~\NAME\NOTE,
+  headformat=\fbox{\arabic{theorem}}~\NAME\NOTE,
   bodyfont=\normalfont,
   headpunct=,
   mdframed={
@@ -711,6 +578,7 @@
 
 \declaretheoremstyle[
   headfont=\sffamily\color{solution},
+  headformat=\NAME~\arabic{solution},
   notefont=\bfseries,
   headpunct=,
   qed=\qedsolution,
@@ -731,17 +599,8 @@
 ]{thmremarkbox}
 
 \declaretheoremstyle[
-  headfont=,
-  headformat=\wconc,
-  bodyfont=\normalfont,
-  notefont=\bfseries,
-  headpunct=,
-  qed=\qedwrong,
-  headindent=0mm,
-]{thmwrongbox}
-
-\declaretheoremstyle[
   headfont=\sffamily\color{proof},
+  headformat=\NAME,
   headindent=0mm,
   bodyfont=\normalfont,
   notefont=\bfseries,
@@ -751,6 +610,7 @@
 
 \declaretheoremstyle[
   headfont=\sffamily\color{main},
+  headformat=\NOTE,
   headindent=0mm,
   bodyfont=\normalfont,
   notefont=\bfseries,
@@ -780,22 +640,16 @@
   headpunct=:,
 ]{thmmainplainbox}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%  Create the Environments  %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\declaretheorem[numberwithin=chapter, style=thmdefinitionbox,       name=Definition]      {definition}
-\declaretheorem[numberwithin=chapter, style=thmtheorembox,          name=Theorem]         {theorem}
-\declaretheorem[numbered=no,          style=thmexamplebox,          name=Example]         {example}
-\declaretheorem[numberwithin=chapter, style=thmquestionbox,         name=]                {question}
-\declaretheorem[numbered=no,          style=thmsolutionbox,         name=SOLUTION]        {solution}
-\declaretheorem[numbered=no,          style=thmremarkbox,           name=Remark]          {remark}
-\declaretheorem[numbered=no,          style=thmwrongbox,            name=]                {wrong}
-\declaretheorem[numbered=no,          style=thmreplacementproofbox, name=PROOF]           {replacementproof}
-\declaretheorem[numbered=no,          style=thmpurpleframebox,      name=]                {purpleframe}
+\declaretheorem[style=thmdefinitionbox,       name=Definition]      {definition}
+\declaretheorem[style=thmtheorembox,          name=Theorem]         {theorem}
+\declaretheorem[style=thmexamplebox,          name=Example]         {example}
+\declaretheorem[style=thmquestionbox,         name=]                {question}
+\declaretheorem[style=thmsolutionbox,         name=SOLUTION]        {solution}
+\declaretheorem[style=thmremarkbox,           name=Remark]          {remark}
+\declaretheorem[style=thmreplacementproofbox, name=PROOF]           {replacementproof}
+\declaretheorem[style=thmpurpleframebox,      name=]                {purpleframe}
 
 \declaretheorem[numbered=no,          style=thmmaindefinitionbox,   name=Note]            {note}
-\declaretheorem[numberwithin=chapter, style=thmmaindefinitionbox,   name=Note]            {noten}
 \declaretheorem[numbered=no,          style=thmmaindefinitionbox,   name=Problem]         {problem}
 
 \declaretheorem[numbered=no,          style=thmmainplainbox,        name=Lemma]           {lemma}
@@ -804,6 +658,7 @@
 \declaretheorem[numbered=no,          style=thmmainplainbox,        name=Conjecture]      {conjecture}
 \declaretheorem[numbered=no,          style=thmmainplainbox,        name=Explanation]     {explanation}
 \declaretheorem[numbered=no,          style=thmmainplainbox,        name=Notation]        {notation}
+\declaretheorem[numbered=no,          style=thmmainplainbox,        name=Recall]          {recall}
 \declaretheorem[numbered=no,          style=thmmainplainbox,        name=Claim]           {claim}
 \declaretheorem[numbered=no,          style=thmmainplainbox,        name=Case]            {case}
 \declaretheorem[numbered=no,          style=thmmainplainbox,        name=Acknowledgment]  {acknowledgment}
@@ -811,14 +666,62 @@
 
 \renewenvironment{proof}[1][\proofname]{\begin{replacementproof}}{\end{replacementproof}}
 
-%%%%%%%%%%%%%%%%%%%%
-%  Edit Numbering  %
-%%%%%%%%%%%%%%%%%%%%
+\crefname{definition}{definition}{definitions}
+\Crefname{definition}{Definition}{Definitions}
 
-\renewcommand{\thedefinition}{\arabic{definition}}
-\renewcommand{\theexample}{\arabic{example}}
-\renewcommand{\thetheorem}{\arabic{theorem}}
-\renewcommand{\thenoten}{\arabic{noten}}
+\crefname{theorem}{theorem}{theorems}
+\Crefname{theorem}{Theorem}{Theorems}
+
+\crefname{example}{example}{examples}
+\Crefname{example}{Example}{Examples}
+
+\crefname{question}{question}{questions}
+\Crefname{question}{Question}{Questions}
+
+\crefname{solution}{solution}{solutions}
+\Crefname{solution}{Solution}{Solutions}
+
+\crefname{remark}{remark}{remarks}
+\Crefname{remark}{Remark}{Remarks}
+
+\crefname{note}{note}{notes}
+\Crefname{note}{Note}{Notes}
+
+\crefname{problem}{problem}{problem}
+\Crefname{problem}{Problem}{Problems}
+
+\crefname{lemma}{lemma}{lemmas}
+\Crefname{lemma}{Lemma}{Lemmas}
+
+\crefname{corollary}{corollary}{corollaries}
+\Crefname{corollary}{Corollary}{Corollaries}
+
+\crefname{proposition}{proposition}{propositions}
+\Crefname{proposition}{Proposition}{Propositions}
+
+\crefname{conjecture}{conjecture}{conjectures}
+\Crefname{conjecture}{Conjecture}{Conjectures}
+
+\crefname{explanation}{explanation}{explanations}
+\Crefname{explanation}{Explanation}{Explanations}
+
+\crefname{notation}{notation}{notations}
+\Crefname{notation}{Notation}{Notations}
+
+\crefname{recall}{recall}{recalls}
+\Crefname{recall}{Recall}{Recalls}
+
+\crefname{claim}{claim}{claims}
+\Crefname{claim}{Claim}{Claims}
+
+\crefname{case}{case}{cases}
+\Crefname{case}{Case}{Cases}
+
+\crefname{acknowledgment}{acknowledgment}{acknowledgments}
+\Crefname{acknowledgment}{Acknowledgment}{Acknowledgments}
+
+\crefname{conclusion}{conclusion}{conclusions}
+\Crefname{conclusion}{Conclusion}{Conclusions}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -827,8 +730,6 @@
 %                                                                     %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\definecolor{tbl}{HTML}{F035A3}
-\usepackage{titletoc}
 \contentsmargin{0cm}
 \makeatletter
 
@@ -860,11 +761,8 @@
 {\contentslabel[\thecontentslabel]{2pc}}
 {}
 {\hfill\small \thecontentspage}
-[]
+[]%
 
-\makeatother
-
-\makeatletter
 \renewcommand{\tableofcontents}{%
   \chapter*{%
     \vspace*{-20\p@}%
@@ -875,129 +773,5 @@
       \pgftext[right,x=15cm,y=0.2cm]{\color{white}\Huge\sc\bfseries \contentsname};%
     \end{tikzpicture}}%
   \@starttoc{toc}}
-\makeatother
 
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%                                                                     %
-%                             Title Page                              %
-%                                                                     %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\makeatletter
-\newcommand{\mytitle}[4]{
-  \thispagestyle{empty}
-  \begin{tikzpicture}[overlay,remember picture]
-    %%%%%%%%%%%%%%%%%%%%%%
-    %  Background Color  %
-    %%%%%%%%%%%%%%%%%%%%%%
-
-    \fill[black!2] (current page.south west) rectangle (current page.north east);
-
-    %%%%%%%%%%%%%%%%
-    %  Rectangles  %
-    %%%%%%%%%%%%%%%%
-
-    \shade[
-    left color=Dandelion,
-    right color=Dandelion!40,
-    transform canvas ={rotate around ={45:($(current page.north west)+(0,-6)$)}}]
-    ($(current page.north west)+(0,-6)$) rectangle ++(9,1.5);
-
-    \shade[
-    left color=lightgray,
-    right color=lightgray!50,
-    rounded corners=0.75cm,
-    transform canvas ={rotate around ={45:($(current page.north west)+(.5,-10)$)}}]
-    ($(current page.north west)+(0.5,-10)$) rectangle ++(15,1.5);
-
-    \shade[
-    left color=lightgray,
-    rounded corners=0.3cm,
-    transform canvas ={rotate around ={45:($(current page.north west)+(.5,-10)$)}}] ($(current page.north west)+(1.5,-9.55)$) rectangle ++(7,.6);
-
-    \shade[
-    left color=orange!80,
-    right color=orange!60,
-    rounded corners=0.4cm,
-    transform canvas ={rotate around ={45:($(current page.north)+(-1.5,-3)$)}}]
-    ($(current page.north)+(-1.5,-3)$) rectangle ++(9,0.8);
-
-    \shade[
-    left color=red!80,
-    right color=red!80,
-    rounded corners=0.9cm,
-    transform canvas ={rotate around ={45:($(current page.north)+(-3,-8)$)}}] ($(current page.north)+(-3,-8)$) rectangle ++(15,1.8);
-
-    \shade[
-    left color=orange,
-    right color=Dandelion,
-    rounded corners=0.9cm,
-    transform canvas ={rotate around ={45:($(current page.north west)+(4,-15.5)$)}}]
-    ($(current page.north west)+(4,-15.5)$) rectangle ++(30,1.8);
-
-    \shade[
-    left color=RoyalBlue,
-    right color=Emerald,
-    rounded corners=0.75cm,
-    transform canvas ={rotate around ={45:($(current page.north west)+(13,-10)$)}}]
-    ($(current page.north west)+(13,-10)$) rectangle ++(15,1.5);
-
-    \shade[
-    left color=lightgray,
-    rounded corners=0.3cm,
-    transform canvas ={rotate around ={45:($(current page.north west)+(18,-8)$)}}]
-    ($(current page.north west)+(18,-8)$) rectangle ++(15,0.6);
-
-    \shade[
-    left color=lightgray,
-    rounded corners=0.4cm,
-    transform canvas ={rotate around ={45:($(current page.north west)+(19,-5.65)$)}}]
-    ($(current page.north west)+(19,-5.65)$) rectangle ++(15,0.8);
-
-    \shade[
-    left color=OrangeRed,
-    right color=red!80,
-    rounded corners=0.6cm,
-    transform canvas ={rotate around ={45:($(current page.north west)+(20,-9)$)}}]
-    ($(current page.north west)+(20,-9)$) rectangle ++(14,1.2);
-
-    %%%%%%%%%%
-    %  Year  %
-    %%%%%%%%%%
-
-    \draw[ultra thick,gray]
-    ($(current page.center)+(5,2)$) -- ++(0,-3cm)
-    node[
-    midway,
-    left=0.25cm,
-    text width=5cm,
-    align=right,
-    black!75
-    ]
-    {
-      {\fontsize{25}{30} \selectfont \bf Lecture \\[10pt] Notes}
-    }
-    node[
-    midway,
-    right=0.25cm,
-    text width=6cm,
-    align=left,
-    orange]
-    {
-      {\fontsize{72}{86.4} \selectfont \academicyear}
-    };
-
-    %%%%%%%%%%%
-    %  Title  %
-    %%%%%%%%%%%
-
-    \node[align=center] at ($(current page.center)+(0,-5)$)
-    {
-      {\fontsize{60}{72} \selectfont {{\@title}}} \\[1cm]
-      \ifthenelse{\equal{\lecturer}{\string Lecture}}{{\fontsize{16}{19.2} \selectfont \textcolor{orange}{\bf Lecturer: \lecturer}}\\[3pt]}{}
-      Author: \@author
-    };
-  \end{tikzpicture}
-}
 \makeatother

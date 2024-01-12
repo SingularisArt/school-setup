@@ -20,7 +20,7 @@ compile:
 	pdflatex -synctex=1 -shell-escape $(DOCNAME).tex
 
 clean:
-	rm -rf *.aux *.bcf *.fdb_latexmk *.fls *.log *.out *.toc *.synctex* *.tdo *.loe *.snm *.nav *.auxlock *.bib *.bbl *.blg *.xml *.mtc *.ptc *.mtc0 *.maf
+	rm -rf *.bcf *.fdb_latexmk *.fls *.log *.out *.toc *.synctex* *.tdo *.loe *.snm *.nav *.bib *.bbl *.blg *.xml *.mtc *.ptc *.mtc0 *.maf *.nlo *.ist *.nls *.lof *.lot *.ilg *.aux
 
 view:
 	make compile

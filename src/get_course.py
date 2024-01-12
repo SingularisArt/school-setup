@@ -194,7 +194,7 @@ def get_course_info_from_html(url):
             "days": days,
             "url": "",
             "type": class_type,
-            "notes_type": "lectures" if class_type != "Online" else "chapters",
+            "notes-type": "lectures" if class_type != "Online" else "chapters",
             "professor": {
                 "name": name,
                 "email": email,

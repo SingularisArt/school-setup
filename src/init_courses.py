@@ -41,7 +41,7 @@ def main():
         term = course.info["term"]
         year = course.info["year"]
         faculty = course.info["faculty"]
-        intro_type = course.info["notes_type"]
+        intro_type = course.info["notes-type"]
         note_type_abbr = ""
         if course.info["notes_type"].lower() == "lectures":
             note_type_abbr = "lec"

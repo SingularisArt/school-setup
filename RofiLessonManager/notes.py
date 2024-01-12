@@ -6,7 +6,7 @@ import config
 import utils
 
 info = utils.load_data(f"{config.current_course}/info.yaml", "yaml")
-NOTES_TYPE = info["notes_type"]
+NOTES_TYPE = info["notes-type"]
 LEC_OR_CHAP = "lec" if NOTES_TYPE == "lectures" else "chap"
 
 

@@ -6,7 +6,9 @@
 
 global !p
 
-from latex_.scopes import text, math, display_math
+
+from latex_.matrix import createMatrix
+from latex_.scopes import text, math, displayMath
 environments = {
   "def": "definition",
   "thm": "theorem",
@@ -17,7 +19,7 @@ environments = {
   "wrng": "wrong",
   "prpl": "purpleframe",
   "nte": "note",
-  "nnte": "noten",
+  "nta": "notation",
   "prb": "problem",
   "psol": "probsolution",
   "lma": "lemma",
@@ -101,7 +103,7 @@ endsnippet
 
 priority 10000
 context "math()"
-snippet "([0-9]+)?(p)?d([a-zA-Z])?([0-9]+)?d([a-zA-Z])" "Derivatives" r
+snippet "([0-9]+)?(p)?D([a-zA-Z])?([0-9]+)?D([a-zA-Z])" "Derivatives" r
 `!p
 derivative_type = "\\odv" if not match.group(2) else "\\pdv"
 derivative_number = "" if not match.group(1) else "[order={" + match.group(1) + "," + match.group(1) + "}]"
@@ -111,9 +113,15 @@ snip.rv = derivative_type + derivative_number + "{" + derivative_function + "}" 
 `
 endsnippet
 
-context "display_math()"
+context "displayMath()"
 snippet &= "New equation line"
 &= ${1:${VISUAL}} \\\
+endsnippet
+
+priority 1
+context "math()"
+pre_expand "createMatrix(snip, match, True)"
+snippet "(a)?(d|p|b|B|v|V)?mat\(([1-9]+) ([1-9]+)\)" "Matrix" rbm
 endsnippet
 
 # vim:ft=snippets:

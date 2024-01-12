@@ -4,6 +4,7 @@
 %                                                                              %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\usepackage{extramarks}
 \input{../../preamble.tex}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -144,7 +145,19 @@
 % Environments %
 %%%%%%%%%%%%%%%%
 
-\newenvironment{problem}[1][-1]{
+\newenvironment{probsolution}[1][-1]{
+  \ifnum#1>0
+    \setcounter{homeworkSolutionCounter}{#1}
+  \fi
+  \section{Solution \arabic{homeworkSolutionCounter}}
+  \setcounter{partCounter}{1}
+  \enterProblemHeader{homeworkSolutionCounter}
+}{
+  \exitProblemHeader{homeworkSolutionCounter}
+  \thispagestyle{boxfooter}
+}
+
+\renewenvironment{problem}[1][-1]{
   \ifnum#1>0
     \setcounter{homeworkProblemCounter}{#1}
   \fi
@@ -155,14 +168,71 @@
   \exitProblemHeader{homeworkProblemCounter}
 }
 
-\newenvironment{solution}[1][-1]{
-  \ifnum#1>0
-    \setcounter{homeworkSolutionCounter}{#1}
-  \fi
-  \section{Solution \arabic{homeworkSolutionCounter}}
-  \setcounter{partCounter}{1}
-  \enterProblemHeader{homeworkSolutionCounter}
-}{
-  \exitProblemHeader{homeworkSolutionCounter}
-  \thispagestyle{boxfooter}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%  Edit equation number display  %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\makeatletter
+\renewcommand\tagform@[1]{(#1)}
+\def\@eqnnum{{\normalfont \normalcolor \theequation}}
+\makeatother
+
+%%%%%%%%%%%%%%%
+%  PGF Plots  %
+%%%%%%%%%%%%%%%
+
+\usepackage{pgfplots, pgfplotstable}
+
+\pgfplotsset{width=7cm,compat=1.8}
+\pgfplotsset{compat=newest}
+
+\usepgfplotslibrary{patchplots}
+\usepgfplotslibrary{fillbetween}
+\usetikzlibrary{intersections}
+
+\pgfplotsset{pccplot/.style={color=red,mark=none,line width=1pt,<->,solid}}
+\pgfplotsset{asymptote/.style={color=gray,mark=none,line width=1pt,<->,dashed}}
+\pgfplotsset{soldot/.style={color=red,only marks,mark=*}}
+\pgfplotsset{holdot/.style={color=red,fill=white,only marks,mark=*}}
+\pgfplotsset{blankgraph/.style={xmin=-10,xmax=10,ymin=-10,ymax=10,axis line style= {-, draw opacity=0 },axis lines=box,major tick length=0mm,xtick={-10,-9,...,10},ytick={-10,-9,...,10},grid=major,yticklabels={,,},xticklabels={,,},minor xtick=,minor ytick=,xlabel={},ylabel={},width=0.75\textwidth,grid style={solid,gray!40}}}
+
+\pgfplotscreateplotcyclelist{pccstylelist}{
+  pccplot \\
+  % color=blue,mark=none,line width=1pt,<->,dashdotted \\
+  % color=gray,mark=none,line width=1pt,<->,dashdotdotted \\
+}
+
+\def\axisdefaultwidth{175pt}
+\def\axisdefaultheight{\axisdefaultwidth}
+
+\pgfplotsset{every axis/.append style={
+    axis x line=middle,
+    axis y line=middle,
+    axis line style={<->},
+    xlabel={$x$},
+    ylabel={$y$},
+    xmin=-7,xmax=7,
+    ymin=-7,ymax=7,
+    yticklabel style={inner sep=0.333ex},
+    minor xtick={-7,-6,...,7},
+    minor ytick={-7,-6,...,7},
+    scale only axis,
+    cycle list name=pccstylelist,
+    tick label style={font=\footnotesize},
+    legend cell align=left,
+    grid=minor,
+    grid style={solid,gray!40},
+    try min ticks=6,
+  },
+  framed/.style={axis background/.style={draw=gray}}
+}
+
+% framing the graphs
+\pgfplotsset{axis background/.style={draw=gray}}
+
+\hypersetup{
+  colorlinks,
+  linkcolor=blue,
+  citecolor=black,
+  urlcolor={blue!80!black}
 }

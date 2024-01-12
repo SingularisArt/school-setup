@@ -423,7 +423,7 @@ I've already created an example setup [here](./example-setup) you can use to und
 cd ~/
 git clone https://github.com/SingularisArt/school-setup/
 cd school-setup
-./install
+./install-example
 ```
 
 ### Configuration
@@ -457,10 +457,6 @@ The configuration file's located at `$HOME/.config/lesson-manager/config.yaml`. 
 
 - **`assignments_dir`**: Directory for storing assignments.
 - **`assignment_folders`**: Subfolders for different types of assignments (e.g., Bibtex files, LaTeX files).
-
-- **`exams_dir`**: Directory for storing exams.
-- **`exam_solution_keys`**: Subfolders for exam solution keys.
-- **`exam_review`**: Subfolders for exam review materials.
 
 - **`rofi_options`**: Customize Rofi options for a better interactive experience. Modify this list as needed.
 
