@@ -31,13 +31,15 @@ def text(events, now):
     if not current:
         nxt = next((e for e in events if now <= e["start"]), None)
         if nxt:
+            location = utils.location(nxt["location"])
+            start = utils.format_date_and_time(now, nxt["start"])
             return utils.generate_short_title(
                 utils.join(
                     utils.colored_text(nxt["type"]),
                     utils.summary(nxt["summary"]),
                     utils.colored_text("starts in"),
-                    utils.format_date_and_time(now, nxt["start"]),
-                    utils.location(nxt["location"]) + period,
+                    start + period if not location else start,
+                    location + period if location else "",
                     "(" + utils.format_time(nxt["start"]) + ")",
                 ),
                 MAX_LENGTH=MAX_LENGTH,

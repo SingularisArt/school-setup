@@ -29,7 +29,7 @@ class Note:
                 self.note_number = False
                 return
 
-        class_start_date_str = info["start_date"]
+        class_start_date_str = info["start-date"]
         date_str = match.group(3)
         date = datetime.strptime(date_str, config.date_format)
         class_start_date = datetime.strptime(

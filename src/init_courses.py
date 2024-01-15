@@ -36,29 +36,29 @@ def main():
 
         title = course.info["title"]
         author = course.info["author"]
-        start_date = get_start_date(course.info["start_date"])
+        start_date = get_start_date(course.info["start-date"])
         date = datetime.datetime.today().strftime("%B %d, %Y")
         term = course.info["term"]
         year = course.info["year"]
         faculty = course.info["faculty"]
         intro_type = course.info["notes-type"]
         note_type_abbr = ""
-        if course.info["notes_type"].lower() == "lectures":
+        if course.info["notes-type"].lower() == "lectures":
             note_type_abbr = "lec"
         else:
             note_type_abbr = "chap"
-        note_type = course.info["notes_type"].lower()
+        note_type = course.info["notes-type"].lower()
         college = course.info["college"]
         professor_info = course.info["professor"]
         professor_short = professor_info["name"].split()[0]
-        note_location = f"{course.info['notes_type']}/{note_type_abbr}"
+        note_location = f"{course.info['notes-type']}/{note_type_abbr}"
 
         for folder in folders:
             (notes.root / folder).mkdir(exist_ok=True)
             if config.create_readme_file:
                 (notes.root / folder / "README.md").touch(exist_ok=True)
 
-        (notes.root / course.info["notes_type"]).mkdir(exist_ok=True)
+        (notes.root / course.info["notes-type"]).mkdir(exist_ok=True)
 
         for file in files:
             key = files[file]

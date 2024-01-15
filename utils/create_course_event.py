@@ -15,15 +15,15 @@ def create_course_event(info):
     )
 
     start_date = datetime.datetime.strptime(
-        info["start_date"], config.date_format
+        info["start-date"], config.date_format
     ).strftime("%Y-%m-%d")
 
     end_date = datetime.datetime.strptime(
-        info["end_date"], config.date_format
+        info["end-date"], config.date_format
     ).strftime("%Y%m%d")
 
-    start_time = info["start_time"]
-    end_time = info["end_time"]
+    start_time = info["start-time"]
+    end_time = info["end-time"]
 
     calendar_event = {
         "summary": info["short"],
