@@ -6,7 +6,8 @@ import config
 import utils
 
 info = utils.load_data(f"{config.current_course}/info.yaml", "yaml")
-NOTES_TYPE = info["notes-type"]
+print(info)
+NOTES_TYPE = info["notes_type"]
 LEC_OR_CHAP = "lec" if NOTES_TYPE == "lectures" else "chap"
 
 
@@ -29,7 +30,7 @@ class Note:
                 self.note_number = False
                 return
 
-        class_start_date_str = info["start-date"]
+        class_start_date_str = info["start_date"]
         date_str = match.group(3)
         date = datetime.strptime(date_str, config.date_format)
         class_start_date = datetime.strptime(

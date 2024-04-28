@@ -124,7 +124,7 @@ def get_course_info_from_html(url):
 
         # Location
         location = ""
-        if class_type == "In-person":
+        if class_type == "In_person":
             location = row.find_all("td")[1].text.strip()
             location = location.split(" ")
             location = f"{location[0]} Campus, {' '.join(location[1:])}"
@@ -194,11 +194,11 @@ def get_course_info_from_html(url):
             "days": days,
             "url": "",
             "type": class_type,
-            "notes-type": "lectures" if class_type != "Online" else "chapters",
+            "notes_type": "lectures" if class_type != "Online" else "chapters",
             "professor": {
                 "name": name,
                 "email": email,
-                "phone-number": phone_number,
+                "phone_number": phone_number,
                 "office": office,
             },
         }
