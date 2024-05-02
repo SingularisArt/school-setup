@@ -11,6 +11,9 @@ function msg() {
   printf "%s\n" "$text"
 }
 
+msg "Installing required packages"
+pip3 install -r requirements.txt
+
 if [[ ! -d "$DIR" ]]; then
   msg "Creating folder to store config.yaml"
 
