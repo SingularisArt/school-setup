@@ -23,6 +23,7 @@ root = Path(data["root"]).expanduser()
 templates_dir = Path(data["templates_dir"]).expanduser()
 current_course = Path(data["current_course"]).expanduser()
 current_course_watch_file = Path("~/.local/share/current_course").expanduser()
+sourcing_notes_template = data["sourcing_notes_template"]
 
 books_dir = current_course / Path(data["books_dir"]).expanduser()
 figures_dir = current_course / Path(data["figures_dir"]).expanduser()

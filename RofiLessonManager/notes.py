@@ -142,7 +142,9 @@ class Notes(list):
             file = utils.number_to_filename(number, LEC_OR_CHAP)
             if os.path.exists(f"{self.path}/{file}"):
                 tab = " " * 2
-                body += rf"""{tab}\includenote{{{number}}}
+                body += f"{tab}"
+                body += config.sourcing_notes_template.replace("#1", str(number))
+                body += """
 """
 
         self.master_file.write_text(header + body + footer)

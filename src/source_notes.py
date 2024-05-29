@@ -33,7 +33,7 @@ def main():
 
     note_range = notes.parse_range_string(command)
     notes.update_notes_in_master(note_range)
-    notes.compile_master()
+    # notes.compile_master()
 
 
 if __name__ == "__main__":
