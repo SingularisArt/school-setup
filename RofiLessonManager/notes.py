@@ -19,8 +19,10 @@ class Note:
         self.date = None
         self.week = None
         self.title = None
+        self.path = file_path
 
         self._parse_note_file()
+
 
     def _parse_note_file(self):
         with open(self.file_path, "r") as file:

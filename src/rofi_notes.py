@@ -1,5 +1,3 @@
-import os
-
 from RofiLessonManager.courses import Courses as Courses
 import config
 import utils
@@ -47,7 +45,6 @@ def main():
     if index < 0:
         exit(1)
 
-    os.chdir(notes.path)
     sorted_notes[index].edit()
 
 
