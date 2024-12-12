@@ -1,128 +1,92 @@
 import os
 import re
 from datetime import datetime
+from pathlib import Path
 
 import config
 import utils
 
 info = utils.load_data(f"{config.current_course}/info.yaml", "yaml")
-print(info)
+
 NOTES_TYPE = info["notes_type"]
 LEC_OR_CHAP = "lec" if NOTES_TYPE == "lectures" else "chap"
 
 
 class Note:
     def __init__(self, file_path):
-        match = None
-        self.note_number = False
-
-        with open(file_path) as f:
-            for line in f:
-                match = re.search(
-                    r"(nte)(\[.*\])?\{(.*?)\}\{(.*)\}",
-                    line,
-                )
-                if match:
-                    self.note_number = True
-                    break
-
-            if not match:
-                self.note_number = False
-                return
-
-        class_start_date_str = info["start_date"]
-        date_str = match.group(3)
-        date = datetime.strptime(date_str, config.date_format)
-        class_start_date = datetime.strptime(
-            class_start_date_str,
-            config.date_format,
-        )
-        week = utils.get_week(date) - utils.get_week(class_start_date) + 1
-        title = match.group(4)
-
         self.file_path = file_path
-        self.date = date
-        self.week = week
-        self.number = utils.filename_to_number(file_path.stem)
-        self.title = title
+        self.number = None
+        self.date = None
+        self.week = None
+        self.title = None
+
+        self._parse_note_file()
+
+    def _parse_note_file(self):
+        with open(self.file_path, "r") as file:
+            for line in file:
+                match = re.search(r"\\(lecture){(\d+)}{(.+)}{(.+)}", line)
+                if match:
+                    self.number = int(match.group(2))
+                    self.date = datetime.strptime(match.group(3), config.date_format)
+                    self.title = match.group(4)
+                    self.week = (
+                        utils.get_week(self.date)
+                        - utils.get_week(
+                            datetime.strptime(info["start_date"], config.date_format)
+                        )
+                        + 1
+                    )
+                    break
 
     def edit(self):
         listen_location = "/tmp/nvim.pipe"
-        args = []
+        args = (
+            ["--server", listen_location, "--remote"]
+            if os.path.exists(listen_location)
+            else ["--listen", listen_location]
+        )
+        note_file = Path(NOTES_TYPE) / f"{LEC_OR_CHAP}-{self.number}.tex"
 
-        if os.path.exists(listen_location):
-            args = ["--server", "/tmp/nvim.pipe", "--remote"]
-        elif not os.path.exists(listen_location):
-            args = ["--listen", "/tmp/nvim.pipe"]
-
-        args = " ".join(str(e) for e in args if e)
-
-        note_file = f"{NOTES_TYPE}/{LEC_OR_CHAP}-{self.number}.tex"
-
-        cmd_part_1 = f"kitty --directory={config.current_course}"
-        cmd_part_2 = f"{config.editor} {args} {note_file}"
-
-        cmd = f"{cmd_part_1} {cmd_part_2}"
+        cmd = (
+            f"kitty --directory={config.current_course} {config.editor} "
+            f"{' '.join(args)} {note_file}"
+        )
         os.system(cmd)
+
+    def __len__(self):
+        return len(self.title or "")
 
 
 class Notes(list):
     def __init__(self, course):
-        self.root = course.root
+        self.root = Path(course.root)
         self.master_file = self.root / "master.tex"
-        self.path = self.root / NOTES_TYPE
+        self.notes_path = self.root / NOTES_TYPE
+        super().__init__(self._read_files())
 
-        list.__init__(self, self.read_files())
+    def _read_files(self):
+        notes = [Note(f) for f in self.notes_path.glob(f"{LEC_OR_CHAP}-*.tex")]
+        return sorted(
+            (note for note in notes if note.number is not None),
+            key=lambda note: note.number,
+        )
 
-    def read_files(self):
-        files = self.root.glob(f"{NOTES_TYPE}/{LEC_OR_CHAP}-*.tex")
-        return_files = []
+    def _parse_note_spec(self, spec):
+        all_numbers = [note.number for note in self]
+        if not all_numbers:
+            return []
 
-        for f in files:
-            note = Note(f)
-            try:
-                if note.number:
-                    return_files.append(note)
-            except AttributeError:
-                pass
-
-        return sorted(return_files, key=lambda note: note.number)
-
-    def parse_note_spec(self, string):
-        all_numbers = [int(note.number) for note in self]
-
-        if len(self) == 0:
-            return 0
-
-        if string.isdigit():
-            return [int(string)]
-        elif string == "last":
+        if spec.isdigit():
+            return [int(spec)]
+        if spec == "last":
             return [all_numbers[-1]]
-        elif string == "prev_last":
-            return [all_numbers[-2], all_numbers[-1]]
-        elif string == "all":
+        if spec == "prev_last":
+            return all_numbers[-2:]
+        if spec == "all":
             return all_numbers
-        elif string == "prev":
-            return all_numbers[0:-1]
-
-    def get_header_footer(self, lec_path):
-        part = 0
-
-        header = ""
-        footer = ""
-
-        with lec_path.open() as f:
-            for line in f:
-                if "end notes" in line:
-                    part = 2
-                if part == 0:
-                    header += line
-                if part == 2:
-                    footer += line
-                if "start notes" in line:
-                    part = 1
-
-        return (header, footer)
+        if spec == "prev":
+            return all_numbers[:-1]
 
     def parse_range_string(self, arg):
         if "-" in arg:
@@ -130,24 +94,49 @@ class Notes(list):
                 start, end = map(int, arg.split("-"))
                 return list(range(start, end + 1))
             except ValueError:
-                return
+                return []
+        return self._parse_note_spec(arg)
 
-        return self.parse_note_spec(arg)
+    def _filter_body(self, numbers):
+        with open(self.master_file, "r") as file:
+            lines = file.readlines()
+
+        filtered_body = []
+        in_notes_block = False
+        lowest, highest = 0, 0
+
+        for line in lines:
+            stripped = line.strip()
+
+            if stripped.startswith(r"\chapter"):
+                filtered_body.append(line)
+
+            elif "% notes start" in stripped:
+                match = re.search(r"% notes start (\d+)-(\d+)", stripped)
+                if match:
+                    lowest, highest = map(int, match.groups())
+                    in_notes_block = True
+                filtered_body.append(line)
+
+                for num in numbers:
+                    if lowest <= num <= highest:
+                        display_number = f"{num:02}"
+                        filtered_body.append(
+                            f"  \\input{{lectures/{LEC_OR_CHAP}-{display_number}.tex}}\n"
+                        )
+
+            elif "% notes end" in stripped:
+                in_notes_block = False
+                filtered_body.append(line)
+
+            elif not in_notes_block:
+                filtered_body.append(line)
+
+        return "".join(filtered_body)
 
     def update_notes_in_master(self, numbers):
-        header, footer = self.get_header_footer(self.master_file)
-        body = ""
-
-        for number in numbers:
-            file = utils.number_to_filename(number, LEC_OR_CHAP)
-            if os.path.exists(f"{self.path}/{file}"):
-                tab = " " * 2
-                body += f"{tab}"
-                body += config.sourcing_notes_template.replace("#1", str(number))
-                body += """
-"""
-
-        self.master_file.write_text(header + body + footer)
+        body = self._filter_body(numbers)
+        self.master_file.write_text(body)
 
     def compile_master(self):
         os.chdir(config.current_course)

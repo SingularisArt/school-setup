@@ -1,6 +1,6 @@
-from RofiLessonManager.courses import Courses as Courses
 import config
 import utils
+from RofiLessonManager.courses import Courses as Courses
 
 
 def main():
