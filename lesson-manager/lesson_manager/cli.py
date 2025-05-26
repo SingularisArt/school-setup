@@ -15,12 +15,6 @@ def main():
         action="store_true",
     )
     parser.add_argument(
-        "-gc",
-        "--get-course",
-        metavar="CRN",
-        help="Get course info from CRN number. Seperate by comma.",
-    )
-    parser.add_argument(
         "-ic",
         "--init-courses",
         help="Initalize all courses.",
@@ -45,6 +39,12 @@ def main():
         action="store_true",
     )
     parser.add_argument(
+        "-rf",
+        "--rofi-figures",
+        help="Manage figures. Usage: -rf create <name> | edit [name] | watch",
+        nargs="*",
+    )
+    parser.add_argument(
         "-rn",
         "--rofi-notes",
         help="View notes.",
@@ -57,9 +57,9 @@ def main():
         action="store_true",
     )
     parser.add_argument(
-        "-rsno",
-        "--rofi-strip-notes-output",
-        help="Stripped notes output.",
+        "-o",
+        "--output",
+        help="Output file for stripped notes (default: output.tex).",
         default="output.tex",
     )
     parser.add_argument(
@@ -74,31 +74,21 @@ def main():
         help="Sync notes to google drive.",
         action="store_true",
     )
-    parser.add_argument(
-        "-rf",
-        "--rofi-figures",
-        help="Manage figures. Usage: -rf create <name> | edit [name] | watch",
-        nargs="*",
-    )
 
     args = parser.parse_args()
 
     os.chdir(sys.path[0])
 
-    if args.rofi_figures:
-        import src.rofi_figures as rf
-
-        rf.main(parser, args.rofi_figures)
     if args.calendar:
         import src.countdown as ca
 
         print("Waiting for connection")
         ca.check_internet()
         ca.main()
-    if args.get_course:
-        import src.get_course as gc
+    # if args.get_course:
+    #     import src.get_course as gc
 
-        gc.main(args.get_course)
+    #     gc.main(args.get_course)
     if args.init_courses:
         import src.init_courses as ic
 
@@ -115,6 +105,10 @@ def main():
         import src.rofi_courses as rc
 
         rc.main()
+    if args.rofi_figures:
+        import src.rofi_figures as rf
+
+        rf.main(parser, args.rofi_figures)
     if args.rofi_notes:
         import src.rofi_notes as rn
 
@@ -122,7 +116,7 @@ def main():
     if args.rofi_strip_notes:
         import src.rofi_strip_notes as rsn
 
-        rsn.main(args.rofi_strip_notes_output)
+        rsn.main(args.output)
     if args.source_notes:
         import src.source_notes as sn
 

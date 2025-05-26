@@ -9,8 +9,8 @@ import yaml
 import pyperclip
 from appdirs import user_config_dir
 
-from config import rofi_options
-import config
+from lesson_manager import config
+from lesson_manager.config import rofi_options
 from utils.rofi import select as select
 
 

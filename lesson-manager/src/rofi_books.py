@@ -1,8 +1,8 @@
 import os
 
 from RofiLessonManager.books import Books
-from config import rofi_options
-import config
+from lesson_manager.config import rofi_options
+from lesson_manager import config
 import utils
 
 

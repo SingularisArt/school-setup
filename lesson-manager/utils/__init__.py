@@ -2,7 +2,7 @@ from .authenticate import authenticate
 from .check_if_assignment_is_due import check_if_assignment_is_due
 from .colored_text import colored_text
 from .create_course_event import create_course_event
-from .display_number import display_number
+from .convert_number import convert_number
 from .filename_to_number import filename_to_number
 from .folder_to_name import folder_to_name
 from .format_date_and_time import format_date_and_time

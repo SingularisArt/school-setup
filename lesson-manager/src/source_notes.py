@@ -1,4 +1,4 @@
-import config
+from lesson_manager import config
 import utils
 from RofiLessonManager.courses import Courses as Courses
 
@@ -30,6 +30,8 @@ def main():
         command = commands[selected]
     else:
         command = selected
+
+    print(command)
 
     note_range = notes.parse_range_string(command)
     notes.update_notes_in_master(note_range)

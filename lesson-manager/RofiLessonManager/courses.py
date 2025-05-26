@@ -1,9 +1,8 @@
 import os
-
 import yaml
 
 from RofiLessonManager.notes import Notes as Notes
-import config
+from lesson_manager import config
 
 
 class Course:
@@ -29,6 +28,9 @@ class Course:
         if not self._notes:
             self._notes = Notes(self)
         return self._notes
+
+    def create_course(self):
+        pass
 
     def __eq__(self, other):
         if other is None:

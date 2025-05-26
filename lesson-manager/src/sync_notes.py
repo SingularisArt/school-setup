@@ -1,6 +1,6 @@
 from RofiLessonManager.courses import Courses as Courses
 import utils
-import config
+from lesson_manager import config
 
 
 def get_files(id):
@@ -35,10 +35,11 @@ def sync_notes(course):
     utils.sync_file(service, path, pdf_file_name, course.name, notes_folder)
 
 
+credentials_path = config.config_path / "credentials/sync.json"
 service = utils.authenticate(
     "drive",
     ["https://www.googleapis.com/auth/drive"],
-    "credentials/sync.json",
+    credentials_path,
 )
 
 

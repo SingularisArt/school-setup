@@ -1,5 +1,5 @@
 from RofiLessonManager.courses import Courses as Courses
-import config
+from lesson_manager import config
 import utils
 
 

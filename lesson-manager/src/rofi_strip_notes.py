@@ -2,13 +2,13 @@ from subprocess import check_output
 from TexSoup import TexSoup
 
 from RofiLessonManager.courses import Courses as Courses
-import config
+from lesson_manager import config
 import utils
 from utils import rofi
 
 
 def format_option(note, date_format):
-    number = utils.display_number(str(note.number))
+    number = utils.convert_number(str(note.number))
     title = utils.generate_short_title(note.title, 24)
     date = note.date.strftime(date_format)
     week = note.week

@@ -2,7 +2,6 @@
 
 import datetime
 import os
-import os.path
 import re
 import sched
 import sys
@@ -12,7 +11,7 @@ import urllib.request
 import pytz
 from dateutil.parser import parse
 
-import config
+from lesson_manager import config
 import utils
 from RofiLessonManager.courses import Courses as Courses
 
@@ -115,10 +114,11 @@ def main():
         print("Warning: TZ environ variable not set")
         return
 
+    credentials_path = config.config_path / "credentials/calendar.json"
     service = utils.authenticate(
         "calendar",
         ["https://www.googleapis.com/auth/calendar.readonly"],
-        "credentials/calendar.json",
+        credentials_path,
     )
 
     print("Authenticated")

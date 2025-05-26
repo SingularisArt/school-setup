@@ -1,7 +1,7 @@
 import os
 import sys
 from RofiLessonManager.assignments import Assignments
-from config import assignments_dir, rofi_options
+from lesson_manager.config import assignments_dir, rofi_options
 import utils
 
 

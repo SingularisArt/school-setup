@@ -4,7 +4,7 @@ import re
 import shutil
 
 from RofiLessonManager.courses import Courses
-import config
+from lesson_manager import config
 import utils
 
 

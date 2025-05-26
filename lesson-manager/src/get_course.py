@@ -9,7 +9,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 import yaml
 
-import config
+from lesson_manager import config
 
 
 def extract_days_and_times(days_time):

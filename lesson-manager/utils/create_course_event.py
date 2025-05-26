@@ -1,6 +1,6 @@
 import datetime
 
-import config
+from lesson_manager import config
 import utils
 
 

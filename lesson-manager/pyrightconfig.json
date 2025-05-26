@@ -8,5 +8,6 @@
       "diagnosticMode": "workspace",
       "typeCheckingMode": "basic"
     }
-  }
+  },
+  "reportIndexIssue": false
 }

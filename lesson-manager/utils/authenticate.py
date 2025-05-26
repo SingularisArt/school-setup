@@ -15,7 +15,7 @@ def authenticate(
 ):
     print("Authenticating")
     SCOPES = scopes
-    pickle_location = credentials_location.replace("json", "pickle")
+    pickle_location = str(credentials_location).replace("json", "pickle")
 
     creds = None
     if os.path.exists(pickle_location):

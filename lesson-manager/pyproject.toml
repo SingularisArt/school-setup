@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "lesson-manager"
+version = "0.1.0"
+description = "CLI tool for managing lessons"
+authors = [
+  { name = "Hashem A. Damrah", email = "singularisart@outlook.com" }
+]
+dependencies = []
+
+[tool.setuptools]
+packages = ["lesson_manager", "RofiLessonManager", "src", "utils", "utils.rofi"]
+
+[project.scripts]
+lesson-manager = "lesson_manager.cli:main"

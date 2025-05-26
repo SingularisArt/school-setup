@@ -1,10 +1,10 @@
 from RofiLessonManager.courses import Courses as Courses
-import config
+from lesson_manager import config
 import utils
 
 
 def format_option(note, date_format, length):
-    number = utils.display_number(str(note.number))
+    number = utils.convert_number(str(note.number), False)
     title = utils.generate_short_title(note.title, length + 1)
     date = note.date.strftime(date_format)
     week = note.week

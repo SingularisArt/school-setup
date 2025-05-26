@@ -27,6 +27,10 @@ if [[ -e "$SRC" ]]; then
   rm -rf "$SRC"
 fi
 
+cd lesson-manager || exit 1
+pip3 install .
+msg "Installed lesson-manager package"
+
 cp -r "./example-setup/" "$HOME"
 msg "Copied example setup to $HOME"
 

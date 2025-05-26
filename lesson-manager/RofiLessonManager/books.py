@@ -1,6 +1,6 @@
 import os
 
-import config
+from lesson_manager import config
 
 
 class Book:

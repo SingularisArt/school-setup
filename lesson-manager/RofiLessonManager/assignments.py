@@ -1,6 +1,6 @@
 import os
 from pathlib import Path
-import config
+from lesson_manager import config
 import utils
 import glob
 

@@ -19,22 +19,26 @@ open_research_paper() {
   ([ -f "$pdf_file" ] && zathura "$(realpath "$pdf_file")") || google-chrome-stable --profile-directory="Profile 2" --app="https://google.com/search?q=$pdf_file"
 }
 
-get_figure_folders() {
-  declare -A figure_folders
-  for file in $(find "$current_course/figures/" -mindepth 1 -maxdepth 1 -type d -exec basename {} \; | sort); do
-    new_string=$(echo "$file" | sed -e "s/lec-/Lecture /" -e "s/chap-/Chapter /" -e "s/\b0\+\([1-9][0-9]*\)/\1/")
-    figure_folders["$new_string"]="$file"
+get_figures() {
+  declare -A figure_names
+
+  for file in $(find "$current_course/figures/" | sort); do
+    if [[ "$file" == "README.md" ]]; then
+      continue
+    fi
+
+    figure_name=$(echo "$file" | sed -e 's/\.[^.]*$//')
   done
 
-  declare -p figure_folders
+  declare -p figure_names
 }
 
-list_online_notes() {
+list_professor_notes() {
   declare -A note_files
   declare -A annotated_files
   declare -A blank_files
 
-  for file in $(find "$current_course/online-lecture-notes/" -mindepth 1 -maxdepth 1 -type f -exec basename {} \; | sort); do
+  for file in $(find "$current_course/professor-notes/" -mindepth 1 -maxdepth 1 -type f -exec basename {} \; | sort); do
     if [[ "$file" != *.pdf ]]; then
       continue
     fi
@@ -42,7 +46,7 @@ list_online_notes() {
     note_num=$(echo "$file" | sed -s "s/[^0-9]//g")
     new_string=$(echo "$file" | sed -e "s/lec-/Lecture /" -e "s/chap-/Chapter /" -e "s/.pdf//" -e "s/\b0\+\([1-9][0-9]*\)/\1/" -e 's/-/ /g' -e 's/\b\(.\)/\u\1/g')
 
-    file="$current_course/online-lecture-notes/$file"
+    file="$current_course/professor-notes/$file"
 
     if [[ "$file" == *annotated* ]]; then
       annotated_files["$note_num"]="$file"
@@ -76,27 +80,15 @@ list_online_notes() {
   fi
 }
 
-inkscape_figures() {
-  eval "$(get_figure_folders)";
-
-  figure_folder=$(printf "%s\n" "${!figure_folders[@]}" | sort -t " " -k2,2n -k1,1 -r | rofi -dmenu -window-title "Select Week");
-  [ "$figure_folder" = "" ] && exit 0;
-
-  week="${figure_folders[$figure_folder]}";
-  inkscape-figures edit "$current_course/figures/$week";
-}
-
 create_figure() {
-  eval "$(get_figure_folders)";
+  local figures=$(find "$current_course/figures/" -type f ! -name "README.md" \
+    -exec basename {} \; | sed -e 's/\.[^.]*$//' | sort -u)
 
-  figure_folder=$(printf "%s\n" "${!figure_folders[@]}" | sort -t " " -k2,2n -k1,1 -r | rofi -dmenu -window-title "Select Week");
-  [ "$figure_folder" = "" ] && exit 0;
+  selected=$(echo "$figures" | rofi -dmenu -p "Select a figure")
 
-  week="${figure_folders[$figure_folder]}";
-
-  figure_name=$(rofi -dmenu -window-title "Inkscape figure name");
-  if [ "$figure_name" != "" ]; then
-    inkscape-figures create "$figure_name" "$current_course/figures/$week" | xclip -selection clipboard;
+  if [ "$selected" != "" ]; then
+    cd ~/Documents/school-setup/
+    ./main.py create "$selected" "$current_course/figures" | xclip -selection clipboard;
   else
     exit;
   fi
@@ -135,33 +127,22 @@ case $key in
   #  School Notes  #
   ##################
 
-  # Open my class notes.
+  a ) lesson-manager --rofi-assignments ;;
+  b ) lesson-manager --rofi-books ;;
+  c ) lesson-manager --rofi-courses ;;
+  n ) lesson-manager --rofi-notes ;;
+  f ) lesson-manager --rofi-figures edit "$current_course/figures" ;;
+  F ) create_figure ;;
+
+  s ) lesson-manager --source-notes ;;
+  S ) lesson-manager --sync-notes ;;
+
   o ) zathura "$master_pdf" ;;
-  # List all online notes.
-  O ) list_online_notes ;;
-  # List all my inkscape figures.
-  i ) inkscape_figures ;;
-  # Create inkscape figure.
-  I ) create_figure ;;
-  # Open my current course in the browser.
+  O ) list_professor_notes ;;
   w ) open_browser ;;
-  # Open my info.yaml file.
   y ) launch_kitty --path "$current_course" --cmd "nvim info.yaml" ;;
-  # Search through my research papers.
   p ) open_research_paper ;;
-  # Open my notes.md file for the current course.
   k ) launch_kitty --path "$current_course" --cmd "nvim notes.md" ;;
-  # Open my notes.md file for everything.
   K ) launch_kitty --path "$school_notes_root" --cmd "nvim notes.md" ;;
-  # Open the master.tex file.
   m ) launch_kitty --path "$current_course" --cmd "nvim master.tex" ;;
-
-  # Custom made scripts.
-  a ) ~/Documents/school-setup/main.py --rofi-assignments ;;
-  b ) ~/Documents/school-setup/main.py --rofi-books ;;
-  c ) ~/Documents/school-setup/main.py --rofi-courses ;;
-  n ) ~/Documents/school-setup/main.py --rofi-notes ;;
-
-  s ) ~/Documents/school-setup/main.py --source-notes ;;
-  S ) ~/Documents/school-setup/main.py --sync-notes ;;
 esac
