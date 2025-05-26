@@ -33,5 +33,8 @@ msg "Copied example setup to $HOME"
 cp -r "$HOME/example-setup/config.yaml" "$SRC"
 msg "Copied example config.yaml to $SRC"
 
+cp -r "$HOME/example-setup/config.py" "$SRC"
+msg "Copied example config.py to $SRC"
+
 cp -r "$HOME/example-setup/template.svg" "$SRC"
 msg "Copied example template.svg to $SRC"
