@@ -8,3 +8,4 @@ selenium
 beautifulsoup4
 requests
 pytz
+psutil

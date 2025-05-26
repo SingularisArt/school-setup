@@ -74,11 +74,21 @@ def main():
         help="Sync notes to google drive.",
         action="store_true",
     )
+    parser.add_argument(
+        "-rf",
+        "--rofi-figures",
+        help="Manage figures. Usage: -rf create <name> | edit [name] | watch",
+        nargs="*",
+    )
 
     args = parser.parse_args()
 
     os.chdir(sys.path[0])
 
+    if args.rofi_figures:
+        import src.rofi_figures as rf
+
+        rf.main(parser, args.rofi_figures)
     if args.calendar:
         import src.countdown as ca
 

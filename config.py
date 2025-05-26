@@ -3,7 +3,9 @@ from pathlib import Path
 import utils
 
 # Load the data from the config file
-data = utils.load_data("~/.config/lesson-manager/config.yaml", "yaml")
+config_path = Path("~/.config/lesson-manager").expanduser()
+config_file = config_path / "config.yaml"
+data = utils.load_data(config_file, "yaml")
 
 # Assign the data to the variables
 home = Path(data["home"]).expanduser()

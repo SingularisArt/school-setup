@@ -148,12 +148,16 @@ def main():
         new_events = []
 
         for event in events:
-            regex = r"^([ a-zA-Z0-9-]+): Class$"
+            regex = r"^(Class|Meeting): ([ a-zA-Z0-9-]+)$"
 
             try:
                 parsed_event = re.search(regex, event["summary"])
 
-                summary = parsed_event.group(1)
+                if not parsed_event:
+                    continue
+
+                type = parsed_event.group(1)
+                summary = parsed_event.group(2)
 
                 if "dateTime" in event["start"]:
                     event_dict = {
@@ -161,7 +165,7 @@ def main():
                         "location": event.get("location", None),
                         "start": parse(event["start"]["dateTime"]),
                         "end": parse(event["end"]["dateTime"]),
-                        "type": "Class",
+                        "type": type,
                     }
 
                     new_events.append(event_dict)
