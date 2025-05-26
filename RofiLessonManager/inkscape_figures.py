@@ -59,10 +59,10 @@ class InkscapeFigure:
 
         return "\n".join([
             r"\begin{figure}[H]",
-            r"    \centering",
-            rf"    \incfig{{{name}}}",
-            rf"    \caption{{{caption}}}",
-            rf"    \label{{fig:{label}}}",
+            r"  \centering",
+            rf"  \incfig{{{name}}}",
+            rf"  \caption{{{caption}}}",
+            rf"  \label{{fig:{label}}}",
             r"\end{figure}",
         ])
 
