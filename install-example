@@ -11,12 +11,12 @@ function msg() {
   printf "%s\n" "$text"
 }
 
-# pip3 install -r ./lesson-manager/requirements.txt
-# msg "Installed required packages"
+pip3 install -r ./lesson-manager/requirements.txt
+msg "Installed required packages"
 
-# cd ./lesson-manager || exit 1
-# pip3 install .
-# msg "Installed lesson-manager package"
+cd ./lesson-manager || exit 1
+pip3 install .
+msg "Installed lesson-manager package"
 
 if [[ ! -d "$DIR" ]]; then
   mkdir "$DIR"
