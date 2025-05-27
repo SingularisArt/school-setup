@@ -1,20 +1,45 @@
 from daemonize import Daemonize
 import os
+import signal
 import platform
 
-from RofiLessonManager.inkscape_figures import InkscapeFigure as InkscapeFigure
-from RofiLessonManager.inkscape_figures import log as log
+from core.inkscape_figures import InkscapeFigure as InkscapeFigure
+from core.inkscape_figures import log as log
+from lesson_manager import config
 from utils.rofi import select as select
+from lesson_manager.config import PID_FILE
 
 
-def watch():
+def get_default_path(path):
+    if not path:
+        return config.current_course / "figures"
+
+    return os.path.abspath(path)
+
+
+def watch(kill=False):
+    if kill:
+        if os.path.exists(PID_FILE):
+            with open(PID_FILE, "r") as f:
+                pid = int(f.read())
+            try:
+                os.kill(pid, signal.SIGTERM)
+                log.info(f"Killed watcher process with PID {pid}.")
+                os.remove(PID_FILE)
+            except ProcessLookupError:
+                log.warning(f"No process with PID {pid} found. Removing stale PID file.")
+                os.remove(PID_FILE)
+        else:
+            log.warning("Watcher is not running (PID file not found).")
+        return
+
     fig = InkscapeFigure()
     if platform.system() == "Linux":
         watcher = fig.watch_inotify
     else:
         watcher = fig.watch_fswatch
 
-    Daemonize(app="inkscape-figures", pid="/tmp/inkscape-figures.pid", action=watcher).start()
+    Daemonize(app="inkscape-figures", pid=PID_FILE, action=watcher).start()
     log.info("Watching figures.")
 
 
@@ -26,22 +51,3 @@ def create(title, root):
 def edit(root):
     fig = InkscapeFigure()
     fig.edit_figure(root)
-
-
-def main(parser, args):
-    command = args[0] if args else None
-
-    if not command or len(command) == 0 or command not in ["create", "edit", "watch"]:
-        parser.error("Unknown subcommand for --rofi-figures. Use 'create', 'edit', or 'watch'.")
-    if command == "create" and len(args) < 2:
-        parser.error("The 'create' command requires a figure title.")
-
-    if command == "create":
-        title = args[1]
-        root = os.getcwd() if len(args) < 3 else args[2]
-        create(title, root)
-    elif command == "edit":
-        root = os.getcwd() if len(args) < 2 else args[1]
-        edit(root)
-    elif command == "watch":
-        watch()

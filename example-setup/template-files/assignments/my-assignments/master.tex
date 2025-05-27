@@ -1,0 +1,25 @@
+\documentclass{report}
+
+\newcommand\hmwkTitle{TITLE}
+\newcommand\hmwkDueDate{DUE}
+
+\newcommand\hmwkDueTime{23:59}
+\newcommand\hmwkClass{CLASS}
+\newcommand\hwkClassShort{CLASS_SHORT}
+\newcommand\hmwkClassTime{START_TIME}
+\newcommand\hmwkClassInstructor{PROFESSOR}
+\newcommand\hmwkClassInstructorShortName{PROFESSOR_SHORT}
+\newcommand\hmwkAuthorName{\textbf{AUTHOR}}
+
+\input{preamble.tex}
+
+\begin{document}
+  \maketitle
+  \pagestyle{plain}
+  \mbox{}
+  \thispagestyle{empty}
+  \newpage
+  \pagestyle{fancy}
+  \setcounter{page}{1}
+  \input{latex-files/ASSIGNMENT-NAME.tex}
+\end{document}

@@ -11,18 +11,17 @@ highlight_current_course: true
 
 notes_dir: "~/example-setup"
 root: "~/example-setup/courses"
-templates_dir: "~/example-setup/template_files"
+templates_dir: "~/example-setup/template-files"
 current_course: "~/example-setup/current-course"
-
-# relative to current_course
-books_dir: "books"
-figures_dir: "figures"
+sourcing_notes_template: "\\input{#1}"
 
 date_format: "%b %d %Y %a (%H:%M:%S)"
 home: "/home/user"
 user: "user"
 
 # relative to current_course
+books_dir: "books"
+figures_dir: "figures"
 assignments_dir: "assignments"
 assignment_folders:
   bib_folder: "my-assignments/bibtex-files"

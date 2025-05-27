@@ -14,20 +14,26 @@ Managing LaTeX Lecture Notes
   * [The `info.yaml` file](#the-infoyaml-file)
   * [The `master.tex` file](#the-mastertex-file)
 * [How to use](#how-to-use)
-  * [`lesson-manager -h/--help`](#lesson-manager--h--help)
-  * [`lesson-manager -ca/--calendar`](#lesson-manager--ca--calendar)
-  * [`lesson-manager -ic/--init-courses`](#lesson-manager--ic--init-courses)
-  * [`lesson-manager -ra/--rofi-assignments`](#lesson-manager--ra--rofi-assignments)
-  * [`lesson-manager -rb/--rofi-books`](#lesson-manager--rb--rofi-books)
-  * [`lesson-manager -rc/--rofi-courses`](#lesson-manager--rc--rofi-courses)
-  * [`lesson-manager -rf/--rofi-figures`](#lesson-manager--rf--rofi-figures)
-  * [`lesson-manager -rn/--rofi-notes`](#lesson-manager--rn--rofi-notes)
-  * [`lesson-manager -rsn/--rofi-strip-notes`](#lesson-manager--rsn--rofi-strip-notes)
-  * [`lesson-manager -sn/--source-notes`](#lesson-manager--sn--source-notes)
-  * [`lesson-manager -yn/--sync-notes`](#lesson-manager--yn--sync-notes)
+  * [Stand alone Commands](#stand-alone-commands)
+    * [`lesson-manager -h/--help`](#lesson-manager--h--help)
+    * [`lesson-manager calendar`](#lesson-manager-calendar)
+    * [`lesson-manager init-courses`](#lesson-manager-init-courses)
+    * [`lesson-manager source-notes`](#lesson-manager-source-notes)
+    * [`lesson-manager sync-notes`](#lesson-manager-sync-notes)
+    * [`lesson-manager strip-notes`](#lesson-manager-strip-notes)
+  * [Rofi Commands](#rofi-commands)
+    * [`lesson-manager rofi assignments`](#lesson-manager-rofi-assignments)
+    * [`lesson-manager rofi books`](#lesson-manager-rofi-books)
+    * [`lesson-manager rofi courses`](#lesson-manager-rofi-courses)
+  * [`lesson-manager rofi notes`](#lesson-manager-rofi-notes)
+  * [Figure Commands](#figure-commands)
+    * [`lesson-manager figures create <name> [path]`](#lesson-manager-figures-create-name-path)
+    * [`lesson-manager figures edit [path/name]`](#lesson-manager-figures-edit-pathname)
+    * [`lesson-manager figures watch [--kill]`](#lesson-manager-figures-watch---kill)
+    * [`lesson-manager figures shortcut-manager [--kill]`](#lesson-manager-figures-shortcut-manager---kill)
+  * [Figures](#figures)
 * [Shortcuts](#shortcuts)
   * [SXHKD](#sxhkd)
-* [Figures](#figures)
 * [Setup](#setup)
   * [Install](#install)
   * [Example Setup](#example-setup)
@@ -73,36 +79,36 @@ Here's a quick overview of how the directory structure of a course looks like:
 ```
 .
 ├── assignments
-│   ├── graded-assignments
-│   │   ├── written-homework-01.pdf
-│   │   └── ...
-│   ├── my-assignments
-│   │   ├── bibtex-files
-│   │   │   ├── homework-01.bib
-│   │   │   └── ...
-│   │   ├── image-files
-│   │   │   ├── homework-01
-│   │   │   │   ├── image-01.png
-│   │   │   │   └── ...
-│   │   │   └── ...
-│   │   ├── latex-files
-│   │   │   ├── homework-01.tex
-│   │   │   └── ...
-│   │   ├── Makefile
-│   │   ├── master.tex
-│   │   ├── pdf-files
-│   │   │   ├── homework-01.pdf
-│   │   │   └── ...
-│   │   ├── preamble.tex -> /home/singularis/Documents/school-notes/University/_files/assignments/my-assignments/preamble.tex
-│   │   └── yaml-files
-│   │       ├── homework-01.yaml
-│   │       └── ...
-│   ├── online-assignments
-│   │   ├── homework-01.pdf
-│   │   └── ...
-│   └── solution-keys
-│       ├── written-homework-01.pdf
-│       └── ...
+│   ├── graded-assignments
+│   │   ├── written-homework-01.pdf
+│   │   └── ...
+│   ├── my-assignments
+│   │   ├── bibtex-files
+│   │   │   ├── homework-01.bib
+│   │   │   └── ...
+│   │   ├── image-files
+│   │   │   ├── homework-01
+│   │   │   │   ├── image-01.png
+│   │   │   │   └── ...
+│   │   │   └── ...
+│   │   ├── latex-files
+│   │   │   ├── homework-01.tex
+│   │   │   └── ...
+│   │   ├── Makefile
+│   │   ├── master.tex
+│   │   ├── pdf-files
+│   │   │   ├── homework-01.pdf
+│   │   │   └── ...
+│   │   ├── preamble.tex -> /home/singularis/Documents/school-notes/University/_files/assignments/my-assignments/preamble.tex
+│   │   └── yaml-files
+│   │       ├── homework-01.yaml
+│   │       └── ...
+│   ├── online-assignments
+│   │   ├── homework-01.pdf
+│   │   └── ...
+│   └── solution-keys
+│       ├── written-homework-01.pdf
+│       └── ...
 ├── books
 │   ├── book-01.pdf
 │   ├── book-02
@@ -122,19 +128,19 @@ Here's a quick overview of how the directory structure of a course looks like:
 ├── info.yaml
 ├── intro.tex
 ├── lectures
-│   ├── lec-01.tex
-│   └── ...
+│   ├── lec-01.tex
+│   └── ...
 ├── Makefile -> /home/singularis/Documents/school-notes/University/_files/Makefile
 ├── master.pdf
 ├── master.tex
 ├── notes.md
 ├── professor-notes
-│   ├── lec-01-annotated.pdf
-│   ├── lec-01-blank.pdf
-│   └── ...
+│   ├── lec-01-annotated.pdf
+│   ├── lec-01-blank.pdf
+│   └── ...
 ├── papers
-│   ├── paper-01.pdf
-│   └── ...
+│   ├── paper-01.pdf
+│   └── ...
 ├── preamble.tex -> /home/singularis/Documents/school-notes/University/_files/preamble.tex
 └── UltiSnips
     └── tex.snippets
@@ -170,7 +176,7 @@ assignment_folders:
   python_scripts: "my-assignments/python-scripts"
   ...
 ```
-Then, the program will automatically pick it up and display it in the rofi menu when you run the `lesson-manager -ra` command.
+Then, the program will automatically pick it up and display it in the rofi menu when you run the `lesson-manager rofi assignments` command.
 
 ### The `books` folder
 
@@ -210,7 +216,14 @@ I use inkscape to create my figures. When you want to save your figure, save it 
     ├── figure-01.svg
     └── ...
 ```
-I then use the `\incfig` command I defined to include the figure ([link]()).
+I then use the `\incfig` command I defined to include the figure:
+```latex
+\usepackage{import}
+\newcommand\incfig[2][1]{
+  \def\svgwidth{#1\columnwidth}
+  \import{figures}{#2.pdf_tex}
+}
+```
 
 ### The `papers` folder
 
@@ -228,7 +241,7 @@ Here's an example `info.yaml` file:
 title: "Differential Geometry"
 topic: "Mathematics"
 class_number: 33103
-short: "MTH-411"
+short: "MTH-433"
 author: "Hashem A. Damrah"
 term: "Spring 2025"
 faculty: "Faculty of Mathematics"
@@ -259,7 +272,7 @@ Here's an example `master.tex` file:
 \title{Differential Geometry}
 \date{March 31, 2025}
 
-\def\nlecturer{M. Warren}
+\def\nlecturer{F. Last}
 \def\nterm{Spring}
 \def\nyear{$2025$}
 
@@ -285,11 +298,13 @@ To understand how the program actually works, take a look at the README located 
 
 Once you have everything setup, here are the following commands you can use:
 
-### `lesson-manager -h/--help`
+### Stand alone Commands
+
+#### `lesson-manager -h/--help`
 
 Shows the help menu.
 
-### `lesson-manager -ca/--calendar`
+#### `lesson-manager calendar`
 
 This script hooks into your calendar, which you can configure in the `~/.config/lesson-manager/config.yaml`.
 
@@ -299,51 +314,17 @@ I use the following polybar module:
 ```ini
 [module/class-info]
 type = custom/script
-exec = TZ="America/Vancouver" lesson-manager -ca
+exec = TZ="America/Vancouver" lesson-manager calendar
 click-left = sensible-browser "https://calendar.google.com/calendar/" -- &
 interval = 60
 tail = true
 ```
 
-### `lesson-manager -ic/--init-courses`
+#### `lesson-manager init-courses`
 
 This command initializes all the courses. Just make sure you have the `info.yaml` file in the root directory of each course, and that you have the `templates` folder all setup correctly. The script will then create all the necessary folders and files for you.
 
-### `lesson-manager -ra/--rofi-assignments`
-
-This command will list all your assignments in the current course, via rofi. You can then select the assignment you want to view, and it will then list the latex, yaml, your submitted pdf, the professor's graded pdf, and the solution key for that assignment (if it doesn't exist, it will not show up). You can then select the file you want to view, and it will open it in your preferred editor or viewer, which, again, you can configure in the `~/.config/lesson-manager/config.yaml` file.
-
-### `lesson-manager -rb/--rofi-books`
-
-This command will list all the books in the current course, via rofi. You can then select the book you want to view. If you only have the textbook, it will open it up in your preferred pdf viewer. If you have the textbook and along with the solutions. If your solutions are broken up into multiple pdf files, once you select the `solutions` option, it will then list all the solution files in a rofi menu, and you can select the one you want to view. If you have the solutions as one single pdf file, it will open that up directly.
-
-### `lesson-manager -rc/--rofi-courses`
-
-This command will list all the courses you have, via rofi. You can then select the course you want to view, and it will set that as the current course, via symlinking the chose course to the `current_course` path in the `~/.config/lesson-manager/config.yaml` file. This will then allow you to use all the other commands, such as `lesson-manager -ra`, `lesson-manager -rb`, etc. I use the following `polybar` module to list the current course:
-```ini
-[module/current-course]
-type = custom/script
-exec = cat "/home/singularisart/.local/share/current_course" | sed 's/_/ /g' | sed 's/-/ /g'
-click-left = python3 lesson-manager --rofi-course
-click-right = python3 lesson-manager --rofi-notes
-click-middel = python3 lesson-manager --rofi-assignments
-```
-
-### `lesson-manager -rf/--rofi-figures`
-
-This command has a few options you could pass to it.
-
-- `create <name> [path]`: This will create a new figure with the name provided (something with `<...>` means it's mandatory, while something with `[<...>]` means it's optional), in the path provided (if not provided, it will just create the file in the current directory).
-- `edit [path/name]`: This will open a rofi menu with all the figures in the directory provided (if not provided, it will just open the current directory). If you pass it a file, it will automatically open it in inkscape, so you can edit it.
-- `watch`: This will create a process in the background that will watch as you edit figures in inkscape, and when you save, it will automatically create a `pdf` and `pdf_tex` file for you, so you can use it in your latex documents. It will also create a `svg` file, if you don't have one already. To kill the process, just pass `kill` to the `watch` command, like so: `lesson-manager -rf watch kill`.
-
-### `lesson-manager -rn/--rofi-notes`
-
-This command will list all the lecture notes in the current course, via rofi. You can then select the lecture note you want to view, and it will open it in your preferred editor or viewer.
-
-### `lesson-manager -rsn/--rofi-strip-notes`
-
-### `lesson-manager -sn/--source-notes`
+#### `lesson-manager source-notes`
 
 This command will let you select which lecture notes you want to include in your `master.tex` file. Rofi will provide you with a few options to choose from:
 - `current`: This will source the latest lecture note you took in the current course.
@@ -420,24 +401,76 @@ It's important to keep the `notes start a-b` and `notes end a-b` comments, so th
 % notes end 0-16
 ```
 
-### `lesson-manager -yn/--sync-notes`
+#### `lesson-manager sync-notes`
 
 This command will sync your notes to the cloud. First, it will include all the lecture notes to your `master.tex` file, then it will compile the `master.tex` file to a pdf, and finally, it will upload the pdf to your Google Drive folder. You can configure the Google Drive folder in the `~/.config/lesson-manager/config.yaml` file.
 
+#### `lesson-manager strip-notes`
+
+
+
+### Rofi Commands
+
+#### `lesson-manager rofi assignments`
+
+This command will list all your assignments in the current course, via rofi. You can then select the assignment you want to view, and it will then list the latex, yaml, your submitted pdf, the professor's graded pdf, and the solution key for that assignment (if it doesn't exist, it will not show up). You can then select the file you want to view, and it will open it in your preferred editor or viewer, which, again, you can configure in the `~/.config/lesson-manager/config.yaml` file.
+
+#### `lesson-manager rofi books`
+
+This command will list all the books in the current course, via rofi. You can then select the book you want to view. If you only have the textbook, it will open it up in your preferred pdf viewer. If you have the textbook and along with the solutions. If your solutions are broken up into multiple pdf files, once you select the `solutions` option, it will then list all the solution files in a rofi menu, and you can select the one you want to view. If you have the solutions as one single pdf file, it will open that up directly.
+
+#### `lesson-manager rofi courses`
+
+This command will list all the courses you have, via rofi. You can then select the course you want to view, and it will set that as the current course, via symlinking the chose course to the `current_course` path in the `~/.config/lesson-manager/config.yaml` file. This will then allow you to use all the other commands, such as `lesson-manager rofi assignments`, `lesson-manager rofi books`, etc. I use the following `polybar` module to list the current course:
+```ini
+[module/current-course]
+type = custom/script
+exec = cat "/home/singularisart/.local/share/current_course" | sed 's/_/ /g' | sed 's/-/ /g'
+click-left = lesson-manager rofi course
+click-right = lesson-manager rofi notes
+click-middel = lesson-manager rofi assignments
+```
+
+### `lesson-manager rofi notes`
+
+This command will list all the lecture notes in the current course, via rofi. You can then select the lecture note you want to view, and it will open it in your preferred editor or viewer.
+
+### Figure Commands
+
+#### `lesson-manager figures create <name> [path]`
+
+This command has a few options you could pass to it.
+
+This will create a new figure with the name provided (something with `<...>` means it's mandatory, while something with `[<...>]` means it's optional), in the path provided (if not provided, it will just create the file in the current directory).
+
+#### `lesson-manager figures edit [path/name]`
+
+This will open a rofi menu with all the figures in the directory provided (if not provided, it will just open the current directory). If you pass it a file, it will automatically open it in inkscape, so you can edit it.
+
+#### `lesson-manager figures watch [--kill]`
+
+This will create a process in the background that will watch as you edit figures in inkscape, and when you save, it will automatically create a `pdf`, `pdf_tex`, and `svg` file for you, so you can use it in your latex documents. To kill the process, just pass `--kill` to the `watch` command, like so: `lesson-manager figures watch --kill`.
+
+#### `lesson-manager figures shortcut-manager [--kill]`
+
+This will create a process in the background that will monitor your keystrokes while you are in inkscape and will apply the styles based on your keystrokes. For example, if you type `d` `a`, you get a **d**otted **a**row, or if you type `d` `l`, you get a **d**ashed **l**ine, and so on. See [figures](#figures) for more information on how it works and how you can customize the keystrokes. To kill the process, just pass `--kill` to the `shortcut-manager` command, like so: `lesson-manager figures shortcut-manager --kill`.
+
+### Figures
+
 ## Shortcuts
 
-Instead of typing out the full command every time, I've created [shortcuts](./shortcut-manager.sh) for you. They come with all the commands you can run directly from the `lesson-manager` file, along with a bunch of other nice ones. They are as follows (run like `./shortcut-manager.sh LETTER`)`):
+Instead of typing out the full command every time, I've created [shortcuts](./shortcut-manager.sh) for you. They come with all the commands you can run directly from the `lesson-manager` file, along with a bunch of other nice ones. They are as follows (run like `./shortcut-manager.sh LETTER`):
 
 ### SXHKD
 
 Instead of manually running `./shortcut-manager.sh a` every time, I use `sxhkd` to manage my shortcuts. Here's how I do it:
 ```conf
 alt + {a-z}
-  bash lesson-manager {a-z}
+  bash /path/to/shortcut-manager.sh {a-z}
 alt + {A-Z}
-  bash lesson-manager {A-Z}
+  bash /path/to/shortcut-manager.sh {A-Z}
 ```
-Therefore, I just have to press `alt + a` to run `lesson-manager -ra`, or `alt + b` to run `lesson-manager -rb`, and so on. You can find the full list of shortcuts in the [shortcut-manager.sh](./shortcut-manager.sh) file, but here's an overview of them all:
+Therefore, I just have to press `alt + a` to run `lesson-manager rofi assignments`, or `alt + b` to run `lesson-manager rofi books`, and so on. You can find how all the shortcut works in the [shortcut-manager.sh](./shortcut-manager.sh) file. Here's a quick overview of the shortcuts:
 - `a`: List all assignments in the current course.
 - `b`: List all books in the current course.
 - `c`: List all courses you have.
@@ -453,10 +486,6 @@ Therefore, I just have to press `alt + a` to run `lesson-manager -ra`, or `alt +
 - `k`: Open the `notes.md` file of the current course in your preferred editor.
 - `K`: Open the global `notes.md` file in your preferred editor.
 - `m`: Open the `master.tex` file of the current course in your preferred editor.
-
-## Figures
-
-TODO
 
 ## Setup
 
@@ -482,8 +511,8 @@ I've already created an example setup [here](./example-setup) to understand how 
 The config file for the program is located at `$HOME/.config/lesson-manager/config.yaml`. You can edit it to change the paths to your files and folders, as well as the editor/viewer you want to use for opening files. Here's an example of what the config file looks like:
 ```yaml
 ---
-calendar_id: "primary" # Your Google Calendar ID, usually "primary"
-drive_folder_id: "notes_folder_id" # Your Google Drive folder ID, where you want to sync your notes
+calendar_id: "primary"              # Your Google Calendar ID, usually "primary"
+drive_folder_id: "notes_folder_id"  # Your Google Drive folder ID, where you want to sync your notes
 
 editor: "nvim"
 terminal: "kitty"
@@ -580,17 +609,17 @@ All these variables are paths relative to the `current course` directory, i.e., 
 - The `books directory` is the path to the folder where all your books are located.
 - The `figures directory` is the path to the folder where all your figures are located.
 - The `assignments directory` is the path to the folder where all your assignments are located. This is where you place everything that's related to your assignments, such as the `graded-assignments`, `my-assignments`, `online-assignments`, `solution-keys`, `python-files`, folders.
-- The `assignments folders` is a list of all the items that you want to show up in the rofi menu when you select an assignment when running the `./main -ra` command. You can add as many folders as you want, and the program will automatically pick them up and display them in the rofi menu. Just make sure to keep the naming consistent, i.e., if you have a latex file called `homework-01.tex`, then, it's solution key should be called `homework-01.pdf` placed in the `solution-keys` folder, its yaml file should be called `homework-01.yaml` placed in the `yaml-files` folder, and so on. This way, the program will automatically pick up the files and display them in the rofi menu when you select the assignment.
+- The `assignments folders` is a list of all the items that you want to show up in the rofi menu when you select an assignment when running the `lesson-manager rofi assignments` command. You can add as many folders as you want, and the program will automatically pick them up and display them in the rofi menu. Just make sure to keep the naming consistent, i.e., if you have a latex file called `homework-01.tex`, then, it's solution key should be called `homework-01.pdf` placed in the `solution-keys` folder, its yaml file should be called `homework-01.yaml` placed in the `yaml-files` folder, and so on. This way, the program will automatically pick up the files and display them in the rofi menu when you select the assignment.
 
 #### Rofi Options
 
-These are the options that will be passed to rofi when you run the `lesson-manager -ra`, `lesson-manager -rb`, etc. commands. You can add any rofi options you want, and they will be passed to rofi when you run the command.
+These are the options that will be passed to rofi when you run the `lesson-manager rofi assignments`, `lesson-manager rofi books`, etc. commands. You can add any rofi options you want, and they will be passed to rofi when you run the command.
 
 #### Folders and Files
 
-- The `folders` variable is the list of all the folders that you want to create in the course directory when you run `lesson-manager -ic` command. You can add as many folders as you want, and the program will automatically create them for you.
+- The `folders` variable is the list of all the folders that you want to create in the course directory when you run `lesson-manager init-courses` command. You can add as many folders as you want, and the program will automatically create them for you.
 
-- The `files` variable is the list of all the files that you want to be created or symlinked in the course directory when you run `lesson-manager -ic` command. You have a few options for each file:
+- The `files` variable is the list of all the files that you want to be created or symlinked in the course directory when you run `lesson-manager init-courses` command. You have a few options for each file:
   - If you set it to `symlink`, then the program will create a symlink to the file in the `templates directory`. This is useful for things that you want to stay consistent across all your courses, and when you modify one, you want it to be reflected in all the courses.
   - If you set it to `copy`, then the program will copy the file from the `templates directory` to the course directory. This is useful for creating templates, like the `master.tex`. You can even pass variables, like `TITLE`, or `DATE`, and the program will automatically replace them with the values you set in the `info.yaml` file.
   - If you set it to `create`, and the program will create the file in the course directory.

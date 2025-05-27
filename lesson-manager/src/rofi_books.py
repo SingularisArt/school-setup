@@ -1,6 +1,6 @@
 import os
 
-from RofiLessonManager.books import Books
+from core.books import Books
 from lesson_manager.config import rofi_options
 from lesson_manager import config
 import utils

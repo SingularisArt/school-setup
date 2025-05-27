@@ -11,34 +11,39 @@ function msg() {
   printf "%s\n" "$text"
 }
 
-msg "Installing required packages"
-pip3 install -r requirements.txt
+# pip3 install -r ./lesson-manager/requirements.txt
+# msg "Installed required packages"
+
+# cd ./lesson-manager || exit 1
+# pip3 install .
+# msg "Installed lesson-manager package"
 
 if [[ ! -d "$DIR" ]]; then
-  msg "Creating folder to store config.yaml"
-
   mkdir "$DIR"
+
+  msg "Created folder to store config.yaml"
 fi
 
 if [[ -e "$SRC" ]]; then
-  msg "Backing up config.yaml"
-
   mv "$SRC" "$SRC.back"
   rm -rf "$SRC"
+
+  msg "Backed up config.yaml"
 fi
 
-cd lesson-manager || exit 1
-pip3 install .
-msg "Installed lesson-manager package"
-
-cp -r "./example-setup/" "$HOME"
+cp -r ./example-setup/ "$HOME"
 msg "Copied example setup to $HOME"
 
-cp -r "$HOME/example-setup/config.yaml" "$SRC"
+cp -r "./example-setup/config.yaml" "$SRC"
 msg "Copied example config.yaml to $SRC"
 
-cp -r "$HOME/example-setup/config.py" "$SRC"
-msg "Copied example config.py to $SRC"
+cp -r "./example-setup/config.py" "$DIR"
+msg "Copied example config.py to $DIR"
 
-cp -r "$HOME/example-setup/template.svg" "$SRC"
-msg "Copied example template.svg to $SRC"
+cp -r "./example-setup/template.svg" "$DIR"
+msg "Copied example template.svg to $DIR"
+
+touch "$DIR/roots"
+mkdir -p "$DIR/credentials"
+mkdir -p "$DIR/objects"
+mkdir -p "$DIR/styles"

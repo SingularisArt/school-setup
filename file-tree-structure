@@ -1,0 +1,69 @@
+.
+├── CODE_OF_CONDUCT.md
+├── CONTRIBUTING.md
+├── lesson-manager
+│   ├── lesson_manager
+│   │   ├── cc_info.py
+│   │   ├── cli.py
+│   │   ├── config.py
+│   │   ├── __init__.py
+│   ├── lesson_manager.egg-info
+│   │   ├── dependency_links.txt
+│   │   ├── entry_points.txt
+│   │   ├── PKG-INFO
+│   │   ├── SOURCES.txt
+│   │   └── top_level.txt
+│   ├── pyproject.toml
+│   ├── pyrightconfig.json
+│   ├── README.md
+│   ├── requirements.txt
+│   ├── core
+│   │   ├── assignments.py
+│   │   ├── books.py
+│   │   ├── courses.py
+│   │   ├── exams.py
+│   │   ├── __init__.py
+│   │   ├── inkscape_figures.py
+│   │   ├── LICENSE.md
+│   │   └── notes.py
+│   ├── src
+│   │   ├── countdown.py
+│   │   ├── get_course.py
+│   │   ├── init_courses.py
+│   │   ├── __init__.py
+│   │   ├── rofi_assignments.py
+│   │   ├── rofi_books.py
+│   │   ├── rofi_courses.py
+│   │   ├── rofi_figures.py
+│   │   ├── rofi_notes.py
+│   │   ├── rofi_strip_notes.py
+│   │   ├── source_notes.py
+│   │   └── sync_notes.py
+│   └── utils
+│       ├── authenticate.py
+│       ├── check_if_assignment_is_due.py
+│       ├── colored_text.py
+│       ├── convert_number.py
+│       ├── create_course_event.py
+│       ├── filename_to_number.py
+│       ├── folder_to_name.py
+│       ├── format_date_and_time.py
+│       ├── format_time.py
+│       ├── generate_short_title.py
+│       ├── get_week.py
+│       ├── __init__.py
+│       ├── join.py
+│       ├── load_data.py
+│       ├── location.py
+│       ├── number_to_filename.py
+│       ├── rofi
+│       │   ├── display_text.py
+│       │   ├── get_input.py
+│       │   ├── __init__.py
+│       │   ├── msg.py
+│       │   └── select.py
+│       ├── summary.py
+│       └── sync_file.py
+├── README.md
+├── SECURITY.md
+└── shortcut-manager.sh

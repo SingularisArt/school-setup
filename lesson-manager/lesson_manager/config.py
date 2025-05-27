@@ -1,6 +1,8 @@
 from pathlib import Path
-
 import utils
+
+
+PID_FILE = "/tmp/inkscape-figures.pid"
 
 # Load the data from the config file
 config_path = Path("~/.config/lesson-manager").expanduser()

@@ -12,7 +12,7 @@ authors = [
 dependencies = []
 
 [tool.setuptools]
-packages = ["lesson_manager", "RofiLessonManager", "src", "utils", "utils.rofi"]
+packages = ["lesson_manager", "core", "src", "utils", "utils.rofi"]
 
 [project.scripts]
 lesson-manager = "lesson_manager.cli:main"

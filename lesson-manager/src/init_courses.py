@@ -3,7 +3,7 @@ import os
 import re
 import shutil
 
-from RofiLessonManager.courses import Courses
+from core.courses import Courses
 from lesson_manager import config
 import utils
 
@@ -35,30 +35,30 @@ def main():
         templates_dir = config.templates_dir
 
         title = course.info["title"]
+        topic = course.info["topic"]
+        class_number = course.info["class_number"]
+        short = course.info["short"]
         author = course.info["author"]
+        term = course.info["term"]
+        faculty = course.info["faculty"]
+        college = course.info["college"]
+        location = course.info["location"]
+        year = course.info["year"]
         start_date = get_start_date(course.info["start_date"])
         date = datetime.datetime.today().strftime("%B %d, %Y")
-        term = course.info["term"]
-        year = course.info["year"]
-        faculty = course.info["faculty"]
-        intro_type = course.info["notes_type"]
-        note_type_abbr = ""
-        if course.info["notes_type"].lower() == "lectures":
-            note_type_abbr = "lec"
-        else:
-            note_type_abbr = "chap"
-        note_type = course.info["notes_type"].lower()
-        college = course.info["college"]
+        start_time = course.info["start_time"]
         professor_info = course.info["professor"]
-        professor_short = professor_info["name"].split()[0]
-        note_location = f"{course.info['notes_type']}/{note_type_abbr}"
+        professor_name = professor_info["name"]
+        professor_first_name = professor_name.split()[0]
+        professor_last_name = professor_name.split()[-1]
+        first_professor_letter = professor_first_name[0]
 
         for folder in folders:
             (notes.root / folder).mkdir(exist_ok=True)
             if config.create_readme_file:
                 (notes.root / folder / "README.md").touch(exist_ok=True)
 
-        (notes.root / course.info["notes_type"]).mkdir(exist_ok=True)
+        (notes.root / "lectures").mkdir(exist_ok=True)
 
         for file in files:
             key = files[file]
@@ -73,19 +73,19 @@ def main():
             if search:
                 placeholders = {
                     "CLASS": title,
+                    "CLASS_SHORT": short,
                     "AUTHOR": author,
                     "START_DATE": start_date,
+                    "START_TIME": start_time,
                     "DATE": date,
                     "TERM": term,
                     "YEAR": f"${year}$",
                     "FACULTY": faculty,
-                    "INTRO_TYPE": intro_type.title(),
-                    "TYPE_ABBR": note_type_abbr,
-                    "TYPE": note_type.title()[:-1],
                     "COLLEGE": college,
-                    "PROFESSOR_SHORT": professor_short,
+                    "PROFESSOR_SHORT": professor_first_name,
+                    "FIRST_LETTER": first_professor_letter,
+                    "LAST_NAME": professor_last_name,
                     "PROFESSOR": professor_info["name"],
-                    "NOTE_LOCATION": note_location,
                 }
 
                 with file_dst.open() as f:

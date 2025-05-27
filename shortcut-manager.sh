@@ -19,20 +19,6 @@ open_research_paper() {
   ([ -f "$pdf_file" ] && zathura "$(realpath "$pdf_file")") || google-chrome-stable --profile-directory="Profile 2" --app="https://google.com/search?q=$pdf_file"
 }
 
-get_figures() {
-  declare -A figure_names
-
-  for file in $(find "$current_course/figures/" | sort); do
-    if [[ "$file" == "README.md" ]]; then
-      continue
-    fi
-
-    figure_name=$(echo "$file" | sed -e 's/\.[^.]*$//')
-  done
-
-  declare -p figure_names
-}
-
 list_professor_notes() {
   declare -A note_files
   declare -A annotated_files
@@ -87,8 +73,7 @@ create_figure() {
   selected=$(echo "$figures" | rofi -dmenu -p "Select a figure")
 
   if [ "$selected" != "" ]; then
-    cd ~/Documents/school-setup/
-    ./main.py create "$selected" "$current_course/figures" | xclip -selection clipboard;
+    lesson-manager figures create "$selected" "$current_course/figures" | xclip -selection clipboard;
   else
     exit;
   fi
@@ -96,7 +81,7 @@ create_figure() {
 
 open_browser () {
   url=$(shyaml get-value url < "$current_course/info.yaml" || exit)
-  google-chrome-stable --profile-directory="Profile 1" --app="$url"
+  google-chrome-stable --app="$url"
 }
 
 launch_kitty() {
@@ -127,15 +112,15 @@ case $key in
   #  School Notes  #
   ##################
 
-  a ) lesson-manager --rofi-assignments ;;
-  b ) lesson-manager --rofi-books ;;
-  c ) lesson-manager --rofi-courses ;;
-  n ) lesson-manager --rofi-notes ;;
-  f ) lesson-manager --rofi-figures edit "$current_course/figures" ;;
+  a ) lesson-manager rofi assignments ;;
+  b ) lesson-manager rofi books ;;
+  c ) lesson-manager rofi courses ;;
+  n ) lesson-manager rofi notes ;;
+  f ) lesson-manager figures edit ;;
   F ) create_figure ;;
 
-  s ) lesson-manager --source-notes ;;
-  S ) lesson-manager --sync-notes ;;
+  s ) lesson-manager source-notes ;;
+  S ) lesson-manager sync-notes ;;
 
   o ) zathura "$master_pdf" ;;
   O ) list_professor_notes ;;

@@ -1,0 +1,41 @@
+\usepackage{extramarks}
+\usepackage{multicol}
+\input{../../preamble.tex}
+
+\def\type{problem}
+
+\topmargin=-0.45in
+\evensidemargin=0in
+\oddsidemargin=0in
+\textwidth=6.5in
+\textheight=9.0in
+\headsep=0.25in
+
+\linespread{1.1}
+
+\renewcommand\headrulewidth{0.4pt}
+\renewcommand\footrulewidth{0.4pt}
+
+\pagestyle{fancy}
+
+\makeatletter
+\def\removeSpaces#1{\zap@space#1 \@empty}
+
+\fancyhead[L]{\hmwkAuthorName}
+\fancyhead[C]{\hwkClassShort: \hmwkClass}
+\fancyhead[R]{\hmwkTitle: \hmwkClassInstructorShortName}
+\fancyfoot[L]{\lastxmark}
+\fancyfoot[C]{\thepage}
+\fancyfoot[R]{}
+
+\title{
+  \vspace{2in}\textmd{\textmd{\textbf{\hmwkClass:\ \hmwkTitle}}} \\
+  \normalsize\vspace{0.1in}\small{Due\ on\ \hmwkDueDate\ at \hmwkDueTime} \\
+  \vspace{0.1in}\large{\textit{\hmwkClassInstructor\ \hmwkClassTime}}\vspace{3in}
+}
+
+\author{\hmwkAuthorName\\[-1em] \small{UO ID: 952102243}}
+\date{}
+\makeatother
+
+\renewenvironment{problem}[1][-1]{\ifthenelse{\equal{\type}{problem}}{\noindent\textbf{Problem #1}.}{\noindent\textbf{Exercise #1}.}}{}

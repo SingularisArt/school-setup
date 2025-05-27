@@ -1,4 +1,4 @@
-from RofiLessonManager.courses import Courses as Courses
+from core.courses import Courses as Courses
 import utils
 from lesson_manager import config
 

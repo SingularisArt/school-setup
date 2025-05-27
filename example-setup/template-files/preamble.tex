@@ -1,0 +1,630 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                                                              %
+%                              Required Packages                               %
+%                                                                              %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Required for creating documents
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\RequirePackage{etex}
+
+\usepackage{etoolbox}
+
+% Required math packages
+\usepackage{amsmath}
+\let\iint\relax
+\usepackage{esint}
+\usepackage{amsfonts}
+\usepackage{mathtools}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{mathrsfs}
+\usepackage{breqn}
+\usepackage{upgreek}
+
+\usepackage[usenames,dvipsnames,pdftex]{color} % Required for nicer colors
+\usepackage{hyperref} % Required for hyperlinks
+\usepackage{graphicx} % Required for including images
+\usepackage{enumitem} % Required for customizing lists
+\usepackage{float} % Required for positioning figures and tables
+\usepackage{array} % Required for customizing tables
+\usepackage{cancel} % Required for \cancel
+\usepackage{derivative} % Required for \odv and \pdv
+\usepackage{geometry} % Required for customizing page layout
+\usepackage{textgreek} % Required for greek letters in text mode
+\usepackage{multirow} % Required for multirow in tables
+\usepackage{nicematrix} % Required for better matrices
+\usepackage{cellspace} % Required for better spacing in tables
+\usepackage{xifthen} % Required for if-then-else statements
+\usepackage{fancyhdr} % Required for customizing headers and footers
+\usepackage{import} % Required for importing pdf_tex files
+\usepackage[font=bf]{caption} % Required for customizing captions
+\usepackage{subcaption} % Required for creating subfigures
+\usepackage{siunitx} % Required for SI units
+\usepackage{titletoc} % Required for customizing table of contents
+\usepackage{xstring} % Required for customizing table of contents
+\usepackage[most,many,breakable]{tcolorbox} % Required for creating boxes
+
+% Required for drawing figures
+\usepackage{tikz}
+\usepackage{pgffor}
+\usepackage{tkz-euclide}
+\usepackage{tikz-cd}
+\usepackage{tikz-3dplot}
+
+% Required for creating plots
+\usepackage{pgfplots}
+\usepackage{pgfplotstable}
+
+\makeatletter
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                                                              %
+%                                Basic Settings                                %
+%                                                                              %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\setcounter{tocdepth}{2}
+\allowdisplaybreaks
+
+\ifx\nauthor\undefined
+  \def\nauthor{Hashem A. Damrah}
+\else
+\fi
+
+\newcommand\globalcolor[1]{%
+  \color{#1}\global\let\default@color\current@color
+}
+
+% Symbols
+\let\oldlimsymbol\lim\renewcommand\lim{\displaystyle\oldlimsymbol}
+% \let\oldsumsymbol\sum\renewcommand\sum{\displaystyle\oldsumsymbol}
+\let\oldlimsupsymbol\limsup\renewcommand\limsup{\displaystyle\oldlimsupsymbol}
+\let\oldliminfsymbol\liminf\renewcommand\liminf{\displaystyle\oldliminfsymbol}
+\let\to\rightarrow
+\let\implies\Rightarrow
+\let\impliedby\Leftarrow
+\let\iff\Leftrightarrow
+\let\epsilon\varepsilon
+\let\phi\varphi
+\let\tau\uptau
+
+% Geometry
+\geometry{
+  top=1in,
+  bottom=1.5in,
+  right=1in,
+  left=1in,
+}
+
+% Tables
+\newcolumntype{C}{>{\Centering\arraybackslash}X}
+\setlength{\tabcolsep}{5pt}
+\renewcommand\arraystretch{1.5}
+\renewcommand\thetable{\Roman{table}}
+\captionsetup[figure]{font=small}
+\captionsetup{justification=centering}
+\setlength\cellspacetoplimit{6pt}
+\setlength\cellspacebottomlimit{6pt}
+
+% Lists
+\renewcommand{\labelitemi}{--}
+\renewcommand{\labelitemii}{$\circ$}
+\renewcommand{\labelenumi}{\textnormal{(\roman{*})}}
+
+% Modify Links Color
+\hypersetup{
+  colorlinks,
+  linkcolor=black!90,
+  citecolor=black,
+  urlcolor=cyan!70!black,
+}
+
+%%%%%%%%%%
+%  TikZ  %
+%%%%%%%%%%
+
+\usetikzlibrary{
+  shadings,
+  intersections,
+  angles,
+  quotes,
+  calc,
+  positioning,
+  3d,
+  perspective,
+  arrows,
+  arrows.meta,
+  patterns,
+  decorations.markings,
+  decorations.pathreplacing,
+  decorations.pathmorphing,
+  bending,
+  calligraphy,
+  backgrounds,
+}
+
+\tikzoption{canvas is xy plane at z}[]{%
+  \def\tikz@plane@origin{\pgfpointxyz{0}{0}{#1}}%
+  \def\tikz@plane@x{\pgfpointxyz{1}{0}{#1}}%
+  \def\tikz@plane@y{\pgfpointxyz{0}{1}{#1}}%
+  \tikz@canvas@is@plane}
+
+\usetikzlibrary{shapes.arrows}
+\newcommand\graphslopefield{
+  \pgfmathsetmacro{\hx}{(\xmax-\xmin)/\nx}
+  \pgfmathsetmacro{\hy}{(\ymax-\ymin)/\ny}
+  \foreach \i in {0,...,\nx}
+  \foreach \j in {0,...,\ny}{
+    \pgfmathsetmacro{\yprime}{f({\xmin+\i*\hx},{\ymin+\j*\hy})}
+    \draw[black,shift={({\xmin+\i*\hx},{\ymin+\j*\hy})}]
+    (0,0)--($(0,0)!2mm!(.1,.1*\yprime)$);
+  }
+
+  \draw[->] (\xmin-.5,0)--(\xmax+.5,0) node[below right] {$x$};
+  \draw[->] (0,\ymin-.5)--(0,\ymax+.5) node[above left] {$y$};
+}
+
+\tikzset{derivative/.style={color=gray,mark=none,line width=0.5pt,solid}}
+\tikzset{asymptote/.style={color=gray,mark=none,line width=1pt,<->,dashed}}
+\tikzset{soldot/.style={color=black,fill=black,only marks,mark=*}}
+\tikzset{holdot/.style={color=black,fill=white,only marks,mark=*}}
+
+\tikzset{>=stealth}
+\tikzset{->-/.style={decoration={markings,mark=at position .5 with {\arrow{>}}},postaction={decorate}}}
+
+%%%%%%%%%%%%%%
+%  PgfPlots  %
+%%%%%%%%%%%%%%
+
+\pgfplotsset{width=7cm,compat=1.8}
+\pgfplotsset{compat=newest}
+
+\usepgfplotslibrary{patchplots}
+\usepgfplotslibrary{fillbetween}
+\usetikzlibrary{intersections}
+
+\pgfplotsset{plot/.style={color=red,mark=none,line width=1pt,<->,solid}}
+\pgfplotsset{asymptote/.style={color=gray,mark=none,line width=1pt,<->,dashed}}
+\pgfplotsset{soldot/.style={color=red,only marks,mark=*}}
+\pgfplotsset{holdot/.style={color=red,fill=white,only marks,mark=*}}
+\pgfplotsset{blankgraph/.style={xmin=-10,xmax=10,ymin=-10,ymax=10,axis line style= {-, draw opacity=0 },axis lines=box,major tick length=0mm,xtick={-10,-9,...,10},ytick={-10,-9,...,10},grid=major,yticklabels={,,},xticklabels={,,},minor xtick=,minor ytick=,xlabel={},ylabel={},width=0.75\textwidth,grid style={solid,gray!40}}}
+
+\pgfplotscreateplotcyclelist{stylelist}{
+  plot \\
+}
+
+\def\axisdefaultwidth{175pt}
+\def\axisdefaultheight{\axisdefaultwidth}
+
+\pgfplotsset{every axis/.append style={
+    axis x line=middle,
+    axis y line=middle,
+    axis lines = center,
+    axis line style={<->},
+    xlabel={$x$},
+    ylabel={$y$},
+    xmin=-7,xmax=7,
+    ymin=-7,ymax=7,
+    yticklabel style={inner sep=0.333ex},
+    minor xtick={-7,-6,...,7},
+    minor ytick={-7,-6,...,7},
+    scale only axis,
+    cycle list name=stylelist,
+    tick label style={font=\footnotesize},
+    legend cell align=left,
+    grid=minor,
+    grid style={solid,gray!40},
+    try min ticks=6,
+  },
+  framed/.style={axis background/.style={draw=gray}}
+}
+
+\pgfplotsset{axis background/.style={draw=gray}}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                                                              %
+%                           School Specific Commands                           %
+%                                                                              %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%
+%  Helpful Commands  %
+%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand\resetcounters{
+  \setcounter{section}{0}
+  \setcounter{subsection}{0}
+  \setcounter{subsubsection}{0}
+  \setcounter{paragraph}{0}
+  \setcounter{subparagraph}{0}
+}
+
+\newcommand\sfrac[2]{#1/#2}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%  Lecture/Chapter Command  %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\def\notenum{}
+\def\@note{}%
+\newcommand\lecture[3]{
+  \ifthenelse{\isempty{#3}}{%
+    \def\@note{Lecture #1}%
+  }{%
+    \def\@note{Lecture #1: #3}%
+  }%
+  \section*{\@note\hfill{\small\textnormal{#2}}}
+}
+
+\patchcmd{\maketitle}
+  {\end{titlepage}}
+  {\thispagestyle{titlepagestyle}\end{titlepage}}
+  {}{}
+
+\fancypagestyle{titlepagestyle}{%
+   \fancyhf{}%
+    \fancyfoot[C]{%
+      \textit{For more notes like this, visit \href{\othernotes}{\othernotes}}. \\%
+      \noindent\makebox[\linewidth]{\rule{0.8\textwidth}{0.4pt}}
+      \nterm: \nyear, \\%
+      Last Update: \today, \\%
+      \faculty, \location.%
+    }%
+    \renewcommand{\headrulewidth}{0 mm}
+}%
+
+% Intro
+\pagestyle{plain}
+\newcommand\createintro{
+  \author{Based on lectures by \nlecturer \\\small Notes taken by \nauthor}
+
+  \pagenumbering{roman}
+  \renewcommand\headrulewidth{0pt}
+  \maketitle
+  \thispagestyle{titlepagestyle}
+
+  \begin{center}
+    \begin{minipage}[c]{0.9\textwidth}
+      \centering\footnotesize \textit{Disclaimer:} This document will inevitably
+      contain some mistakes--both simple typos and legitimate errors. Keep in
+      mind that these are the notes of an undergraduate student in the process
+      of learning the material himself, so take what you read with a grain of
+      salt. If you find mistakes and feel like telling me, I will be grateful
+      and happy to hear from you, even for the most trivial of errors. You can
+      reach me by email, in English, Arabic, Hebrew, or Spanish at
+      \href{mailto:singularisartt@gmail.com}{singularisartt@gmail.com}.
+    \end{minipage}
+  \end{center}
+
+  \input{intro.tex}
+
+  \newpage
+
+  \newgeometry{
+    top=1in,
+    bottom=1in,
+    right=1in,
+    left=1in,
+  }
+
+  \tableofcontents
+
+  \pagestyle{fancy}
+  \pagenumbering{arabic}
+  \setcounter{page}{1}
+
+  \renewcommand\headrulewidth{0.4pt}
+  \fancyhead[R]{\@note}
+  \fancyhead[L]{\nauthor}
+  \fancyfoot[C]{\thepage}
+}
+
+%%%%%%%%%%%%%%%%%%%%%
+%  Random Commands  %
+%%%%%%%%%%%%%%%%%%%%%
+
+% Circle
+\newcommand*\circled[1]{
+  \tikz[baseline=(char.base)] {
+    \node[shape=circle,draw,inner sep=1pt] (char) {#1};
+  }
+}
+
+% Import Figures
+\newcommand\incimg[2][1]{%
+  \includegraphics[width=#1\columnwidth]{figures/#2}%
+}
+
+\newcommand\incfig[2][1]{
+  \def\svgwidth{#1\columnwidth}
+  \import{figures}{#2.pdf_tex}
+}
+
+% For diagonal strikeout in red
+\newcommand\rcancel[1]{\renewcommand\CancelColor{\color{red}}\cancel{#1}}
+
+% Logic
+\renewcommand\nmid{\not|~}
+
+%%%%%%%%%%%%%%%%%%
+%  Math Symbols  %
+%%%%%%%%%%%%%%%%%%
+
+\let\U\relax
+\let\C\relax
+\let\G\relax
+
+\newcommand\zbar[1]{\overline{#1}}
+\newcommand\zb{\zbar{z}}
+\newcommand\wb{\zbar{w}}
+
+% Brackets
+\newcommand\abs[1]{\left\lvert #1\right\rvert}
+\newcommand\Abs[1]{\left\lVert #1\right\rVert}
+\newcommand\bra[1]{\left\langle #1 \right\rangle}
+\newcommand\brak[1]{\left\langle #1 \right\rvert}
+\newcommand\braket[2]{\left\langle #1\middle\vert #2 \right\rangle}
+% \newcommand\bra{\langle}
+% \newcommand\ket{\rangle}
+
+% Differentials
+\newcommand\dd[1]{\odif{#1}}
+\newcommand\pd[1]{\pdif{#1}}
+
+% Main macro
+\newcommand\dA{\dd{A}}
+\newcommand\dV{\dd{V}}
+\newcommand\dm{\dd{m}}
+\newcommand\ds{\dd{s}}
+\newcommand\dS{\dd{S}}
+\newcommand\dSS{\dd{\S}}
+\newcommand\dw{\dd{w}}
+\newcommand\dt{\dd{t}}
+\newcommand\dr{\dd{r}}
+\newcommand\drr{\dd{\r}}
+\newcommand\dT{\dd{T}}
+\newcommand\du{\dd{u}}
+\newcommand\dv{\dd{v}}
+\newcommand\dx{\dd{x}}
+\newcommand\dy{\dd{y}}
+\newcommand\dz{\dd{z}}
+
+\newcommand\dxy{\dd{x,y}}
+\newcommand\dyx{\dd{y,x}}
+\newcommand\dzy{\dd{z,y}}
+\newcommand\dyz{\dd{y,z}}
+\newcommand\dzx{\dd{z,x}}
+\newcommand\dxz{\dd{x,z}}
+
+\newcommand\dxyz{\dd{x,y,z}}
+\newcommand\dxzy{\dd{x,z,y}}
+\newcommand\dyxz{\dd{y,x,z}}
+\newcommand\dyzx{\dd{y,z,x}}
+\newcommand\dzxy{\dd{z,x,y}}
+\newcommand\dzyx{\dd{z,y,x}}
+
+\newcommand\duv{\dd{u,v}}
+\newcommand\dvu{\dd{u,y}}
+
+% Helpful text in math
+\newcommand\aand{\quad\textrm{and}\quad}
+\newcommand\diag{\textrm{diag}}
+\newcommand\oor{\quad\textrm{or}\quad}
+\renewcommand\and{\textrm{and}}
+\newcommand\qtq[1]{\quad\textrm{#1}\quad}
+
+% Vectors
+\renewcommand\a{\mathbf{a}}
+\renewcommand\b{\mathbf{b}}
+\renewcommand\c{\mathbf{c}}
+\renewcommand\d{\mathbf{d}}
+\newcommand\e{\mathbf{e}}
+\newcommand\f{\mathbf{f}}
+\newcommand\FF{\mathbf{F}}
+\newcommand\g{\mathbf{g}}
+\newcommand\n{\mathbf{n}}
+\newcommand\p{\mathbf{p}}
+\renewcommand\r{\mathbf{r}}
+\renewcommand\S{\mathbf{S}}
+\renewcommand\t{\mathbf{t}}
+\renewcommand\u{\mathbf{u}}
+\renewcommand\v{\mathbf{v}}
+\newcommand\q{\mathbf{q}}
+\newcommand\w{\mathbf{w}}
+\newcommand\x{\mathbf{x}}
+\newcommand\y{\mathbf{y}}
+\newcommand\z{\mathbf{z}}
+\newcommand\zero{\mathbf{0}}
+
+% Unit Tangent, Normal, and Binormal Vectors
+\newcommand\Ta{\mathbf{T}}
+\newcommand\Na{\mathbf{N}}
+\newcommand\Ba{\mathbf{B}}
+
+% Hat vectors
+\newcommand\zhat[1]{\mathbf{\hat{#1}}}
+\newcommand\ah{\zhat{a}}
+\newcommand\bh{\zhat{b}}
+\newcommand\ch{\zhat{c}}
+\renewcommand\dh{\zhat{d}}
+\newcommand\eh{\zhat{e}}
+\newcommand\nh{\zhat{n}}
+\newcommand\ph{\zhat{p}}
+\newcommand\Th{\zhat{T}}
+\newcommand\uh{\zhat{u}}
+\newcommand\vh{\zhat{v}}
+\newcommand\wh{\zhat{w}}
+\newcommand\xh{\zhat{x}}
+\newcommand\yh{\zhat{y}}
+\newcommand\zh{\zhat{z}}
+
+% Unit vectors
+\newcommand\ui{\hat{\boldsymbol{\imath}}}
+\newcommand\uj{\hat{\boldsymbol{\jmath}}}
+\newcommand\uk{\hat{\mathbf{k}}}
+
+% Matrix groups
+\newcommand\GL{\operatorname{GL}}
+\newcommand\Or{\operatorname{O}}
+\newcommand\PGL{\operatorname{PGL}}
+\newcommand\PSL{\operatorname{PSL}}
+\newcommand\PSO{\operatorname{PSO}}
+\newcommand\PSU{\operatorname{PSU}}
+\newcommand\SL{\operatorname{SL}}
+\newcommand\SO{\operatorname{SO}}
+\newcommand\Spin{\operatorname{Spin}}
+\newcommand\Sp{\operatorname{Sp}}
+\newcommand\SU{\operatorname{SU}}
+\newcommand\U{\operatorname{U}}
+\newcommand\Mat{\operatorname{Mat}}
+\renewcommand\P{\operatorname{P}}
+
+% Random functions
+\newcommand\sech{\operatorname{sech}}
+\newcommand\fff{\mathrm{I}}
+\newcommand\sff{\mathrm{II}}
+
+% Lie algebras
+\newcommand\ec{\mathrm{e}}
+\newcommand\gl{\mathrm{gl}}
+\newcommand\so{\mathrm{so}}
+\newcommand\su{\mathrm{su}}
+\newcommand\ggl{\mathfrak{g}}
+\newcommand\hl{\mathfrak{h}}
+
+% Subspaces
+\newcommand\B{\mathbb{B}}
+\newcommand\C{\mathbb{C}}
+\newcommand\D{\mathbb{D}}
+\newcommand\E{\mathbb{E}}
+\newcommand\F{\mathbb{F}}
+\newcommand\I{\mathbb{I}}
+\newcommand\N{\mathbb{N}}
+\newcommand\Q{\mathbb{Q}}
+\newcommand\R{\mathbb{R}}
+\newcommand\Z{\mathbb{Z}}
+
+% Math operators
+\let\div\relax
+\let\Re\relax
+\let\Im\relax
+
+% Operators
+% \DeclareMathOperator\arg{arg}
+\DeclareMathOperator\Arg{Arg}
+\DeclareMathOperator\curl{curl}
+\DeclareMathOperator\div{div}
+\DeclareMathOperator\Col{Col}
+\DeclareMathOperator\Null{Null}
+\DeclareMathOperator\Range{Range}
+\DeclareMathOperator\Ker{Ker}
+\DeclareMathOperator\Tr{Tr}
+\DeclareMathOperator\Rank{Rank}
+\DeclareMathOperator\proj{proj}
+\DeclareMathOperator\comp{comp}
+\DeclareMathOperator\Sspan{Span}
+\DeclareMathOperator\Re{Re}
+\DeclareMathOperator\Im{Im}
+\DeclareMathOperator\ad{ad}
+\DeclareMathOperator\Ad{Ad}
+\DeclareMathOperator\Log{Log}
+
+% Fancy letters
+\newcommand\BB{\mathcal{B}}
+\newcommand\DD{\mathcal{D}}
+
+% Create command to box equations
+\newcommand*\colorboxed{}
+\def\colorboxed#1#{%
+  \colorboxedAux{#1}%
+}
+\newcommand*\colorboxedAux[3]{%
+  \begingroup
+    \colorlet{cb@saved}{.}%
+    \color#1{#2}%
+    \boxed{%
+      \color{cb@saved}%
+      #3%
+    }%
+  \endgroup
+}
+\newcommand\empheq[1]{%
+  \colorboxed{black}{%
+    \begin{aligned}[b]
+      #1
+    \end{aligned}%
+  }%
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                                                              %
+%                                 Environments                                 %
+%                                                                              %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\theoremstyle{definition}
+\newtheorem*{assumption}{Assumption}
+\newtheorem*{claim}{Claim}
+\newtheorem*{conjecture}{Conjecture}
+\newtheorem*{definition}{Definition}
+\newtheorem*{example}{Example}
+\newtheorem*{notation}{Notation}
+\newtheorem*{proposition}{Proposition}
+\newtheorem*{question}{Question}
+\newtheorem*{problem}{Problem}
+\newtheorem*{rrule}{Rule}
+
+\newtheorem*{remark}{Remark}
+\newtheorem*{note}{Note}
+\newtheorem*{warning}{Warning}
+
+\theoremstyle{plain}
+\newtheorem*{corollary}{Corollary}
+\newtheorem*{lemma}{Lemma}
+\newtheorem*{theorem}{Theorem}
+\newtheorem*{worksheet}{Worksheet}
+
+\newcommand\frmebox[1][]{%
+  \begin{tcolorbox}[%
+    title={\sffamily\color{black}#1},
+    colback=white,
+    enhanced,
+    attach boxed title to top center={
+      yshift=-3mm,
+      yshifttext=-1mm,
+    },
+    boxed title style={
+      size=small,
+      colback=white,
+      frame code={},
+    },
+    coltext=black,
+    frame hidden,
+    borderline east={0.5pt}{0pt}{black},
+    borderline west={0.5pt}{0pt}{black},
+    borderline north={0.5pt}{0pt}{black},
+    borderline south={0.5pt}{0pt}{black},
+    breakable,
+    parskip=0pt,
+  ]
+}
+
+\renewenvironment{frame}[1][]{%
+  \frmebox[#1]%
+}{%
+  \end{tcolorbox}%
+}
+
+% create solution env using proof env
+\newenvironment{solution}[1][]{%
+  \begin{proof}[Solution\ifthenelse{\equal{#1}{}}{}{~to~#1}]
+}{%
+  \end{proof}
+}
+
+\makeatother

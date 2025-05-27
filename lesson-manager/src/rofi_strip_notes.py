@@ -1,7 +1,7 @@
 from subprocess import check_output
 from TexSoup import TexSoup
 
-from RofiLessonManager.courses import Courses as Courses
+from core.courses import Courses as Courses
 from lesson_manager import config
 import utils
 from utils import rofi

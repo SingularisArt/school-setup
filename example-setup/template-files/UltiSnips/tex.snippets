@@ -1,0 +1,171 @@
+################################################################################
+#                                                                              #
+#                                    Global                                    #
+#                                                                              #
+################################################################################
+
+global !p
+
+
+from builtin import writeRoman
+from latex_.matrix import createMatrix
+from latex_.cmdsub import createProblemSolution
+from latex_.scopes import text, math, displayMath
+environments = {
+  "def": "definition",
+  "thm": "theorem",
+  "wrks": "worksheet",
+  "exm": "example",
+  "qst": "question",
+  "sol": "solution",
+  "rmk": "remark",
+  "wrng": "wrong",
+  "prpl": "purpleframe",
+  "nte": "note",
+  "nta": "notation",
+  "prb": "problem",
+  "psol": "probsolution",
+  "lma": "lemma",
+  "crl": "corollary",
+  "prps": "proposition",
+  "cnj": "conjecture",
+  "exp": "explanation",
+  "clm": "claim",
+  "cse": "case",
+  "ack": "acknowledgment",
+  "con": "conclusion",
+}
+
+namedEnvironments = {
+  "ndef": "definition",
+  "nthm": "theorem",
+  "nexm": "example",
+  "nqst": "question",
+  "nsol": "solution",
+  "nrmk": "remark",
+  "nwrng": "wrong",
+  "nprpl": "purpleframe",
+  "nnte": "note",
+  "nnta": "notation",
+  "nprb": "problem",
+  "npsol": "probsolution",
+  "nlma": "lemma",
+  "ncrl": "corollary",
+  "nprps": "proposition",
+  "ncnj": "conjecture",
+  "nexp": "explanation",
+  "nclm": "claim",
+  "ncse": "case",
+  "nack": "acknowledgment",
+  "ncon": "conclusion",
+}
+
+def remove_parantheses(s):
+	return s.replace("(", "").replace(")", "")
+endglobal
+
+
+################################################################################
+#                                                                              #
+#                                 Environments                                 #
+#                                                                              #
+################################################################################
+
+context "match[0] in environments"
+snippet "\b[a-z]+\b" "Custom Environments" rAbm
+\begin{`!p snip.rv = environments[match[0]]`}
+	$1
+\end{`!p snip.rv = environments[match[0]]`}
+endsnippet
+
+context "text()"
+snippet sprb "Problem and Solution" Abm
+\begin{problem}[$1]
+	$2
+\end{problem}
+
+\begin{proof}[Solution]
+	$3
+\end{proof}
+endsnippet
+
+pre_expand "createProblemSolution(snip, match)"
+snippet "([0-9]+)sprb" "Problem and Solution" rAbm
+endsnippet
+
+context "match[0] in namedEnvironments"
+snippet "\b[a-z]+\b" "Custom Environments" rAbm
+\begin{`!p snip.rv = namedEnvironments[match[0]]`}[$1]
+	$3
+\end{`!p snip.rv = namedEnvironments[match[0]]`}
+endsnippet
+
+context "text()"
+snippet "wadm" "With Arrows Display Mode" rAbm
+\[\begin{WithArrows}%
+	$1
+\end{WithArrows}${2:.}\]%
+endsnippet
+
+context "text()"
+snippet "wailm" "With Arrows Inline Mode" rAbm
+$\begin{WithArrows}
+	$1
+\end{WithArrows}$
+endsnippet
+
+context "text()"
+snippet imp "Important" bw
+\imp{${1:${VISUAL}}}$0
+endsnippet
+
+################################################################################
+#                                                                              #
+#                                    Other                                     #
+#                                                                              #
+################################################################################
+
+context "text()"
+snippet newnote "New Note"
+\nte{`date "+%b %d %Y %a (%H:%M:%S)"`}{${1:NAME}}
+
+$0
+
+\newpage
+endsnippet
+
+context "math()"
+snippet aaa "Arrow" w
+\Arrow{$1}
+endsnippet
+
+context "math()"
+snippet nrm "Norm" Abm
+\norm{$1}
+endsnippet
+
+priority 10000
+context "math()"
+snippet "(\([0-9,]+\)|[0-9]+)?(p)?D([a-zA-Z])?D(\([a-zA-Z,]+\)|[a-zA-Z]+)" "Derivatives" r
+`!p
+derivative_type = "\\odv" if not match.group(2) else "\\pdv"
+derivative_number = "" if not match.group(1) else f"[order={{{remove_parantheses(match.group(1))}}}]"
+derivative_function = "{}" if not match.group(3) else f"{{{remove_parantheses(match.group(3))}}}"
+with_respect_to = f"{{{remove_parantheses(match.group(4))}}}"
+
+snip.rv = derivative_type + derivative_number + derivative_function + with_respect_to
+`
+endsnippet
+
+context "displayMath()"
+snippet &= "New equation line"
+&= ${1:${VISUAL}} \\\
+endsnippet
+
+priority 1
+context "math()"
+pre_expand "createMatrix(snip, match, True)"
+snippet "(a)?(d|p|b|B|v|V)?mat\(([1-9]+) ([1-9]+)\)" "Matrix" rbm
+endsnippet
+
+# vim:ft=snippets:
