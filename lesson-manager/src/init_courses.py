@@ -72,8 +72,8 @@ def main():
             )
             if search:
                 placeholders = {
-                    "CLASS": title,
                     "CLASS_SHORT": short,
+                    "CLASS": title,
                     "AUTHOR": author,
                     "START_DATE": start_date,
                     "START_TIME": start_time,

@@ -1,6 +1,22 @@
 from pathlib import Path
 import utils
 
+import importlib.util
+from pathlib import Path
+
+
+def load_config():
+    config_path = Path.home() / ".config" / "lesson-manager" / "config.py"
+
+    if not config_path.exists():
+        return None
+
+    spec = importlib.util.spec_from_file_location("lesson_config", config_path)
+    config = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(config)
+
+    return config
+
 
 PID_FILE = "/tmp/inkscape-figures.pid"
 
@@ -27,7 +43,6 @@ root = Path(data["root"]).expanduser()
 templates_dir = Path(data["templates_dir"]).expanduser()
 current_course = Path(data["current_course"]).expanduser()
 current_course_watch_file = Path("~/.local/share/current_course").expanduser()
-sourcing_notes_template = data["sourcing_notes_template"]
 
 books_dir = current_course / Path(data["books_dir"]).expanduser()
 figures_dir = current_course / Path(data["figures_dir"]).expanduser()

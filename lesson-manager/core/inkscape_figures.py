@@ -54,6 +54,12 @@ class InkscapeFigure:
         return [r for r in self.roots_file.read_text().splitlines() if r]
 
     def latex_template(self, name, caption):
+        custom_config = config.load_config()
+        try:
+            return custom_config.latex_template(name, caption)
+        except Exception:
+            pass
+
         label = caption.replace("-", "_").replace(" ", "_").lower()
         caption = caption.replace("-", " ").replace("_", " ").title()
 

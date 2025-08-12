@@ -22,11 +22,11 @@ class Note:
     def _parse_note_file(self):
         with open(self.file_path, "r") as file:
             for line in file:
-                match = re.search(r"\\lecture\[(.+)\]{(\d+)}{(.+)}{(.+)}", line)
+                match = re.search(r"\\lecture{(\d+)}{(.+)}{(.+)}", line)
                 if match:
-                    self.number = int(match.group(2))
-                    self.date = datetime.strptime(match.group(3), config.date_format)
-                    self.title = match.group(4)
+                    self.number = int(match.group(1))
+                    self.date = datetime.strptime(match.group(2), config.date_format)
+                    self.title = match.group(3)
                     self.week = (
                         utils.get_week(self.date)
                         - utils.get_week(
@@ -39,7 +39,7 @@ class Note:
     def edit(self):
         listen_location = "/tmp/nvim.pipe"
         args = (
-            ["--server", listen_location, "--remote"]
+            ["--server", listen_location, "--remote-tab"]
             if os.path.exists(listen_location)
             else ["--listen", listen_location]
         )
@@ -113,6 +113,15 @@ class Notes(list):
 
         return result
 
+    def include_lecture(self, lecture_number):
+        custom_config = config.load_config()
+        number = utils.convert_number(lecture_number, display=True)
+
+        try:
+            return custom_config.include_lecture(number)
+        except Exception:
+            return f"\\input{{./lectures/lec-{number}.tex}}\n"
+
     def _filter_body(self, numbers):
         with open(self.master_file, "r") as file:
             lines = file.readlines()
@@ -136,7 +145,7 @@ class Notes(list):
 
                 for num in numbers:
                     if lowest <= num <= highest:
-                        filtered_body.append(f"  \\input{{lectures/lec-{num:02}.tex}}\n")
+                        filtered_body.append(self.include_lecture(num))
 
             elif "% notes end" in stripped:
                 in_notes_block = False
